@@ -75,6 +75,7 @@ public class TridentKafkaWordCount {
 
     private String zkUrl;
     private String brokerUrl;
+    private static final String KAFKA_TOPIC = "test111";
 
     TridentKafkaWordCount(String zkUrl, String brokerUrl) {
         this.zkUrl = zkUrl;
@@ -92,7 +93,7 @@ public class TridentKafkaWordCount {
      */
     private TransactionalTridentKafkaSpout createKafkaSpout() {
         ZkHosts hosts = new ZkHosts(zkUrl);
-        TridentKafkaConfig config = new TridentKafkaConfig(hosts, "test");
+        TridentKafkaConfig config = new TridentKafkaConfig(hosts, KAFKA_TOPIC);
         config.scheme = new SchemeAsMultiScheme(new StringScheme());
 
         // Consume new data from the topic
@@ -157,7 +158,7 @@ public class TridentKafkaWordCount {
          * so that this gets written out as the message in the kafka topic.
          */
         KafkaBolt bolt = new KafkaBolt()
-                .withTopicSelector(new DefaultTopicSelector("test"))
+                .withTopicSelector(new DefaultTopicSelector(KAFKA_TOPIC))
                 .withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "word"));
         builder.setBolt("forwardToKafka", bolt, 1).shuffleGrouping("spout");
         return builder.createTopology();

@@ -41,7 +41,7 @@ public class TridentWordCount {
 	public static class Split extends BaseFunction {
 		public void execute(TridentTuple tuple, TridentCollector collector) {
 			String sentence = tuple.getString(0);
-			for (String word : sentence.split(" ")) {
+			for (String word : sentence.split("\\$\\$")) {
 				collector.emit(new Values(word));
 			}
 		}
@@ -49,11 +49,11 @@ public class TridentWordCount {
 
 	public static StormTopology buildTopology(LocalDRPC drpc) {
 		FixedBatchSpout spout = new FixedBatchSpout(new Fields("sentence"), 3,
-				new Values("the cow jumped over the moon"),
-				new Values("the man went to the store and bought some candy"),
-				new Values("four score and seven years ago"),
-				new Values("how many apples can you eat"),
-				new Values("to be or not to be the person"));
+				new Values("the$$cow$$jumped$$over$$the$$moon"),
+				new Values("the$$man$$went$$to$$the$$store$$and$$bought$$some$$candy"),
+				new Values("four$$score$$and$$seven$$years$$ago"),
+				new Values("how$$many$$apples$$can$$you$$eat"),
+				new Values("to$$be$$or$$not$$to$$be$$the$$person"));
 		spout.setCycle(true);
 
 		TridentTopology topology = new TridentTopology();
@@ -83,7 +83,7 @@ public class TridentWordCount {
 			for (int i = 0; i < 100; i++) {
 				// The query takes as input a whitespace separated list of words
 				// and return the sum of the counts for those words.
-				System.out.println("DRPC RESULT: " + drpc.execute("words", "cat dog the man"));
+				System.out.println("DRPC RESULT: " + drpc.execute("words", "cat$$dog$$the$$man"));
 				Thread.sleep(1000);
 			}
 		} else {
