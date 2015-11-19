@@ -74,6 +74,7 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 		Config conf = new Config();
 	    Map<String, Object> hbConf = new HashMap<String, Object>();
 	    hbConf.put("hbase.rootdir", "hdfs://hdpha/apps/hbase/data");
+	    conf.put(Config.TOPOLOGY_AUTO_CREDENTIALS, "org.apache.storm.hbase.security.AutoHBase");
 	    conf.put("hbase.conf", hbConf);
 		conf.setDebug(true);
 //		LocalCluster cluster = new LocalCluster();
