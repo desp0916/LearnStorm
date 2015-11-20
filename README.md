@@ -9,3 +9,6 @@ mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TridentKaf
 
 storm jar target/TestTopology-0.0.1-SNAPSHOT.jar com.pic.ala.learn.TestTopology.TridentKafkaWordCount hdp01.localdomain:2181 hdp02.localdomain:6667
 ```
+
+https://azure.microsoft.com/zh-tw/documentation/articles/hdinsight-storm-sensor-data-analysis/
+
