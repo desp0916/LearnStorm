@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import com.pic.ala.spout.RandomLogSpout;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
@@ -19,9 +19,8 @@ import storm.kafka.bolt.selector.DefaultTopicSelector;
 
 /**
  *
- * storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogKafkaTopology
- * hdp01.localdomain:2181 hdp01.localdomain:6667 bin/kafka-console-consumer.sh
- * --zookeeper hdp01.localdomain:2181 --topic aplogtest111 --from-beginning
+ * storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogKafkaTopology hdp01.localdomain:2181 hdp01.localdomain:6667
+ * bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic aplogtest111 --from-beginning
  *
  */
 public class ApLogKafkaTopology {
@@ -86,9 +85,9 @@ public class ApLogKafkaTopology {
 		ApLogKafkaTopology kafkaToplogy = new ApLogKafkaTopology(zkUrl, brokerUrl);
 
 		System.out.println("zkUrl: " + zkUrl + ", brokerUrl: " + brokerUrl);
-		LocalCluster cluster = new LocalCluster();
+//		LocalCluster cluster = new LocalCluster();
 
-		cluster.submitTopology("kafkaBolt", kafkaToplogy.getProducerConfig(), kafkaToplogy.buildProducerTopology());
+		StormSubmitter.submitTopology("ApLogGenerator", kafkaToplogy.getProducerConfig(), kafkaToplogy.buildProducerTopology());
 
 		// StormSubmitter.submitTopology("kafkaBolt",
 		// kafkaToplogy.getProducerConfig(),
