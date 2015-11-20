@@ -1,5 +1,8 @@
 /**
  * storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalysisTopology
+ *
+ *
+ * storm jar target\LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalysisTopology -c nimbus.host=192.168.20.150 -c nimbus.thrift.port=49627
  */
 package com.pic.ala;
 
