@@ -1,4 +1,4 @@
-package com.pic.ala.spout;
+package com.pic.ala;
 
 import java.sql.Timestamp;
 import java.util.Date;
