@@ -1,13 +1,13 @@
 /**
  * storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalysisTopology
  *
- *
  * storm jar target\LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalysisTopology -c nimbus.host=192.168.20.150 -c nimbus.thrift.port=49627
+ *
+ * https://github.com/apache/storm/tree/master/external/storm-kafka
+ *
  */
 package com.pic.ala;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +16,7 @@ import org.apache.storm.hbase.bolt.HBaseBolt;
 import org.apache.storm.hbase.bolt.mapper.SimpleHBaseMapper;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
@@ -43,7 +43,9 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 		String topic = topologyConfig.getProperty("kafka.topic");
 		String zkRoot = topologyConfig.getProperty("kafka.zkRoot");
 		String consumerGroupId = "ApLogAnalysisSpout";
+//		String consumerGroupId = UUID.randomUUID().toString();
 		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, consumerGroupId);
+		spoutConfig.startOffsetTime = System.currentTimeMillis();
 		spoutConfig.scheme = new SchemeAsMultiScheme(new ApLogScheme());
 		return spoutConfig;
 	}
@@ -77,16 +79,16 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 //		"org.apache.storm.hbase.security.AutoHBase");
 		conf.put("hbase.conf", hbConf);
 		conf.setDebug(true);
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("ApLogAnalyzer", conf, builder.createTopology());
+//		LocalCluster cluster = new LocalCluster();
+		StormSubmitter.submitTopology("ApLogAnalyzer", conf, builder.createTopology());
 	}
 
 	public static void main(String args[]) throws Exception {
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-        URL[] urls = ((URLClassLoader)cl).getURLs();
-        for(URL url: urls){
-        	System.out.println(url.getFile());
-        }
+//        ClassLoader cl = ClassLoader.getSystemClassLoader();
+//        URL[] urls = ((URLClassLoader)cl).getURLs();
+//        for(URL url: urls){
+//        	System.out.println(url.getFile());
+//        }
 		String configFileLocation = "ap_log_analysis_topology.properties";
 		ApLogAnalysisTopology apLogAnalysisTopology = new ApLogAnalysisTopology(configFileLocation);
 		apLogAnalysisTopology.buildAndSubmit();
