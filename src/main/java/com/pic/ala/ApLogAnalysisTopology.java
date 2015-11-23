@@ -9,7 +9,6 @@ package com.pic.ala;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.apache.storm.hbase.bolt.HBaseBolt;
@@ -42,8 +41,8 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 		BrokerHosts hosts = new ZkHosts(topologyConfig.getProperty("kafka.zookeeper.host.port"));
 		String topic = topologyConfig.getProperty("kafka.topic");
 		String zkRoot = topologyConfig.getProperty("kafka.zkRoot");
-//		String consumerGroupId = "ApLogAnalysisSpout";
-		String consumerGroupId = UUID.randomUUID().toString();
+		String consumerGroupId = "ApLogAnalysisSpout";
+//		String consumerGroupId = UUID.randomUUID().toString();
 //		String clientId = "ApLogAnalysisClient";
 //		KafkaConfig kafkaConfig = new KafkaConfig(hosts, topic, clientId);
 		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, consumerGroupId);
