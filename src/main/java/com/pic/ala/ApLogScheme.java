@@ -13,7 +13,7 @@ public class ApLogScheme implements Scheme {
 
 	private static final long serialVersionUID = -578815753542323978L;
 
-	public static final String SYSTEM_ID = "aes3g";
+	public static final String SYSTEM_ID = "aes3g";	// HBase Table name
 	public static final String LOG_TYPE = "job";
 
 	public static final String FIELD_LOG_ID = "apLogId";
@@ -61,8 +61,9 @@ public class ApLogScheme implements Scheme {
 	}
 
 	public Fields getOutputFields() {
-		return new Fields(FIELD_LOG_ID, FIELD_HOSTNAME, FIELD_EXEC_TIME, FIELD_ERROR_LEVEL, FIELD_EXEC_METHOD,
-				FIELD_KEYWORD1, FIELD_KEYWORD2, FIELD_KEYWORD3, FIELD_MESSAGE);
+		return new Fields(FIELD_LOG_ID, FIELD_HOSTNAME, FIELD_EXEC_TIME,
+				FIELD_ERROR_LEVEL, FIELD_EXEC_METHOD, FIELD_KEYWORD1,
+				FIELD_KEYWORD2, FIELD_KEYWORD3, FIELD_MESSAGE);
 	}
 
 	private String cleanup(String str) {

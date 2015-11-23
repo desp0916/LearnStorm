@@ -1,16 +1,21 @@
 /**
- * storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalysisTopology
+ * Ref: https://github.com/apache/storm/tree/master/external/storm-kafka
  *
- * storm jar target\LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalysisTopology -c nimbus.host=192.168.20.150 -c nimbus.thrift.port=49627
+ * 1. Create a table with HBase shell:
  *
- * https://github.com/apache/storm/tree/master/external/storm-kafka
+ *     create 'aes3g', 'cf'
+ *
+ * 2. Submit this topology to consume the topic on Kafka and ingest into Hbase:
+ *
+ *     storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalyzer
+ *
  */
+
 package com.pic.ala;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.storm.hbase.bolt.HBaseBolt;
 import org.apache.storm.hbase.bolt.mapper.SimpleHBaseMapper;
 
@@ -27,13 +32,14 @@ import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
 import storm.kafka.ZkHosts;
 
-public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
+public class ApLogAnalyzer extends ApLogBaseTopology {
 
-	private static final Logger LOG = Logger.getLogger(ApLogAnalysisTopology.class);
+//	private static final Logger LOG = Logger.getLogger(ApLogAnalyzer.class);
 	private static final String KAFKA_SPOUT_ID = "kafkaSpout";
 	private static final String HBASE_BOLT_ID = "hbaseBolt";
+	private static final String CONSUMER_GROUP_ID = "ApLogAnalyzerSpout";
 
-	public ApLogAnalysisTopology(String configFileLocation) throws Exception {
+	public ApLogAnalyzer(String configFileLocation) throws Exception {
 		super(configFileLocation);
 	}
 
@@ -41,30 +47,32 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 		BrokerHosts hosts = new ZkHosts(topologyConfig.getProperty("kafka.zookeeper.host.port"));
 		String topic = topologyConfig.getProperty("kafka.topic");
 		String zkRoot = topologyConfig.getProperty("kafka.zkRoot");
-		String consumerGroupId = "ApLogAnalysisSpout";
 //		String consumerGroupId = UUID.randomUUID().toString();
-//		String clientId = "ApLogAnalysisClient";
-//		KafkaConfig kafkaConfig = new KafkaConfig(hosts, topic, clientId);
-		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, consumerGroupId);
+		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
-//		spoutConfig.startOffsetTime = kafka.api.OffsetRequest.EarliestTime()
 		spoutConfig.scheme = new SchemeAsMultiScheme(new ApLogScheme());
 		return spoutConfig;
 	}
 
 	public void configureKafkaSpout(TopologyBuilder builder) {
 		KafkaSpout kafkaSpout = new KafkaSpout(constructKafkaSpoutConf());
-		int spoutCount = Integer.valueOf(topologyConfig.getProperty("spout.thread.count"));
-		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutCount);
+		int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.thread.count"));
+		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads);
 	}
 
 	public void configureHBaseBolt(TopologyBuilder builder) {
-
-		SimpleHBaseMapper mapper = new SimpleHBaseMapper().withRowKeyField(ApLogScheme.FIELD_LOG_ID)
-				.withColumnFields(new Fields(ApLogScheme.FIELD_HOSTNAME, ApLogScheme.FIELD_EXEC_TIME,
-						ApLogScheme.FIELD_ERROR_LEVEL, ApLogScheme.FIELD_EXEC_METHOD, ApLogScheme.FIELD_KEYWORD1,
-						ApLogScheme.FIELD_KEYWORD2, ApLogScheme.FIELD_KEYWORD3, ApLogScheme.FIELD_MESSAGE))
-				// .withCounterFields(new Fields("count"))
+		SimpleHBaseMapper mapper = new SimpleHBaseMapper()
+				.withRowKeyField(ApLogScheme.FIELD_LOG_ID)
+				.withColumnFields(new Fields(
+						ApLogScheme.FIELD_HOSTNAME,
+						ApLogScheme.FIELD_EXEC_TIME,
+						ApLogScheme.FIELD_ERROR_LEVEL,
+						ApLogScheme.FIELD_EXEC_METHOD,
+						ApLogScheme.FIELD_KEYWORD1,
+						ApLogScheme.FIELD_KEYWORD2,
+						ApLogScheme.FIELD_KEYWORD3,
+						ApLogScheme.FIELD_MESSAGE))
+//				.withCounterFields(new Fields("count"))
 				.withColumnFamily("cf");
 		HBaseBolt hbase = new HBaseBolt(ApLogScheme.SYSTEM_ID, mapper).withConfigKey("hbase.conf");
 		builder.setBolt(HBASE_BOLT_ID, hbase, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(ApLogScheme.FIELD_LOG_ID));
@@ -76,9 +84,8 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 		configureHBaseBolt(builder);
 		Config conf = new Config();
 		Map<String, Object> hbConf = new HashMap<String, Object>();
+
 		hbConf.put("hbase.rootdir", "hdfs://hdpha/apps/hbase/data");
-//		conf.put("topology.auto-credentials",
-//		"org.apache.storm.hbase.security.AutoHBase");
 		conf.put("hbase.conf", hbConf);
 		conf.setDebug(true);
 //		LocalCluster cluster = new LocalCluster();
@@ -86,14 +93,9 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 	}
 
 	public static void main(String args[]) throws Exception {
-//        ClassLoader cl = ClassLoader.getSystemClassLoader();
-//        URL[] urls = ((URLClassLoader)cl).getURLs();
-//        for(URL url: urls){
-//        	System.out.println(url.getFile());
-//        }
-		String configFileLocation = "ap_log_analysis_topology.properties";
-		ApLogAnalysisTopology apLogAnalysisTopology = new ApLogAnalysisTopology(configFileLocation);
-		apLogAnalysisTopology.buildAndSubmit();
+		String configFileLocation = "ApLogAnalyzer.properties";
+		ApLogAnalyzer topology = new ApLogAnalyzer(configFileLocation);
+		topology.buildAndSubmit();
 	}
 
 }

@@ -1,51 +1,52 @@
+/**
+ * 1. Configure the topic name in ApLogAnalyzer.properties. Assume your topic is 'mytopic'.
+ *
+ * 2. Create a topic 'mytopic' with command line:
+ *
+ *     kafka-topics.sh --create --zookeeper hdp01.localdomain:2181 --replication-factor 1 --partition 1 --topic mytopic
+ *
+ * 3. Submit this topology:
+ *
+ *     storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
+ *
+ * 4. Monitor the topic:
+ *
+ *     bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic mytopic --from-beginning
+ *
+ */
+
 package com.pic.ala;
 
 import java.util.Properties;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 
-import com.pic.ala.spout.RandomLogSpout;
-
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
-import backtype.storm.generated.StormTopology;
 import backtype.storm.topology.TopologyBuilder;
 import storm.kafka.bolt.KafkaBolt;
 import storm.kafka.bolt.mapper.FieldNameBasedTupleToKafkaMapper;
 import storm.kafka.bolt.selector.DefaultTopicSelector;
 
-/**
- *
- * storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogKafkaTopology hdp01.localdomain:2181 hdp01.localdomain:6667
- * bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic aplogtest111 --from-beginning
- *
- */
-public class ApLogKafkaTopology {
+public class ApLogGenerator extends ApLogBaseTopology {
 
-	private String zkUrl;
-	private String brokerUrl;
+	private static String brokerUrl;
+	private Config conf;
 
-	public static final String KAFKA_TOPIC = "aplogtest111";
-
-	ApLogKafkaTopology(String zkUrl, String brokerUrl) {
-		this.zkUrl = zkUrl;
-		this.brokerUrl = brokerUrl;
+	public ApLogGenerator(String configFileLocation) throws Exception {
+		super(configFileLocation);
+		conf = new Config();
 	}
 
-	public StormTopology buildProducerTopology() {
-		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("spout", new RandomLogSpout(), 2);
-		KafkaBolt bolt = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(KAFKA_TOPIC))
-				.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "log"));
-		builder.setBolt("forwardToKafka", bolt, 1).shuffleGrouping("spout");
-		return builder.createTopology();
+	public void configureRandomLogSpout(TopologyBuilder builder) {
+		builder.setSpout("RandomLogSpout", new RandomLogSpout(), 2);
 	}
 
-	public Config getProducerConfig() {
-		Config conf = new Config();
+	public void configureKafkaBolt(TopologyBuilder builder) {
+		String topic = topologyConfig.getProperty("kafka.topic");
 		conf.setMaxSpoutPending(20);
 		Properties props = new Properties();
 		props.put("metadata.broker.list", brokerUrl);
@@ -54,46 +55,33 @@ public class ApLogKafkaTopology {
 		props.put("request.required.acks", "1");
 		props.put(ProducerConfig.CLIENT_ID_CONFIG, "storm-kafka-producer");
 		conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
-		return conf;
+		KafkaBolt kafka = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(topic))
+										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "log"));
+		builder.setBolt("KafkaBolt", kafka, 1).shuffleGrouping("RandomLogSpout");
 	}
 
-	/**
-	 * <p>
-	 * To run this topology ensure you have a kafka broker running.
-	 * </p>
-	 * Create a topic test with command line, kafka-topics.sh --create
-	 * --zookeeper localhost:2181 --replication-factor 1 --partition 1 --topic
-	 * test
-	 */
-	public static void main(String[] args)
-			throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
+	public void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
+		TopologyBuilder builder = new TopologyBuilder();
+		configureRandomLogSpout(builder);
+		configureKafkaBolt(builder);
+		StormSubmitter.submitTopology("ApLogGenerator", conf, builder.createTopology());
+	}
 
-		String zkUrl = "192.168.20.150:32774";
-		String brokerUrl = "192.168.20.150:32775";
+	public static void main(String[] args) throws Exception {
 
-		if (args.length > 2 || (args.length == 1 && args[0].matches("^-h|--help$"))) {
-			System.out.println("Usage: ApLogKafkaTopology [kafka zookeeper url] [kafka broker url]");
-			System.out.println("   E.g ApLogKafkaTopology [" + zkUrl + "]" + " [" + brokerUrl + "]");
-			System.exit(1);
+		String configFileLocation = "ApLogAnalyzer.properties";
+		ApLogGenerator topology = new ApLogGenerator(configFileLocation);
+
+		if (args.length == 0) {
+			brokerUrl = topologyConfig.getProperty("metadata.broker.list");
 		} else if (args.length == 1) {
-			zkUrl = args[0];
-		} else if (args.length == 2) {
-			zkUrl = args[0];
-			brokerUrl = args[1];
+			brokerUrl = args[0];
+		} else {
+			System.out.println("Usage: ApLogKafkaTopology [kafka broker url]");
+			System.exit(1);
 		}
 
-		ApLogKafkaTopology kafkaToplogy = new ApLogKafkaTopology(zkUrl, brokerUrl);
-
-		System.out.println("zkUrl: " + zkUrl + ", brokerUrl: " + brokerUrl);
-//		LocalCluster cluster = new LocalCluster();
-
-		StormSubmitter.submitTopology("ApLogGenerator", kafkaToplogy.getProducerConfig(), kafkaToplogy.buildProducerTopology());
-
-		// StormSubmitter.submitTopology("kafkaBolt",
-		// kafkaToplogy.getProducerConfig(),
-		// kafkaToplogy.buildProducerTopology());
-		// cluster.killTopology("kafkaBolt");
-		// cluster.shutdown();
+		topology.buildAndSubmit();
 	}
 
 }
