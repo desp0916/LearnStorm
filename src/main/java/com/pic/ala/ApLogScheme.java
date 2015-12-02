@@ -23,7 +23,7 @@ public class ApLogScheme implements Scheme {
 
 	private static final long serialVersionUID = -578815753542323978L;
 
-	public static final String SYSTEM_ID = "aes3g";	// HBase Table name
+	public static final String SYSTEM_ID = "aes3g";		// HBase Table name
 	public static final String LOG_TYPE = "job";
 
 	public static final String FIELD_LOG_ID = "apLogId";
@@ -39,9 +39,7 @@ public class ApLogScheme implements Scheme {
 
 	public static final String AGG_TABLE = "aes3g_agg";	// HBase Table name
 	public static final String FIELD_AGG_ID = "aggId";
-	public static final String FIELD_DAY_COUNT = "count";
-	public static final String YearMonthDay = "yearMonthDay";
-	public static final String HourMinute = "hourMinute";
+	public static final String FIELD_HOUR_MINUTE = "hourMinute";
 
 	private static final Logger LOG = Logger.getLogger(ApLogScheme.class);
 
@@ -79,15 +77,17 @@ public class ApLogScheme implements Scheme {
 			int hour = dateTime.getHourOfDay();
 			int minute = dateTime.getMinuteOfHour();
 
-			String hourMinute = String.valueOf(hour) + ":" + String.valueOf(minute);
+			String hourMinute = String.valueOf(hour) + "-" + String.valueOf(minute);
 			String yearMonthDay = String.valueOf(year) + "-" + String.valueOf(month)
 									+ "-" + String.valueOf(day);
 			String aggId = yearMonthDay;
 
 			setCounterColumnName(hourMinute);
 
-			return new Values(logId, aggId, hostName, execTime, errLevel, execMethod,
-								keyword1, keyword2, keyword3, message, aggId);
+			return new Values(logId, hostName, execTime,
+								errLevel, execMethod, keyword1,
+								keyword2, keyword3,	message,
+								aggId, hourMinute);
 
 		} catch (UnsupportedEncodingException e) {
 			LOG.error(e);
@@ -98,7 +98,8 @@ public class ApLogScheme implements Scheme {
 	public Fields getOutputFields() {
 		return new Fields(FIELD_LOG_ID, FIELD_HOSTNAME, FIELD_EXEC_TIME,
 				FIELD_ERROR_LEVEL, FIELD_EXEC_METHOD, FIELD_KEYWORD1,
-				FIELD_KEYWORD2, FIELD_KEYWORD3, FIELD_MESSAGE, FIELD_AGG_ID);
+				FIELD_KEYWORD2, FIELD_KEYWORD3, FIELD_MESSAGE,
+				FIELD_AGG_ID, FIELD_HOUR_MINUTE);
 	}
 
 	private String cleanup(String str) {

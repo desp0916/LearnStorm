@@ -82,13 +82,8 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		builder.setBolt(HBASE_DETAIL_BOLT_ID, hbase, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(ApLogScheme.FIELD_LOG_ID));
 
 		// the bolt to write aggregations
-		CustomeHBaseMapper aggMapper = new CustomeHBaseMapper()
-				.withRowKeyField(ApLogScheme.FIELD_AGG_ID)
-				.withColumnFields(new Fields(ApLogScheme.YearMonthDay))
-				.withCounterFields(new Fields(ApLogScheme.FIELD_DAY_COUNT))
-//				.withCounterFields(new Fields(apLogScheme.getCounterColumnName()))
-				.withColumnFamily("day");
-		HBaseBolt hbase2 = new HBaseBolt(ApLogScheme.AGG_TABLE, aggMapper).withConfigKey("hbase.conf");
+		SimpleHBaseMapper aggMapper = new SimpleHBaseMapper();
+		HBaseBolt hbase2 = new CustomHBaseBolt(ApLogScheme.AGG_TABLE, aggMapper).withConfigKey("hbase.conf");
 		builder.setBolt(HBASE_AGG_BOLT_ID, hbase2, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(ApLogScheme.FIELD_AGG_ID));
 	}
 
@@ -105,6 +100,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //		LocalCluster cluster = new LocalCluster();
 //		conf.put(Config.NIMBUS_HOST, "hdp01.localdomain");
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");
+		System.setProperty("hadoop.home.dir", "/tmp");
 		StormSubmitter.submitTopology("ApLogAnalyzer", conf, builder.createTopology());
 	}
 

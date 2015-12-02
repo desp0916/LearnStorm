@@ -1,5 +1,11 @@
 package com.pic.ala;
 
+import static org.apache.storm.hbase.common.Utils.toBytes;
+
+import java.util.List;
+
+import org.apache.hadoop.hbase.client.Durability;
+import org.apache.hadoop.hbase.client.Mutation;
 import org.apache.storm.hbase.bolt.HBaseBolt;
 import org.apache.storm.hbase.bolt.mapper.HBaseMapper;
 import org.apache.storm.hbase.common.ColumnList;
@@ -7,10 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
 public class CustomHBaseBolt extends HBaseBolt {
 
+	private static final String ONE  = "1";
     private static final Logger LOG = LoggerFactory.getLogger(CustomHBaseBolt.class);
 
 	boolean writeToWAL = true;
@@ -21,50 +29,39 @@ public class CustomHBaseBolt extends HBaseBolt {
 		super(tableName, mapper);
 	}
 
-	public CustomHBaseBolt(String tableName, HBaseMapper mapper, ApLogScheme apLogScheme) {
-		super(tableName, mapper);
-	}
-
     @Override
 	public void execute(Tuple tuple) {
 
-        byte[] rowKey = this.mapper.rowKey(tuple);
         ColumnList cols = new ColumnList();
-        String exec_time = tuple.getValueByField(ApLogScheme.FIELD_EXEC_TIME).toString();
-        String agg_id = tuple.getValueByField(ApLogScheme.FIELD_EXEC_TIME).toString();
 
+        String agg_id = tuple.getValueByField(ApLogScheme.FIELD_AGG_ID).toString();
 
-//        tuple.getValueByField(ApLogScheme.HourMinute);
+        byte[] rowKey = toBytes(tuple.getValueByField(ApLogScheme.FIELD_AGG_ID));
+        byte[] columnFamily = new String("min").getBytes();
 
-//        ColumnList cols = new ColumnList();
+        // 從 tuple 取值做為欄位名稱
+        Object hourMinute = tuple.getValueByField(ApLogScheme.FIELD_HOUR_MINUTE);
+        Fields counterFields = new Fields(hourMinute.toString());
 
-//		if (this.columnFields != null) {
-//			// TODO timestamps
-//			for (String field : this.columnFields) {
-//				if (field == apLogScheme.) {
-//
-//				}
-//				cols.addColumn(this.columnFamily, field.getBytes(), toBytes(tuple.getValueByField(field)));
-//			}
-//		}
-//        if(this.counterFields != null){
-//            for(String field : this.counterFields){
-//                cols.addCounter(this.columnFamily, field.getBytes(), toLong(tuple.getValueByField(field)));
-//            }
-//        }
-//
-//        byte[] rowKey = this.mapper.rowKey(tuple);
-//        // 這裡會建立欄位，並插入欄位值
-//        ColumnList cols = this.mapper.columns(tuple);
-//        List<Mutation> mutations = hBaseClient.constructMutationReq(rowKey, cols, writeToWAL? Durability.SYNC_WAL : Durability.SKIP_WAL);
-//
-//        try {
-//            this.hBaseClient.batchMutate(mutations);
-//        } catch(Exception e){
-//            this.collector.reportError(e);
-//            this.collector.fail(tuple);
-//            return;
-//        }
+		LOG.error("GARYYYY: agg_id = " + agg_id + ", hourMinute: " + hourMinute);
+
+		if (counterFields != null) {
+//			LOG.error("GARYYYZ: " +  hourMinute);
+			for (String field : counterFields) {
+//				LOG.error("GARYYYB field.getBytes(): " +  field.getBytes());
+                cols.addCounter(columnFamily, field.getBytes(), 1L);
+			}
+		}
+
+        List<Mutation> mutations = hBaseClient.constructMutationReq(rowKey, cols, writeToWAL? Durability.SYNC_WAL : Durability.SKIP_WAL);
+
+        try {
+            this.hBaseClient.batchMutate(mutations);
+        } catch(Exception e){
+            this.collector.reportError(e);
+            this.collector.fail(tuple);
+            return;
+        }
 
         this.collector.ack(tuple);
     }
