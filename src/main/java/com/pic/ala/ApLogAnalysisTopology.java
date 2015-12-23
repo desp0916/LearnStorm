@@ -49,6 +49,7 @@ public class ApLogAnalysisTopology extends BaseApLogAnalysisTopology {
 //		KafkaConfig kafkaConfig = new KafkaConfig(hosts, topic, clientId);
 		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, consumerGroupId);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
+//		spoutConfig.startOffsetTime = kafka.api.OffsetRequest.EarliestTime()
 		spoutConfig.scheme = new SchemeAsMultiScheme(new ApLogScheme());
 		return spoutConfig;
 	}
