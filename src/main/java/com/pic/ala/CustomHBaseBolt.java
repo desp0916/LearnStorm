@@ -1,3 +1,7 @@
+/**
+ * https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/
+ * scan 'aes3g_agg', {COLUMNS => ['min:15-29:toLong'] }
+ */
 package com.pic.ala;
 
 import static org.apache.storm.hbase.common.Utils.toBytes;
