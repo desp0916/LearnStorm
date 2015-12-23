@@ -15,7 +15,10 @@
 		<!-- storm.version>0.10.0.2.3.2.0-2950</storm.version -->
 		<storm.version>0.10.0-beta1</storm.version>
 		<kafka.version>0.8.2.2.3.2.0-2950</kafka.version>
+		<!-- kafka.version>0.8.1.1</kafka.version -->
 		<log4j.version>1.2.17</log4j.version>
+		<mockito.version>1.9.5</mockito.version>
+		<curator.version>2.5.0</curator.version>
 	</properties>
 
 	<repositories>
@@ -194,6 +197,8 @@
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_2.10</artifactId>
 			<version>${kafka.version}</version>
+			<!-- artifactId>kafka_2.9.2</artifactId -->
+			<!-- version>0.8.1.1</version -->
 			<!-- use provided scope, so users can pull in whichever scala version 
 				they choose -->
 			<!-- scope>provided</scope -->
@@ -218,6 +223,53 @@
 			<version>${kafka.version}</version>
 			<!-- scope>provided</scope -->
 		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<!--<version>0.20.2</version> -->
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+<!--		
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>${curator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-test</artifactId>
+            <version>${curator.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+-->
 		<dependency>
 			<groupId>jdk.tools</groupId>
 			<artifactId>jdk.tools</artifactId>
