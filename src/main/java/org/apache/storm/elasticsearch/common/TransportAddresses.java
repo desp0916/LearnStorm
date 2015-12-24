@@ -40,9 +40,8 @@ final class TransportAddresses implements Iterable<InetSocketTransportAddress> {
         this.nodes = nodes;
     }
 
-    @Override
     public Iterator<InetSocketTransportAddress> iterator() {
-        List<InetSocketTransportAddress> result = new LinkedList<>();
+        List<InetSocketTransportAddress> result = new LinkedList<InetSocketTransportAddress>();
 
         for (String node : nodes) {
             InetSocketTransportAddress transportAddress = transformToInetAddress(node);

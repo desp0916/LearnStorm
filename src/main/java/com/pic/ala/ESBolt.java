@@ -17,7 +17,6 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
 public class ESBolt extends BaseRichBolt {
@@ -80,13 +79,13 @@ public class ESBolt extends BaseRichBolt {
 
 	public void execute(Tuple tuple) {
 		tuple.getValueByField(ApLogScheme.LOG_JSON);
-		String toBeIndexed = entry.toJSON().toJSONString();
+//		String toBeIndexed = entry.toJSON().toJSONString();
 
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields(ApLogScheme.LOG_ENTRY,
-				ApLogScheme.FIELD_LOG_ID));
+//		declarer.declare(new Fields(ApLogScheme.LOG_ENTRY,
+//				ApLogScheme.FIELD_LOG_ID));
 
 	}
 

@@ -17,16 +17,16 @@
  */
 package org.apache.storm.elasticsearch.trident;
 
-import backtype.storm.task.IMetricsContext;
-import org.apache.storm.elasticsearch.common.EsConfig;
-import org.apache.storm.elasticsearch.common.EsTupleMapper;
-
-import storm.trident.state.State;
-import storm.trident.state.StateFactory;
+import static org.elasticsearch.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
-import static org.elasticsearch.common.base.Preconditions.checkNotNull;
+import org.apache.storm.elasticsearch.common.EsConfig;
+import org.apache.storm.elasticsearch.common.EsTupleMapper;
+
+import backtype.storm.task.IMetricsContext;
+import storm.trident.state.State;
+import storm.trident.state.StateFactory;
 
 /**
  * StateFactory for providing EsState.
@@ -46,7 +46,6 @@ public class EsStateFactory implements StateFactory {
         this.tupleMapper = checkNotNull(tupleMapper);
     }
 
-    @Override
     public State makeState(Map conf, IMetricsContext metrics, int partitionIndex, int numPartitions) {
         EsState esState = new EsState(esConfig, tupleMapper);
         esState.prepare();

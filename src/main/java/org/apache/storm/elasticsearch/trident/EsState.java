@@ -17,20 +17,20 @@
  */
 package org.apache.storm.elasticsearch.trident;
 
-import backtype.storm.topology.FailedException;
+import java.util.List;
 
-import org.apache.storm.elasticsearch.common.StormElasticSearchClient;
 import org.apache.storm.elasticsearch.common.EsConfig;
 import org.apache.storm.elasticsearch.common.EsTupleMapper;
+import org.apache.storm.elasticsearch.common.StormElasticSearchClient;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import backtype.storm.topology.FailedException;
 import storm.trident.state.State;
 import storm.trident.tuple.TridentTuple;
-
-import java.util.List;
 
 /**
  * Trident State for storing tuple to ES document.
@@ -59,7 +59,6 @@ class EsState implements State {
      * which means if same tuple replays, only one record will be stored in elasticsearch for same document
      * without control with txid
      */
-    @Override
     public void beginCommit(Long txid) {
 
     }
@@ -71,7 +70,6 @@ class EsState implements State {
      * which means if same tuple replays, only one record will be stored in elasticsearch for same document
      * without control with txid
      */
-    @Override
     public void commit(Long txid) {
 
     }

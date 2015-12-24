@@ -17,6 +17,9 @@
  */
 package org.apache.storm.elasticsearch.common;
 
+import static org.elasticsearch.common.base.Preconditions.checkArgument;
+import static org.elasticsearch.common.base.Preconditions.checkNotNull;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,9 +27,6 @@ import java.util.Map;
 
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
-
-import static org.elasticsearch.common.base.Preconditions.checkArgument;
-import static org.elasticsearch.common.base.Preconditions.checkNotNull;
 
 /**
  * @since 0.11
@@ -66,7 +66,7 @@ public class EsConfig implements Serializable {
         checkArgument(nodes.length != 0, "Nodes cannot be empty");
         this.clusterName = clusterName;
         this.nodes = nodes;
-        this.additionalConfiguration = new HashMap<>(additionalConfiguration);
+        this.additionalConfiguration = new HashMap<String, String>(additionalConfiguration);
     }
 
     TransportAddresses getTransportAddresses() {

@@ -1,6 +1,6 @@
 package com.pic.ala;
 
-import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 import java.util.List;
 
 //import org.joda.time.DateTime;
@@ -28,16 +28,20 @@ public class ApLogScheme implements Scheme {
 	private static final long serialVersionUID = -578815753542323978L;
 
 	public static final String SYSTEM_ID = "aes3g"; // HBase Table name
-	public static final String LOG_TYPE = "job";
+	public static final String FIELD_ES_SOURCE = "es_source";
+	public static final String FIELD_ES_INDEX_NAME = "es_index_name";	// ElasticSearch Index name
+	public static final String FIELD_ES_INDEX_TYPE = "es_index_type";	// ElasticSearch Index type
+	public static final String ES_INDEX = SYSTEM_ID;
+	public static final String LOG_TYPE = "batch";
 
-	public static final String LOG_JSON = "";
+	public static final String LOG_JSON = "{}";
 
 	public static final String FIELD_LOG_ID = "apLogId";
-	public static final String FIELD_HOSTNAME = "hostName";
+	public static final String FIELD_HOSTIP = "hostIP";
 	public static final String FIELD_AP_ID = "apId";
-	public static final String FIELD_EXEC_TIME = "execTime";
-	public static final String FIELD_ERROR_LEVEL = "errLevel";
-	public static final String FIELD_EXEC_METHOD = "execMethod";
+	public static final String FIELD_LOG_TIME = "logTime";
+	public static final String FIELD_LOG_LEVEL = "errLevel";
+	public static final String FIELD_CLASS_METHOD = "classMethod";
 	public static final String FIELD_KEYWORD1 = "keyword1";
 	public static final String FIELD_KEYWORD2 = "keyword2";
 	public static final String FIELD_KEYWORD3 = "keyword3";
@@ -55,28 +59,36 @@ public class ApLogScheme implements Scheme {
 		return this.counterColumnName;
 	}
 
+	class TimestampJSON {
+		protected boolean enabled = true;
+		TimestampJSON() {
+			enabled = true;
+		}
+	}
+
 	public List<Object> deserialize(byte[] bytes) {
 		try {
-			JSONObject logJSON = new JSONObject();
-
-//			logJSON.put(key, value);
 
 			String logEntry = new String(bytes, "UTF-8");
 			String[] pieces = logEntry.split("\\$\\$");
 			// aes3g-AESRCT1-AES-job-ERROR-2015-01-05 10:50:31,346
 
-			String hostName = cleanup(pieces[0]);
+			String hostIP = cleanup(pieces[0]);
 			String apId = cleanup(pieces[1]);
-			String execTime = cleanup(pieces[2]);
-			String errLevel = cleanup(pieces[3]);
-			String execMethod = cleanup(pieces[4]);
+			String logTime = cleanup(pieces[2]);
+			String logLevel = cleanup(pieces[3]);
+			String classMethod = cleanup(pieces[4]);
 			String keyword1 = cleanup(pieces[5]);
 			String keyword2 = cleanup(pieces[6]);
 			String keyword3 = cleanup(pieces[7]);
 			String message = cleanup(pieces[8]);
-			String logId = SYSTEM_ID + "-" + hostName + "-" + apId + "-" + LOG_TYPE + "-" + execMethod + "-" + execTime;
+			String logId = SYSTEM_ID + "-" + hostIP + "-" + apId + "-" + LOG_TYPE + "-" + classMethod + "-" + logTime;
+
+			//
+			// @TODO fix the following code to make it stabler!
 
 			DateTime dateTime = formatter.parseDateTime(cleanup(pieces[2]));
+			Timestamp timeStamp = new Timestamp(dateTime.getMillis());
 
 			int year = dateTime.getYear();
 			int month = dateTime.getMonthOfYear();
@@ -85,24 +97,47 @@ public class ApLogScheme implements Scheme {
 			int minute = dateTime.getMinuteOfHour();
 
 			String hourMinute = String.valueOf(hour) + "-" + String.valueOf(minute);
-			String yearMonthDay = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day);
+			String yearMonthDay = String.valueOf(year) + "-" + String.valueOf(month)
+									+ "-" + String.valueOf(day);
 			String aggId = yearMonthDay;
 
 			setCounterColumnName(hourMinute);
 
-			return new Values(logJSON, logId, hostName, execTime, errLevel, execMethod, keyword1, keyword2, keyword3,
-					message, aggId, hourMinute);
+			JSONObject logJsonObj = new JSONObject();
 
-		} catch (UnsupportedEncodingException e) {
+//			logJsonObj.put("messageId", messageId);
+			logJsonObj.put("systemId", SYSTEM_ID);
+			logJsonObj.put("logTime", logTime);
+			logJsonObj.put("logLevel", logLevel);
+			logJsonObj.put("classMethod", classMethod);
+			logJsonObj.put("hostIP", hostIP);
+//			logJsonObj.put("appId", value);
+//			logJsonObj.put("action", value);
+//			logJsonObj.put("functionId", value);
+//			logJsonObj.put("result", value);
+			logJsonObj.put("keyword1", keyword1);
+			logJsonObj.put("keyword2", keyword2);
+			logJsonObj.put("keyword3", keyword3);
+			logJsonObj.put("message", message);
+//			logJsonObj.put("dataCount", value);
+
+			logJsonObj.put("timestamp", "1234345462334");
+
+			return new Values(logJsonObj.toJSONString(), ES_INDEX, LOG_TYPE, logId,
+					hostIP, logTime, logLevel, classMethod, keyword1, keyword2,
+					keyword3, message, aggId, hourMinute);
+
+		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			throw new RuntimeException(e);
 		}
 	}
 
 	public Fields getOutputFields() {
-		return new Fields(LOG_JSON, FIELD_LOG_ID, FIELD_HOSTNAME, FIELD_EXEC_TIME, FIELD_ERROR_LEVEL,
-				FIELD_EXEC_METHOD, FIELD_KEYWORD1, FIELD_KEYWORD2, FIELD_KEYWORD3, FIELD_MESSAGE, FIELD_AGG_ID,
-				FIELD_HOUR_MINUTE);
+		return new Fields(FIELD_ES_SOURCE, FIELD_ES_INDEX_NAME, FIELD_ES_INDEX_TYPE,
+				FIELD_LOG_ID, FIELD_HOSTIP, FIELD_LOG_TIME, FIELD_LOG_LEVEL,
+				FIELD_CLASS_METHOD, FIELD_KEYWORD1,	FIELD_KEYWORD2, FIELD_KEYWORD3,
+				FIELD_MESSAGE, FIELD_AGG_ID, FIELD_HOUR_MINUTE);
 	}
 
 	private String cleanup(String str) {

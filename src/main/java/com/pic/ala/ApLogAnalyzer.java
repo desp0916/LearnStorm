@@ -16,11 +16,14 @@ package com.pic.ala;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.storm.elasticsearch.bolt.EsIndexBolt;
+import org.apache.storm.elasticsearch.common.EsConfig;
+import org.apache.storm.elasticsearch.common.EsTupleMapper;
 import org.apache.storm.hbase.bolt.HBaseBolt;
 import org.apache.storm.hbase.bolt.mapper.SimpleHBaseMapper;
 
 import backtype.storm.Config;
-import backtype.storm.StormSubmitter;
+import backtype.storm.LocalCluster;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
@@ -65,15 +68,20 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	}
 
 	private void configureESBolts(TopologyBuilder builder, Config config) {
-		HashMap<String, Object> esConfig = new HashMap<String, Object>();
-		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
-		esConfig.put(ESBolt.ES_HOST, topologyConfig.getProperty(ESBolt.ES_HOST));
-		esConfig.put(ESBolt.ES_INDEX_NAME, topologyConfig.getProperty(ESBolt.ES_INDEX_NAME));
-		esConfig.put(ESBolt.ES_INDEX_TYPE, topologyConfig.getProperty(ESBolt.ES_INDEX_TYPE));
-		config.put("es.conf", esConfig);
+//		HashMap<String, Object> esConfig = new HashMap<String, Object>();
+//		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
+//		esConfig.put(ESBolt.ES_HOST, topologyConfig.getProperty(ESBolt.ES_HOST));
+//		esConfig.put(ESBolt.ES_INDEX_NAME, topologyConfig.getProperty(ESBolt.ES_INDEX_NAME));
+//		esConfig.put(ESBolt.ES_INDEX_TYPE, topologyConfig.getProperty(ESBolt.ES_INDEX_TYPE));
+//		config.put("es.conf", esConfig);
+//
+//		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
+//		builder.setBolt(ES_BOLT_ID, esBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
 
-		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
-		builder.setBolt(ES_BOLT_ID, esBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
+		EsConfig esConfig = new EsConfig("elasticsearch", new String[]{"hdp01.localdomain:9300"});
+		EsTupleMapper tupleMapper = new CustomEsTupleMapper();
+		EsIndexBolt indexBolt = new EsIndexBolt(esConfig, tupleMapper);
+		builder.setBolt(ES_BOLT_ID, indexBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
 	}
 
 	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
@@ -85,10 +93,10 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		SimpleHBaseMapper rawMapper = new SimpleHBaseMapper()
 				.withRowKeyField(ApLogScheme.FIELD_LOG_ID)
 				.withColumnFields(new Fields(
-						ApLogScheme.FIELD_HOSTNAME,
-						ApLogScheme.FIELD_EXEC_TIME,
-						ApLogScheme.FIELD_ERROR_LEVEL,
-						ApLogScheme.FIELD_EXEC_METHOD,
+						ApLogScheme.FIELD_HOSTIP,
+						ApLogScheme.FIELD_LOG_TIME,
+						ApLogScheme.FIELD_LOG_LEVEL,
+						ApLogScheme.FIELD_CLASS_METHOD,
 						ApLogScheme.FIELD_KEYWORD1,
 						ApLogScheme.FIELD_KEYWORD2,
 						ApLogScheme.FIELD_KEYWORD3,
@@ -110,14 +118,14 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
 		configureKafkaSpout(builder, config);
-		configureHBaseBolts(builder, config);
+//		configureHBaseBolts(builder, config);
 		configureESBolts(builder, config);
 
-//		LocalCluster cluster = new LocalCluster();
+		LocalCluster cluster = new LocalCluster();
 //		conf.put(Config.NIMBUS_HOST, "hdp01.localdomain");
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");
 		System.setProperty("hadoop.home.dir", "/tmp");
-		StormSubmitter.submitTopology("ApLogAnalyzer", config, builder.createTopology());
+		cluster.submitTopology("ApLogAnalyzer", config, builder.createTopology());
 	}
 
 	public static void main(String args[]) throws Exception {

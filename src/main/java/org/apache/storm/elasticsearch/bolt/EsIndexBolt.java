@@ -17,16 +17,17 @@
  */
 package org.apache.storm.elasticsearch.bolt;
 
+import static org.elasticsearch.common.base.Preconditions.checkNotNull;
+
+import java.util.Map;
+
+import org.apache.storm.elasticsearch.common.EsConfig;
+import org.apache.storm.elasticsearch.common.EsTupleMapper;
+
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
-import org.apache.storm.elasticsearch.common.EsConfig;
-import org.apache.storm.elasticsearch.common.EsTupleMapper;
-
-import java.util.Map;
-
-import static org.elasticsearch.common.base.Preconditions.checkNotNull;
 
 /**
  * Basic bolt for storing tuple to ES document.
@@ -60,7 +61,6 @@ public class EsIndexBolt extends AbstractEsBolt {
             String index = tupleMapper.getIndex(tuple);
             String type = tupleMapper.getType(tuple);
             String id = tupleMapper.getId(tuple);
-
             client.prepareIndex(index, type, id).setSource(source).execute().actionGet();
             collector.ack(tuple);
         } catch (Exception e) {

@@ -16,8 +16,9 @@ public class LogEntry implements Scheme {
 
 	private String messageId;	// 紀錄識別		（UI & Batch & TPIPAS）
 	private String systemId;	// 系統			（Batch）
-	private String dateTime;	// Log 寫入時間	（UI & Batch）
-	private String level;		// 訊息層級		（Batch）
+	private String logTime;		// Log 寫入時間	（UI & Batch）
+	private String logLevel;	// 訊息層級		（Batch）
+	private String classMethod;	// 執行程式		（Batch）
 	private String hostIP;		// 本地端			（UI & TPIPAS）
 	private String appId;		// 人			（UI & TPIPAS）
 	private String action;		// 執行動作		（UI & TPIPAS）
@@ -26,17 +27,18 @@ public class LogEntry implements Scheme {
 	private String keyword1;	// 關鍵字1		（UI & Batch）
 	private String keyword2;	// 關鍵字2		（UI & Batch）
 	private String keyword3;	// 關鍵字3		（UI & Batch）
-	private String message;		// 事 & 物		（UI & TPIPAS & TPIPAS）
+	private String message;		// 事 & 物		（UI & Batch & TPIPAS）
 	private String dataCount;	// 資料筆數		（TPIPAS）
 
 	public LogEntry(JSONObject json) {
 	}
 
 	public List<Object> deserialize(byte[] bytes) {
+		return null;
 	}
 
 	public Fields getOutputFields() {
-
+		return null;
 	}
 
 }

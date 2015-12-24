@@ -17,6 +17,8 @@
  */
 package org.apache.storm.elasticsearch.bolt;
 
+import static org.elasticsearch.common.base.Preconditions.checkNotNull;
+
 import java.util.Map;
 
 import org.apache.storm.elasticsearch.common.EsConfig;
@@ -32,8 +34,6 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Tuple;
 
-import static org.elasticsearch.common.base.Preconditions.checkNotNull;
-
 public abstract class AbstractEsBolt extends BaseRichBolt {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEsBolt.class);
@@ -48,7 +48,6 @@ public abstract class AbstractEsBolt extends BaseRichBolt {
         this.esConfig = esConfig;
     }
 
-    @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
         try {
             this.collector = outputCollector;
@@ -62,10 +61,8 @@ public abstract class AbstractEsBolt extends BaseRichBolt {
         }
     }
 
-    @Override
     public abstract void execute(Tuple tuple);
 
-    @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
     }
 
