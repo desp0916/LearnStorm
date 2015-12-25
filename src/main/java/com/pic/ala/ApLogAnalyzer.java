@@ -16,9 +16,6 @@ package com.pic.ala;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.storm.elasticsearch.bolt.EsIndexBolt;
-import org.apache.storm.elasticsearch.common.EsConfig;
-import org.apache.storm.elasticsearch.common.EsTupleMapper;
 import org.apache.storm.hbase.bolt.HBaseBolt;
 import org.apache.storm.hbase.bolt.mapper.SimpleHBaseMapper;
 
@@ -68,20 +65,20 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	}
 
 	private void configureESBolts(TopologyBuilder builder, Config config) {
-//		HashMap<String, Object> esConfig = new HashMap<String, Object>();
-//		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
-//		esConfig.put(ESBolt.ES_HOST, topologyConfig.getProperty(ESBolt.ES_HOST));
-//		esConfig.put(ESBolt.ES_INDEX_NAME, topologyConfig.getProperty(ESBolt.ES_INDEX_NAME));
-//		esConfig.put(ESBolt.ES_INDEX_TYPE, topologyConfig.getProperty(ESBolt.ES_INDEX_TYPE));
-//		config.put("es.conf", esConfig);
-//
-//		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
-//		builder.setBolt(ES_BOLT_ID, esBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
+		HashMap<String, Object> esConfig = new HashMap<String, Object>();
+		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
+		esConfig.put(ESBolt.ES_HOST, topologyConfig.getProperty(ESBolt.ES_HOST));
+		esConfig.put(ESBolt.ES_INDEX_NAME, topologyConfig.getProperty(ESBolt.ES_INDEX_NAME));
+		esConfig.put(ESBolt.ES_INDEX_TYPE, topologyConfig.getProperty(ESBolt.ES_INDEX_TYPE));
+		config.put("es.conf", esConfig);
 
-		EsConfig esConfig = new EsConfig("elasticsearch", new String[]{"hdp01.localdomain:9300"});
-		EsTupleMapper tupleMapper = new CustomEsTupleMapper();
-		EsIndexBolt indexBolt = new EsIndexBolt(esConfig, tupleMapper);
-		builder.setBolt(ES_BOLT_ID, indexBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
+		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
+		builder.setBolt(ES_BOLT_ID, esBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
+
+//		EsConfig esConfig = new EsConfig("elasticsearch", new String[]{"hdp01.localdomain:9300"});
+//		EsTupleMapper tupleMapper = new CustomEsTupleMapper();
+//		EsIndexBolt indexBolt = new EsIndexBolt(esConfig, tupleMapper);
+//		builder.setBolt(ES_BOLT_ID, indexBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
 	}
 
 	private void configureHBaseBolts(TopologyBuilder builder, Config config) {

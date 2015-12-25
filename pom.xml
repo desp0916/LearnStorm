@@ -227,7 +227,7 @@
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<!--<version>0.20.2</version> -->
-			<version>1.7.1</version>
+			<version>1.7.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>

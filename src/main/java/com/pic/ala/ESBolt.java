@@ -1,15 +1,18 @@
+/**
+ * ElasticSearch 2.1.1 的作法：
+ *
+ * https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
+ */
 package com.pic.ala;
-
-import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
 
 import java.util.Map;
 
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.node.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,25 +71,49 @@ public class ESBolt extends BaseRichBolt {
 			LOG.warn("No '" + ES_INDEX_TYPE + "' value found in configuration! Using ElasticSearch defaults.");
 		}
 
-		if ((Boolean) stormConf.get(backtype.storm.Config.TOPOLOGY_DEBUG) == true) {
-			Node node = nodeBuilder().local(true).node();
-			client = node.client();
-		} else {
-			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
-			client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
-		}
+//		if ((Boolean) stormConf.get(backtype.storm.Config.TOPOLOGY_DEBUG) == true) {
+//			Node node = nodeBuilder().local(true).node();
+//			client = node.client();
+//		} else {
+			try {
+//				Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
+				Settings settings = ImmutableSettings.settingsBuilder()
+						.put("cluster.name", esClusterName).build();
+				synchronized (ESBolt.class) {
+					if (client == null) {
+//						client = TransportClient.builder().settings(settings).build().addTransportAddress(
+//								new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
+						client = new TransportClient(settings)
+								.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
+					}
+				}
+			} catch (Exception e) {
+				LOG.warn("Unable to initialize ESBolt", e);
+			}
+//		}
 	}
 
 	public void execute(Tuple tuple) {
-		tuple.getValueByField(ApLogScheme.LOG_JSON);
-//		String toBeIndexed = entry.toJSON().toJSONString();
-
+		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
+		if (toBeIndexed == null) {
+			LOG.warn("Received null or incorrect value from tuple");
+			return;
+		}
+		IndexResponse response = client.prepareIndex(ApLogScheme.ES_INDEX, ApLogScheme.LOG_TYPE)
+				.setSource(toBeIndexed).execute().actionGet();
+		if (response == null)
+			LOG.error("Failed to index Tuple: " + tuple.toString());
+		else {
+			if (response.getId() == null)
+				LOG.error("Failed to index Tuple: " + tuple.toString());
+			else {
+				LOG.debug("Indexing success on Tuple: " + tuple.toString());
+//				collector.emit(new Values(entry, response.getId()));
+			}
+		}
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-//		declarer.declare(new Fields(ApLogScheme.LOG_ENTRY,
-//				ApLogScheme.FIELD_LOG_ID));
-
 	}
 
 	@Override

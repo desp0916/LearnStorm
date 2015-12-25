@@ -1,5 +1,7 @@
 package com.pic.ala;
 
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
 import org.apache.storm.joda.time.DateTime;
 import org.apache.storm.joda.time.format.DateTimeFormat;
 import org.apache.storm.joda.time.format.DateTimeFormatter;
-import org.json.simple.JSONObject;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +90,7 @@ public class ApLogScheme implements Scheme {
 			// @TODO fix the following code to make it stabler!
 
 			DateTime dateTime = formatter.parseDateTime(cleanup(pieces[2]));
-			Timestamp timeStamp = new Timestamp(dateTime.getMillis());
+			long timestamp = System.currentTimeMillis();
 
 			int year = dateTime.getYear();
 			int month = dateTime.getMonthOfYear();
@@ -103,27 +105,41 @@ public class ApLogScheme implements Scheme {
 
 			setCounterColumnName(hourMinute);
 
-			JSONObject logJsonObj = new JSONObject();
+			XContentBuilder builder = jsonBuilder()
+				    .startObject()
+				        .field("systemId", SYSTEM_ID)
+				        .field("logTime", logTime)
+				        .field("logLevel", logLevel)
+				        .field("classMethod", classMethod)
+				        .field("hostIP", hostIP)
+				        .field("keyword1", keyword1)
+				        .field("keyword2", keyword2)
+				        .field("keyword3", keyword3)
+				        .field("message", message)
+				        .field("timestamp_ms", System.currentTimeMillis())
+				        .field("@timestamp", new Timestamp(timestamp))
+				    .endObject();
 
 //			logJsonObj.put("messageId", messageId);
-			logJsonObj.put("systemId", SYSTEM_ID);
-			logJsonObj.put("logTime", logTime);
-			logJsonObj.put("logLevel", logLevel);
-			logJsonObj.put("classMethod", classMethod);
-			logJsonObj.put("hostIP", hostIP);
-//			logJsonObj.put("appId", value);
-//			logJsonObj.put("action", value);
-//			logJsonObj.put("functionId", value);
-//			logJsonObj.put("result", value);
-			logJsonObj.put("keyword1", keyword1);
-			logJsonObj.put("keyword2", keyword2);
-			logJsonObj.put("keyword3", keyword3);
-			logJsonObj.put("message", message);
-//			logJsonObj.put("dataCount", value);
+//			logJsonObj.put("systemId", SYSTEM_ID);
+//			logJsonObj.put("logTime", logTime);
+//			logJsonObj.put("logLevel", logLevel);
+//			logJsonObj.put("classMethod", classMethod);
+//			logJsonObj.put("hostIP", hostIP);
+////			logJsonObj.put("appId", value);
+////			logJsonObj.put("action", value);
+////			logJsonObj.put("functionId", value);
+////			logJsonObj.put("result", value);
+//			logJsonObj.put("keyword1", keyword1);
+//			logJsonObj.put("keyword2", keyword2);
+//			logJsonObj.put("keyword3", keyword3);
+//			logJsonObj.put("message", message);
+////			logJsonObj.put("dataCount", value);
+//
+//			logJsonObj.put("timestamp_ms", System.currentTimeMillis());
+//			logJsonObj.put("@timestamp", new Timestamp(timestamp));
 
-			logJsonObj.put("timestamp", "1234345462334");
-
-			return new Values(logJsonObj.toJSONString(), ES_INDEX, LOG_TYPE, logId,
+			return new Values(builder.string(), ES_INDEX, LOG_TYPE, logId,
 					hostIP, logTime, logLevel, classMethod, keyword1, keyword2,
 					keyword3, message, aggId, hourMinute);
 
