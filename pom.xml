@@ -19,6 +19,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<mockito.version>1.9.5</mockito.version>
 		<curator.version>2.5.0</curator.version>
+		<elasticsearch.version>1.7.4</elasticsearch.version>
 	</properties>
 
 	<repositories>
@@ -227,12 +228,7 @@
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<!--<version>0.20.2</version> -->
-			<version>1.7.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
+			<version>${elasticsearch.version}</version>
 		</dependency>
 <!--		
         <dependency>
