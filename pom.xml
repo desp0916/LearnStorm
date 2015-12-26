@@ -15,11 +15,11 @@
 		<!-- storm.version>0.10.0.2.3.2.0-2950</storm.version -->
 		<storm.version>0.10.0-beta1</storm.version>
 		<kafka.version>0.8.2.2.3.2.0-2950</kafka.version>
-		<!-- kafka.version>0.8.1.1</kafka.version -->
-		<log4j.version>1.2.17</log4j.version>
-		<mockito.version>1.9.5</mockito.version>
 		<curator.version>2.5.0</curator.version>
 		<elasticsearch.version>1.7.4</elasticsearch.version>
+		<!-- kafka.version>0.8.1.1</kafka.version -->
+		<!-- log4j.version>1.2.17</log4j.version -->
+		<!-- mockito.version>1.9.5</mockito.version -->
 	</properties>
 
 	<repositories>
@@ -27,8 +27,10 @@
 			<id>hortonworks</id>
 			<url>http://nexus-private.hortonworks.com/nexus/content/groups/public/</url>
 		</repository>
-		<!--repository> <id>hortonworks</id> <url>http://repo.hortonworks.com/content/repositories/releases/</url> 
-			</repository -->
+		<!--repository>
+            <id>hortonworks</id>
+            <url>http://repo.hortonworks.com/content/repositories/releases/</url> 
+	    </repository -->
 		<repository>
 			<id>github-releases</id>
 			<url>http://oss.sonatype.org/content/repositories/github-releases/</url>
@@ -118,6 +120,30 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-core</artifactId>
+			<version>${storm.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jetty</groupId>
+					<artifactId>org.mortbay.jetty</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>javax.servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<!-- HBase Dependcies -->
 		<dependency>
 			<groupId>org.apache.storm</groupId>
@@ -156,43 +182,22 @@
 					<groupId>org.glassfish</groupId>
 					<artifactId>javax.servlet</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-beanutils-core</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Kafka Dependcies -->
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-kafka</artifactId>
 			<version>${storm.version}</version>
 			<!-- scope>provided</scope -->
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-core</artifactId>
-			<version>${storm.version}</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>log4j-over-slf4j</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>jetty</groupId>
-					<artifactId>org.mortbay.jetty</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>javax.servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
@@ -222,50 +227,19 @@
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-clients</artifactId>
 			<version>${kafka.version}</version>
-			<!-- scope>provided</scope -->
 		</dependency>
+		<!-- ElasticSearch Dependcies -->
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<!--<version>0.20.2</version> -->
 			<version>${elasticsearch.version}</version>
 		</dependency>
-<!--		
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <version>${curator.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-test</artifactId>
-            <version>${curator.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.testng</groupId>
-                    <artifactId>testng</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
--->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>jdk.tools</groupId>
 			<artifactId>jdk.tools</artifactId>
