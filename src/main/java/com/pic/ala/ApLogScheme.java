@@ -1,3 +1,6 @@
+/**
+ * https://www.elastic.co/guide/en/elasticsearch/client/java-api/1.7/generate.html
+ */
 package com.pic.ala;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
