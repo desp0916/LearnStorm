@@ -1,28 +1,34 @@
 package com.pic.ala.gen;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BatchJob {
 
-	private String systemID;	// 系統 ID
-	private int duration;		// 執行時間
+	private volatile String systemID; 	// 系統 ID
+	private volatile int duration; 		// 執行時間
 
 	public BatchJob(String systemID) {
 		this.systemID = systemID;
-		// 1~20 秒之間
-		this.duration = ThreadLocalRandom.current().nextInt(1, 21);
+	}
+
+	public String getSystemId() {
+		return systemID;
 	}
 
 	public void run() {
 		try {
-	        long threadId = Thread.currentThread().getId();
-	        Calendar cal = Calendar.getInstance();
-	        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-	        System.out.println(systemID + "\tBATCH\t" + threadId + "\t" + sdf.format(cal.getTime()) + "\tSTART");
-			Thread.sleep(duration * 1000);
-			System.out.println(systemID + "\tBATCH\t" + threadId + "\t" + sdf.format(cal.getTime()) + "\tEND");
+			while (true) {
+				System.out.println(systemID + "\tBATCH\t"
+						+ Thread.currentThread().getId() + "\t"
+						+ new Timestamp(new Date().getTime()) + "\tSTART");
+				duration = ThreadLocalRandom.current().nextInt(1, 21);
+				Thread.sleep(duration * 1000);
+				System.out.println(systemID + "\tBATCH\t"
+						+ Thread.currentThread().getId() + "\t"
+						+ new Timestamp(new Date().getTime()) + "\tEND");
+			}
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		}

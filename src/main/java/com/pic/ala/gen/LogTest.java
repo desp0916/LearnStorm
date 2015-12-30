@@ -5,11 +5,7 @@ import java.util.Random;
 public class LogTest {
 
 	public static void main(String[] args) {
-		while (true) {
-			Command command = getCommand();
-			command.start();
-		}
-//		startAllCommands();
+		startAllCommands();
 	}
 
 	public static void startAllCommands() {
@@ -20,13 +16,6 @@ public class LogTest {
 			new TPIPASEventCommand(new TPIPASEvent(systems[i])).start();
 		}
 	}
-
-//	public static void startAllCommands2() {
-//		TPIPASEvent tpipasEvent = new TPIPASEvent(getSystem());
-//
-//		Thread t1 = new TPIPASEventCommand(tpipasEvent);
-//
-//	}
 
 	private static Command getCommand() {
 

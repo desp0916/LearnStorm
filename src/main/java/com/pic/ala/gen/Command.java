@@ -1,6 +1,6 @@
 package com.pic.ala.gen;
 
-public interface Command extends Runnable {
+public interface Command {
 	public void run();
 	public void start();
 }

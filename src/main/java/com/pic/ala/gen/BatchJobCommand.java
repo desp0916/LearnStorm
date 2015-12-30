@@ -6,6 +6,7 @@ public class BatchJobCommand extends Thread implements Command {
 
 	public BatchJobCommand(BatchJob batchJob) {
 		this.batchJob = batchJob;
+		this.setName(batchJob.getSystemId() + "-BatchJobCommand");
 	}
 
 	@Override

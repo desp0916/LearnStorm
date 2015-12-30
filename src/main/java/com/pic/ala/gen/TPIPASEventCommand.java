@@ -6,6 +6,7 @@ public class TPIPASEventCommand extends Thread implements Command {
 
 	public TPIPASEventCommand(TPIPASEvent tpipasEvent) {
 		this.tpipasEvent = tpipasEvent;
+		this.setName(tpipasEvent.getSystemId() + "-TPIPASEvent");
 	}
 
 	@Override
