@@ -2,8 +2,6 @@ package com.pic.ala.gen;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.pic.ala.log.Log;
-
 public class UIAction {
 
 	private volatile String systemID; // 系統 ID

@@ -1,4 +1,4 @@
-package com.pic.ala.log;
+package com.pic.ala.gen;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
