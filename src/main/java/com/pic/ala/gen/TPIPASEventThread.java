@@ -1,10 +1,10 @@
 package com.pic.ala.gen;
 
-public class TPIPASEventCommand extends Thread implements Command {
+public class TPIPASEventThread extends Thread implements Command {
 
 	private TPIPASEvent tpipasEvent;
 
-	public TPIPASEventCommand(TPIPASEvent tpipasEvent) {
+	public TPIPASEventThread(TPIPASEvent tpipasEvent) {
 		this.tpipasEvent = tpipasEvent;
 		this.setName(tpipasEvent.getSystemId() + "-TPIPASEvent");
 	}

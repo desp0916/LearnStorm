@@ -9,11 +9,12 @@ public class LogTest {
 	}
 
 	public static void startAllCommands() {
-		String[] systems = new String[] {"AES", "POS", "UPCC", "SCP"};
+//		String[] systems = new String[] {"AES", "POS", "UPCC", "SCP"};
+		String[] systems = new String[] {"AES", "POS"};
 		for (int i = 0; i < systems.length; i++) {
-			new BatchJobCommand(new BatchJob(systems[i])).start();
-			new UIActionCommand(new UIAction(systems[i])).start();
-			new TPIPASEventCommand(new TPIPASEvent(systems[i])).start();
+			new BatchJobThread(new BatchJob(systems[i])).start();
+			new UIActionThread(new UIAction(systems[i])).start();
+			new TPIPASEventThread(new TPIPASEvent(systems[i])).start();
 		}
 	}
 
@@ -23,9 +24,9 @@ public class LogTest {
 		UIAction uiJob = new UIAction(getSystem());
 		TPIPASEvent tpipasEvent = new TPIPASEvent(getSystem());
 
-		BatchJobCommand bjc = new BatchJobCommand(batchJob);
-		UIActionCommand uac = new UIActionCommand(uiJob);
-		TPIPASEventCommand tec = new TPIPASEventCommand(tpipasEvent);
+		BatchJobThread bjc = new BatchJobThread(batchJob);
+		UIActionThread uac = new UIActionThread(uiJob);
+		TPIPASEventThread tec = new TPIPASEventThread(tpipasEvent);
 
 		Command[] commands = new Command[] {bjc, uac, tec};
 

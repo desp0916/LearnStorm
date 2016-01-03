@@ -1,13 +1,13 @@
 package com.pic.ala.gen;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.pic.ala.log.Log;
 
 public class UIAction {
 
-	private volatile String systemID; 	// 系統 ID
-	private volatile int duration; 		// 執行時間
+	private volatile String systemID; // 系統 ID
+	// private volatile int duration; // 執行時間
 
 	public UIAction(String systemID) {
 		this.systemID = systemID;
@@ -18,16 +18,21 @@ public class UIAction {
 	}
 
 	public void take() {
-		try {
-			while (true) {
-				duration = ThreadLocalRandom.current().nextInt(1, 21);
-				Thread.sleep(duration * 1000);
-				System.out.println(systemID + "\tUI\t"
-						+ Thread.currentThread().getId() + "\t"
-						+ new Timestamp(new Date().getTime()));
+		while (true) {
+			try {
+				synchronized (this) {
+					wait(ThreadLocalRandom.current().nextInt(1, 21) * 1000);
+//					System.out.println(systemID + "\tUI\t" + Thread.currentThread().getId() + "\t"
+//							+ new Timestamp(new Date().getTime()));
+					Log log = new Log(systemID, "UI");
+					System.out.println(log.toString());
+				}
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+
 		}
 
 	}

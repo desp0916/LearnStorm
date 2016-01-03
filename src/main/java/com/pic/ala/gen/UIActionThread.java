@@ -1,10 +1,10 @@
 package com.pic.ala.gen;
 
-public class UIActionCommand extends Thread implements Command {
+public class UIActionThread extends Thread implements Command {
 
 	private UIAction uiAction;
 
-	public UIActionCommand(UIAction uiAction) {
+	public UIActionThread(UIAction uiAction) {
 		this.uiAction = uiAction;
 		this.setName(uiAction.getSystemId() + "-UIAction");
 	}

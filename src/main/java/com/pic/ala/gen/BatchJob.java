@@ -1,13 +1,13 @@
 package com.pic.ala.gen;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.pic.ala.log.Log;
 
 public class BatchJob {
 
-	private volatile String systemID; 	// 系統 ID
-	private volatile int duration; 		// 執行時間
+	private volatile String systemID; // 系統 ID
+	// private volatile int duration; // 執行時間
 
 	public BatchJob(String systemID) {
 		this.systemID = systemID;
@@ -18,20 +18,23 @@ public class BatchJob {
 	}
 
 	public void run() {
-		try {
-			while (true) {
-				System.out.println(systemID + "\tBATCH\t"
-						+ Thread.currentThread().getId() + "\t"
-						+ new Timestamp(new Date().getTime()) + "\tSTART");
-				duration = ThreadLocalRandom.current().nextInt(1, 21);
-				Thread.sleep(duration * 1000);
-				System.out.println(systemID + "\tBATCH\t"
-						+ Thread.currentThread().getId() + "\t"
-						+ new Timestamp(new Date().getTime()) + "\tEND");
+		while (true) {
+			try {
+				synchronized (this) {
+//				System.out.println(systemID + "\tBATCH\t" + Thread.currentThread().getId() + "\t"
+//						+ new Timestamp(new Date().getTime()) + "\tSTART");
+				Log log = new Log(systemID, "BATCH");
+				System.out.println(log.toString());
+				wait(ThreadLocalRandom.current().nextInt(1, 21) * 1000);
+				System.out.println(log.toString());
+//				System.out.println(systemID + "\tBATCH\t" + Thread.currentThread().getId() + "\t"
+//						+ new Timestamp(new Date().getTime()) + "\tEND");
+				}
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
 		}
+
 	}
 
 }
