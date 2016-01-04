@@ -1,9 +1,9 @@
 package com.pic.ala;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Map;
 import java.util.Random;
+
+import com.pic.ala.gen.Log;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -25,20 +25,22 @@ public class RandomLogSpout extends BaseRichSpout {
 	}
 
 	public void nextTuple() {
-		Utils.sleep(100);
-		String[] logs = new String[] {
-				"AESSNT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  JOB_START      $$ AbstractJobSender.service()             $$ 主程序       $$  程序開始   $$             $$ Job: MAT202 開始執行",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  FUNC_START     $$ MaImportServiceImpl.chkReceiveState()   $$ 子程序       $$ 程序開始    $$             $$ 系統確認檔案收檔狀態 開始",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 確認MA/MAT201/MA_STORE_SPEC_T收檔狀態",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 檢查 MA_STORE_SPEC_T 300秒x24次",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 檢查 MA_STORE_SPEC_T 收檔狀態仍未成功.WAITING... 重試第1次",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 檢查 MA_STORE_SPEC_T 收檔狀態仍未成功.WAITING... 重試第2次",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  ERROR          $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$ 收送檔失敗  $$             $$ 收檔成功，檔名：MA/MAT201/MA_STORE_SPEC_T ",
-				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  FUNC_END       $$ MaImportServiceImpl.chkReceiveState()   $$ 子程序       $$ 程序結束    $$             $$ 系統確認檔案收檔狀態 結束",
-				"AESSNT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  JOB_END        $$ AbstractJobSender.service()             $$ 主程序       $$  程序結束   $$             $$ Job: MAT202 執行結束",
-		};
-		String log = logs[_rand.nextInt(logs.length)];
-		_collector.emit(new Values(log));
+		Utils.sleep(500);
+//		String[] logs = new String[] {
+//				"AESSNT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  JOB_START      $$ AbstractJobSender.service()             $$ 主程序       $$  程序開始   $$             $$ Job: MAT202 開始執行",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  FUNC_START     $$ MaImportServiceImpl.chkReceiveState()   $$ 子程序       $$ 程序開始    $$             $$ 系統確認檔案收檔狀態 開始",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 確認MA/MAT201/MA_STORE_SPEC_T收檔狀態",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 檢查 MA_STORE_SPEC_T 300秒x24次",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 檢查 MA_STORE_SPEC_T 收檔狀態仍未成功.WAITING... 重試第1次",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  INFO           $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$             $$             $$ 檢查 MA_STORE_SPEC_T 收檔狀態仍未成功.WAITING... 重試第2次",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  ERROR          $$ MaImportServiceImpl.chkRuningFlag()     $$ 收送檔檢查   $$ 收送檔失敗  $$             $$ 收檔成功，檔名：MA/MAT201/MA_STORE_SPEC_T ",
+//				"AESRCT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  FUNC_END       $$ MaImportServiceImpl.chkReceiveState()   $$ 子程序       $$ 程序結束    $$             $$ 系統確認檔案收檔狀態 結束",
+//				"AESSNT1 $$ AES $$  "+new Timestamp(new Date().getTime())+"    $$  JOB_END        $$ AbstractJobSender.service()             $$ 主程序       $$  程序結束   $$             $$ Job: MAT202 執行結束",
+//		};
+		String[] systems = new String[] {"AES", "POS", "UPCC", "SCP"};
+		String[] logTypes = new String[] {"UI", "BATCH", "TPIPAS"};
+		Log log = new Log(systems[_rand.nextInt(systems.length)], logTypes[_rand.nextInt(logTypes.length)]);
+		_collector.emit(new Values(log.toString()));
 	}
 
 	@Override

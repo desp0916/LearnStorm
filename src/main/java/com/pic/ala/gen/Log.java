@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class Log {
 
-	private static final String sep = "\t";
+	private static final String sep = "$$";
 	private static final String[] systemIDs = new String[] { "AES", "POS", "UPCC", "SCP" };
 	private static final String[] logTypes = new String[] { "UI", "BATCH", "TPIPAS" };
 
@@ -24,7 +24,7 @@ public class Log {
 	private static List<String> actions = Arrays.asList("登入", "登出", "註冊", "訂單成立", "放入購物車");
 	private static List<String> results = Arrays.asList("成功", "失敗", "放棄", "取消", "逾時");
 	private static List<String> keywords = Arrays.asList("原力覺醒", "史努比", "玩命關頭", "侏羅紀世界", "怪物遊戲");
-	private static List<String> messageLevels = Arrays.asList("FATAL", "ERROR", "WARNING", "INFO", "DEBUG");
+	private static List<String> messageLevels = Arrays.asList("FATAL", "ERROR", "WARNING", "NOTICE", "INFO", "DEBUG");
 	private static List<String> messages = Arrays.asList("Wrong password.", "Lost connection.", "Invalid format", "Unsufficient privilege", "Disk full");
 	private static List<String> messageCodes = Arrays.asList("10001", "23001", "12345", "56789", "23245");
 	private static List<String> tableNames = Arrays.asList("SYS_USERS", "TRA_ORDERS", "TRA_INVOICES", "CODES", "ITEMS");

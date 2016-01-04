@@ -13,6 +13,10 @@
  *
  *     bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic mytopic --from-beginning
  *
+ * How to delete the topic?
+ *
+ * bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic ap_logs_test_222 --from-beginning
+ *
  */
 
 package com.pic.ala;
