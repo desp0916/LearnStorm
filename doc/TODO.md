@@ -9,10 +9,13 @@
 4. Kafka (0.8.2):
   - Configuration & performance tuning.
   - Design the topics.
+  - read/write permission of topics
+  - topics housekeeping 
 5. ElasticSearch (1.7.4):
   - Configuration & performance tuning.
   - Plan the cluster.
   - Dockerization.
+  - Indexes housekeeping
 6. HBase (1.1.2):
   - Configuration & performance tuning.
   - Enable compression.

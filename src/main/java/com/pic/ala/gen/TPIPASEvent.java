@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 public class TPIPASEvent {
 
 	private volatile String systemID; // 系統 ID
-	// private volatile int duration; // 執行時間
 	private static Logger logger = Logger.getLogger(TPIPASEvent.class);
 
 	public TPIPASEvent(String systemID) {
@@ -23,10 +22,8 @@ public class TPIPASEvent {
 			try {
 				synchronized (this) {
 					wait(ThreadLocalRandom.current().nextInt(1, 21) * 1000);
-//					System.out.println(systemID + "\tTPIPAS\t" + Thread.currentThread().getId() + "\t"
-//							+ new Timestamp(new Date().getTime()));
-					 Log log = new Log(systemID, "TPIPAS");
-					 logger.info(log.toString());
+					ApLog log = new ApLog(systemID, "TPIPAS");
+					logger.info(log.toString());
 				}
 
 			} catch (InterruptedException ie) {
