@@ -15,7 +15,7 @@
  *
  * How to delete the topic?
  *
- * bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic ap_logs_test_222 --from-beginning
+ *     bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181 --delete --topic mytopic
  *
  */
 

@@ -1,8 +1,14 @@
 /**
  * ElasticSearch 2.1.1 的作法：
- *
  * https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
+ *
+ * At first, you should create the index just like this:
+ *  curl -XPUT 'localhost:9200/aplog_aes3g?pretty'
+ *  curl -XPUT 'localhost:9200/aplog_pos?pretty'
+ *  curl -XPUT 'localhost:9200/aplog_upcc?pretty'
+ *  curl -XPUT 'localhost:9200/aplog_wds?pretty'
  */
+
 package com.pic.ala;
 
 import java.util.Map;
@@ -24,10 +30,11 @@ import backtype.storm.tuple.Tuple;
 
 public class ESBolt extends BaseRichBolt {
 
+	private static final String ES_INDEX_PREFIX = "aplog_";
 	private static final long serialVersionUID = -26161992456930984L;
 	private static final Logger LOG = LoggerFactory.getLogger(ESBolt.class);
 	private Client client;
-	private OutputCollector collector;
+//	private OutputCollector collector;
 
 	protected String configKey;
 
@@ -41,8 +48,9 @@ public class ESBolt extends BaseRichBolt {
 		return this;
 	}
 
+	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-		this.collector = collector;
+//		this.collector = collector;
 		Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
 
 		String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
@@ -71,36 +79,34 @@ public class ESBolt extends BaseRichBolt {
 			LOG.warn("No '" + ES_INDEX_TYPE + "' value found in configuration! Using ElasticSearch defaults.");
 		}
 
-//		if ((Boolean) stormConf.get(backtype.storm.Config.TOPOLOGY_DEBUG) == true) {
-//			Node node = nodeBuilder().local(true).node();
-//			client = node.client();
-//		} else {
-			try {
-//				Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
-				Settings settings = ImmutableSettings.settingsBuilder()
-						.put("cluster.name", esClusterName).build();
-				synchronized (ESBolt.class) {
-					if (client == null) {
-//						client = TransportClient.builder().settings(settings).build().addTransportAddress(
+		try {
+//			Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
+			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
+			synchronized (ESBolt.class) {
+				if (client == null) {
+//					client = TransportClient.builder().settings(settings).build().addTransportAddress(
 //								new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
-						client = new TransportClient(settings)
+					client = new TransportClient(settings)
 								.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
-					}
 				}
-			} catch (Exception e) {
-				LOG.warn("Unable to initialize ESBolt", e);
 			}
-//		}
+		} catch (Exception e) {
+			LOG.warn("Unable to initialize ESBolt", e);
+		}
 	}
 
+	@Override
 	public void execute(Tuple tuple) {
-		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
+		String systemID = (String) tuple.getValueByField(APLogScheme.FIELD_SYSTEM_ID);
+		String logType = (String) tuple.getValueByField(APLogScheme.FIELD_LOG_TYPE);
+		String toBeIndexed = (String) tuple.getValueByField(APLogScheme.FIELD_ES_SOURCE);
+
 		if (toBeIndexed == null) {
 			LOG.warn("Received null or incorrect value from tuple");
 			return;
 		}
-		IndexResponse response = client.prepareIndex(ApLogScheme.ES_INDEX, ApLogScheme.LOG_TYPE)
-				.setSource(toBeIndexed).execute().actionGet();
+		IndexResponse response = client.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase(), logType.toLowerCase())
+									.setSource(toBeIndexed).execute().actionGet();
 		if (response == null)
 			LOG.error("Failed to index Tuple: " + tuple.toString());
 		else {
@@ -113,6 +119,7 @@ public class ESBolt extends BaseRichBolt {
 		}
 	}
 
+	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 	}
 

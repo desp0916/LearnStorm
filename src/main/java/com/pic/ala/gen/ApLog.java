@@ -11,15 +11,16 @@ public class ApLog {
 
 	public static final String LOG_SEPARATOR = "$$";
 
-	public static final String DEFAULT_SYSTEM = "AES";
-	public static final String DEFAULT_LOG_TYPE = "BATCH";
+	public static final String DEFAULT_SYSTEM = "aes3g";
+	public static final String DEFAULT_LOG_TYPE = "batch";
 
-	public static final List<String> SYSTEMS = Arrays.asList("AES", "POS", "UPCC", "SCP");
-	public static final List<String> LOG_TYPES = Arrays.asList("UI", "BATCH", "TPIPAS");
-
-	private static List<String> users = Arrays.asList("艾莉絲", "班潔明", "王小明", "丹尼爾");
+	// Index names of Elasticsearch should be lower cases.
+	public static final List<String> SYSTEMS = Arrays.asList(DEFAULT_SYSTEM, "pos", "upcc", "wds");
+	public static final List<String> LOG_TYPES = Arrays.asList(DEFAULT_LOG_TYPE, "ui", "tpipas");
 
 	private static List<String> apNames = Arrays.asList("APv1", "WebAppV1", "WebServiceV2", "RESTAPIv1", "TransBatchv1");
+	private static List<String> functionIDs = Arrays.asList("FUNC10000", "FUNC10001", "FUNC10002", "FUNC10002", "FUNC10003");
+	private static List<String> users = Arrays.asList("艾莉絲", "班潔明", "王小明", "丹尼爾");
 	private static List<String> allServers = new ArrayList<String>();
 	private static List<String> webServers = Arrays.asList("apache", "iis", "nginx", "proxy");
 	private static List<String> apServers = Arrays.asList("tomcat", "jboss", "iis", "websphere");
@@ -62,44 +63,46 @@ public class ApLog {
 
 	public ApLog(String systemID, String logType) {
 
-		this.logType = logType;
-		this.logTime = new Timestamp(new Date().getTime()).toString();
-
 		if (systemID != null && !("").equals(systemID) && SYSTEMS.contains(systemID)) {
-			this.systemID = systemID;
+			this.systemID = systemID.toLowerCase();
 		} else {
-			this.systemID = DEFAULT_SYSTEM;
+			this.systemID = DEFAULT_SYSTEM.toLowerCase();
 		}
 
-		switch (logType) {
-			case "UI":
-				this.apName = "WebAppv1";
-				this.from = getRandomOption(webServers);
-				this.at = getRandomOption(apServers);
-				this.to = getRandomOption(dbServers);
-				this.who = getRandomOption(users);
-				this.action = getRandomOption(actions);
-				break;
-			case "TPIPAS":
-				getAllServers();
-				this.apName = getRandomOption(apNames);
-				this.from = getRandomOption(allServers);
-				this.at = getRandomOption(allServers);
-				this.to = getRandomOption(allServers);
-				this.who = getRandomOption(users);
-				this.action = getRandomOption(actions);
-				break;
-			case "BATCH":
-			default:
-				this.logType = logType;
-				this.apName = "TransBatchv4";
-				this.from = getRandomOption(apServers);
-				this.at = getRandomOption(batchServers);
-				this.to = getRandomOption(dbServers);
-				this.who = getRandomOption(users);
-				this.action = getRandomOption(actions);
+		System.out.println("logType:"+logType);
+
+		if (logType == null || ("").equals(logType) || !LOG_TYPES.contains(logType)) {
+			this.logType = DEFAULT_LOG_TYPE;
+		} else {
+			this.logType = logType;
 		}
 
+		if (logType == "ui") {
+			this.apName = "WebAppv1";
+			this.from = getRandomOption(webServers);
+			this.at = getRandomOption(apServers);
+			this.to = getRandomOption(dbServers);
+			this.who = getRandomOption(users);
+			this.action = getRandomOption(actions);
+		} else if (logType == "tpipas") {
+			getAllServers();
+			this.apName = getRandomOption(apNames);
+			this.from = getRandomOption(allServers);
+			this.at = getRandomOption(allServers);
+			this.to = getRandomOption(allServers);
+			this.who = getRandomOption(users);
+			this.action = getRandomOption(actions);
+		} else if (logType == "batch") {
+			this.apName = "TransBatchv4";
+			this.from = getRandomOption(apServers);
+			this.at = getRandomOption(batchServers);
+			this.to = getRandomOption(dbServers);
+			this.who = getRandomOption(users);
+			this.action = getRandomOption(actions);
+		}
+
+		this.logTime = new Timestamp(new Date().getTime()).toString();
+		this.functionID = getRandomOption(functionIDs);
 		this.result = getRandomOption(results);
 		this.keyword = getRandomOption(keywords);
 		this.messageLevel = getRandomOption(messageLevels);

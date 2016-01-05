@@ -21,8 +21,8 @@ public class TPIPASEvent {
 		while (true) {
 			try {
 				synchronized (this) {
-					wait(ThreadLocalRandom.current().nextInt(1, 21) * 1000);
-					ApLog log = new ApLog(systemID, "TPIPAS");
+					wait(ThreadLocalRandom.current().nextInt(1, 121) * 1000);
+					ApLog log = new ApLog(systemID, "tpipas");
 					logger.info(log.toString());
 				}
 

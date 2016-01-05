@@ -21,8 +21,8 @@ public class UIAction {
 		while (true) {
 			try {
 				synchronized (this) {
-					wait(ThreadLocalRandom.current().nextInt(1, 21) * 1000);
-					ApLog log = new ApLog(systemID, "UI");
+					wait(ThreadLocalRandom.current().nextInt(1, 121) * 1000);
+					ApLog log = new ApLog(systemID, "ui");
 					logger.info(log.toString());
 				}
 			} catch (InterruptedException e) {

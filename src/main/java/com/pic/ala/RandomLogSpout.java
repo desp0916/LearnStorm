@@ -27,7 +27,7 @@ public class RandomLogSpout extends BaseRichSpout {
 
 	@Override
 	public void nextTuple() {
-		Utils.sleep(500);
+		Utils.sleep(1000);
 		String systemID = ApLog.getRandomOption(ApLog.SYSTEMS);
 		String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
 		ApLog log = new ApLog(systemID, logType);

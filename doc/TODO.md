@@ -15,7 +15,7 @@
   - Configuration & performance tuning.
   - Plan the cluster.
   - Dockerization.
-  - Indexes housekeeping
+  - Indexes naming and housekeeping
 6. HBase (1.1.2):
   - Configuration & performance tuning.
   - Enable compression.
