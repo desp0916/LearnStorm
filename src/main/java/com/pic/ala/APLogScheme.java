@@ -8,13 +8,12 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.apache.log4j.Logger;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import backtype.storm.spout.Scheme;
 import backtype.storm.tuple.Fields;
@@ -24,8 +23,9 @@ public class APLogScheme implements Scheme {
 
     TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
 
-	private static final long serialVersionUID = 7102546688047309944L;
-	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
+//	private static final long serialVersionUID = 7102546688047309944L;
+//	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
+    private static final Logger LOG = Logger.getLogger(APLogScheme.class);
 //	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
@@ -117,7 +117,7 @@ public class APLogScheme implements Scheme {
 				        .field(FIELD_DATA_COUNT, isNumeric(dataCount) ? Long.valueOf(dataCount) : dataCount)
 				        .field("timestamp_ms", logTime.getMillis())
 //				        .field("@timestamp", new Timestamp(System.currentTimeMillis()))
-				        .field("@timeStamp", logTime)
+				        .field("@timestamp", logTime)
 				    .endObject();
 
 			return new Values(builder.string(), systemID, logType, logTime,

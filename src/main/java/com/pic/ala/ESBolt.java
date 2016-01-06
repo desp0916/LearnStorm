@@ -13,14 +13,13 @@ package com.pic.ala;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -31,8 +30,9 @@ import backtype.storm.tuple.Tuple;
 public class ESBolt extends BaseRichBolt {
 
 	private static final String ES_INDEX_PREFIX = "aplog_";
-	private static final long serialVersionUID = -26161992456930984L;
-	private static final Logger LOG = LoggerFactory.getLogger(ESBolt.class);
+//	private static final long serialVersionUID = -26161992456930984L;
+    private static final Logger LOG = Logger.getLogger(ESBolt.class);
+
 	private Client client;
 //	private OutputCollector collector;
 
@@ -82,14 +82,14 @@ public class ESBolt extends BaseRichBolt {
 		try {
 //			Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
 			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
-			synchronized (ESBolt.class) {
+//			synchronized (ESBolt.class) {
 				if (client == null) {
 //					client = TransportClient.builder().settings(settings).build().addTransportAddress(
 //								new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
 					client = new TransportClient(settings)
 								.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
 				}
-			}
+//			}
 		} catch (Exception e) {
 			LOG.warn("Unable to initialize ESBolt", e);
 		}
@@ -113,7 +113,7 @@ public class ESBolt extends BaseRichBolt {
 			if (response.getId() == null)
 				LOG.error("Failed to index Tuple: " + tuple.toString());
 			else {
-				LOG.debug("Indexing success on Tuple: " + tuple.toString());
+				LOG.debug("Indexing success ["+response.getId()+"] on Tuple: " + tuple.toString());
 //				collector.emit(new Values(entry, response.getId()));
 			}
 		}
