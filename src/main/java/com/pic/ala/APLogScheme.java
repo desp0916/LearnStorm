@@ -5,10 +5,14 @@ package com.pic.ala;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-import java.sql.Timestamp;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +22,13 @@ import backtype.storm.tuple.Values;
 
 public class APLogScheme implements Scheme {
 
+    TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
+
 	private static final long serialVersionUID = 7102546688047309944L;
 	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
-//	private static final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+//	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 	// The fields will be stored.
 	public static final String FIELD_ES_SOURCE = "es_source";	// ElasticSearch 物件的 source 欄位
@@ -47,13 +55,14 @@ public class APLogScheme implements Scheme {
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
 		try {
+
 			// @TODO fix the following code to make it stabler!
 			String logEntry = new String(bytes, "UTF-8");
 			String[] pieces = logEntry.split("\\$\\$");
 
 			String systemID = cleanup(pieces[0]);
 			String logType = cleanup(pieces[1]);
-			String logTime = cleanup(pieces[2]);
+			DateTime logTime = dateTimeFormatter.parseDateTime(cleanup(pieces[2]));
 			String apName = cleanup(pieces[3]);
 			String functionID = cleanup(pieces[4]);
 			String who = cleanup(pieces[5]);
@@ -70,7 +79,7 @@ public class APLogScheme implements Scheme {
 			String dataCount = cleanup(pieces[16]);
 
 			// The following fields are for HBase:
-//			DateTime dateTime = formatter.parseDateTime(cleanup(pieces[2]));
+//			DateTime dateTime = DateTimeFormatter.parseDateTime(cleanup(pieces[2]));
 //			long timestamp = System.currentTimeMillis();
 //
 //			int year = dateTime.getYear();
@@ -86,7 +95,7 @@ public class APLogScheme implements Scheme {
 //
 //			setCounterColumnName(hourMinute);
 
-			// ElasticSearch 物件的 source 欄位
+			// ElasticSearch 物件的 _source 欄位
 			XContentBuilder builder = jsonBuilder()
 				    .startObject()
 				        .field(FIELD_SYSTEM_ID, systemID)
@@ -105,9 +114,10 @@ public class APLogScheme implements Scheme {
 				        .field(FIELD_MESSAGE, message)
 				        .field(FIELD_MESSAGE_CODE, messageCode)
 				        .field(FIELD_TABLE_NAME, tableName)
-				        .field(FIELD_DATA_COUNT, isInteger(dataCount) ? Integer.valueOf(dataCount) : dataCount)
-				        .field("timestamp_ms", System.currentTimeMillis())
-				        .field("@timestamp", new Timestamp(System.currentTimeMillis()))
+				        .field(FIELD_DATA_COUNT, isNumeric(dataCount) ? Long.valueOf(dataCount) : dataCount)
+				        .field("timestamp_ms", logTime.getMillis())
+//				        .field("@timestamp", new Timestamp(System.currentTimeMillis()))
+				        .field("@timeStamp", logTime)
 				    .endObject();
 
 			return new Values(builder.string(), systemID, logType, logTime,
@@ -178,4 +188,32 @@ public class APLogScheme implements Scheme {
 		}
 		return true;
 	}
+
+	/**
+	 * http://stackoverflow.com/questions/2563608/check-whether-a-string-is-parsable-into-long-without-try-catch
+	 *
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumeric(String str) {
+	    if (str == null) {
+	        return false;
+	    }
+	    int sz = str.length();
+	    if (sz == 0) {
+	    	return false;
+	    }
+	    for (int i = 0; i < sz; i++) {
+	        if (Character.isDigit(str.charAt(i)) == false) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+
+	private static String dateToString(String str) {
+		DateTime dt = dateTimeFormatter.parseDateTime(str);
+		return dt.toString(fmt);
+	}
+
 }

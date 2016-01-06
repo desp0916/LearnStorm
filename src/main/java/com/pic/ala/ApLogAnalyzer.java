@@ -31,7 +31,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 
 //	private static final Logger LOG = Logger.getLogger(ApLogAnalyzer.class);
 	private static final String KAFKA_SPOUT_ID = "kafkaSpout";
-	private static final String ES_BOLT_ID = "elasticSearchBolt";
+	private static final String ES_BOLT_ID = "ESBolt";
 	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
 	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
 	private static final String CONSUMER_GROUP_ID = "ApLogAnalyzerSpout";

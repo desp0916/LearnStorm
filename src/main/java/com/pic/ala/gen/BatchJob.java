@@ -23,7 +23,7 @@ public class BatchJob {
 				synchronized (this) {
 					ApLog log = new ApLog(systemID, "batch");
 					logger.info(log.toString());
-					wait(ThreadLocalRandom.current().nextInt(1, 121) * 1000);
+					wait(ThreadLocalRandom.current().nextInt(1, 10) * 1000);
 					logger.info(log.toString());
 				}
 			} catch (InterruptedException ie) {
