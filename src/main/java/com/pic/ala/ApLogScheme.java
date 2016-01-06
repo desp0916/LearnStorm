@@ -5,56 +5,149 @@ package com.pic.ala;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-import java.sql.Timestamp;
 import java.util.List;
+import java.util.TimeZone;
 
-//import org.joda.time.DateTime;
-//import org.joda.time.format.DateTimeFormat;
-//import org.joda.time.format.DateTimeFormatter;
-import org.apache.storm.joda.time.DateTime;
-import org.apache.storm.joda.time.format.DateTimeFormat;
-import org.apache.storm.joda.time.format.DateTimeFormatter;
+import org.apache.log4j.Logger;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import backtype.storm.spout.Scheme;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-public class ApLogScheme implements Scheme {
+public class APLogScheme implements Scheme {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
+    TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
 
-	private static final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+//	private static final long serialVersionUID = 7102546688047309944L;
+//	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
+    private static final Logger LOG = Logger.getLogger(APLogScheme.class);
+//	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+
+	// The fields will be stored.
+	public static final String FIELD_ES_SOURCE = "es_source";	// ElasticSearch 物件的 source 欄位
+	public static final String FIELD_SYSTEM_ID = "systemID";
+	public static final String FIELD_LOG_TYPE = "logType";
+	public static final String FIELD_LOG_TIME = "logTime";
+	public static final String FIELD_AP_NAME = "apName";
+	public static final String FIELD_FUNCTION_ID = "functionID";
+	public static final String FIELD_WHO = "who";
+	public static final String FIELD_FROM = "from";
+	public static final String FIELD_AT = "at";
+	public static final String FIELD_TO = "to";
+	public static final String FIELD_ACTION = "action";
+	public static final String FIELD_RESULT = "result";
+	public static final String FIELD_KEYWORD = "keyword";
+	public static final String FIELD_MESSAGE_LEVEL = "messageLevel";
+	public static final String FIELD_MESSAGE = "message";
+	public static final String FIELD_MESSAGE_CODE = "messageCode";
+	public static final String FIELD_TABLE_NAME = "tableName";
+	public static final String FIELD_DATA_COUNT = "dataCount";
 
 	private String counterColumnName;
 
-	private static final long serialVersionUID = -578815753542323978L;
+	@Override
+	public List<Object> deserialize(byte[] bytes) {
+		try {
 
-	public static final String SYSTEM_ID = "aes3g"; // HBase Table name
-	public static final String FIELD_ES_SOURCE = "es_source";
-	public static final String FIELD_ES_INDEX_NAME = "es_index_name";	// ElasticSearch Index name
-	public static final String FIELD_ES_INDEX_TYPE = "es_index_type";	// ElasticSearch Index type
-	public static final String ES_INDEX = SYSTEM_ID;
-	public static final String LOG_TYPE = "batch";
+			// @TODO fix the following code to make it stabler!
+			String logEntry = new String(bytes, "UTF-8");
+			String[] pieces = logEntry.split("\\$\\$");
 
-	public static final String LOG_JSON = "{}";
+			String systemID = cleanup(pieces[0]);
+			String logType = cleanup(pieces[1]);
+			DateTime logTime = dateTimeFormatter.parseDateTime(cleanup(pieces[2]));
+			String apName = cleanup(pieces[3]);
+			String functionID = cleanup(pieces[4]);
+			String who = cleanup(pieces[5]);
+			String from = cleanup(pieces[6]);
+			String at = cleanup(pieces[7]);
+			String to = cleanup(pieces[8]);
+			String action = cleanup(pieces[9]);
+			String result = cleanup(pieces[10]);
+			String keyword = cleanup(pieces[11]);
+			String messageLevel = cleanup(pieces[12]);
+			String message = cleanup(pieces[13]);
+			String messageCode = cleanup(pieces[14]);
+			String tableName = cleanup(pieces[15]);
+			String dataCount = cleanup(pieces[16]);
 
-	public static final String FIELD_LOG_ID = "apLogId";
-	public static final String FIELD_HOSTIP = "hostIP";
-	public static final String FIELD_AP_ID = "apId";
-	public static final String FIELD_LOG_TIME = "logTime";
-	public static final String FIELD_LOG_LEVEL = "errLevel";
-	public static final String FIELD_CLASS_METHOD = "classMethod";
-	public static final String FIELD_KEYWORD1 = "keyword1";
-	public static final String FIELD_KEYWORD2 = "keyword2";
-	public static final String FIELD_KEYWORD3 = "keyword3";
-	public static final String FIELD_MESSAGE = "message";
+			// The following fields are for HBase:
+//			DateTime dateTime = DateTimeFormatter.parseDateTime(cleanup(pieces[2]));
+//			long timestamp = System.currentTimeMillis();
+//
+//			int year = dateTime.getYear();
+//			int month = dateTime.getMonthOfYear();
+//			int day = dateTime.getDayOfMonth();
+//			int hour = dateTime.getHourOfDay();
+//			int minute = dateTime.getMinuteOfHour();
+//
+//			String hourMinute = String.valueOf(hour) + "-" + String.valueOf(minute);
+//			String yearMonthDay = String.valueOf(year) + "-" + String.valueOf(month)
+//									+ "-" + String.valueOf(day);
+//			String aggId = yearMonthDay;
+//
+//			setCounterColumnName(hourMinute);
 
-	public static final String AGG_TABLE = "aes3g_agg"; // HBase Table name
-	public static final String FIELD_AGG_ID = "aggId";
-	public static final String FIELD_HOUR_MINUTE = "hourMinute";
+			// ElasticSearch 物件的 _source 欄位
+			XContentBuilder builder = jsonBuilder()
+				    .startObject()
+				        .field(FIELD_SYSTEM_ID, systemID)
+				        .field(FIELD_LOG_TYPE, logType)
+				        .field(FIELD_LOG_TIME, logTime)
+				        .field(FIELD_AP_NAME, apName)
+				        .field(FIELD_FUNCTION_ID, functionID)
+				        .field(FIELD_WHO, who)
+				        .field(FIELD_FROM, from)
+				        .field(FIELD_AT, at)
+				        .field(FIELD_TO, to)
+				        .field(FIELD_ACTION, action)
+				        .field(FIELD_RESULT, result)
+				        .field(FIELD_KEYWORD, keyword)
+				        .field(FIELD_MESSAGE_LEVEL, messageLevel)
+				        .field(FIELD_MESSAGE, message)
+				        .field(FIELD_MESSAGE_CODE, messageCode)
+				        .field(FIELD_TABLE_NAME, tableName)
+				        .field(FIELD_DATA_COUNT, isNumeric(dataCount) ? Long.valueOf(dataCount) : dataCount)
+				        .field("timestamp_ms", logTime.getMillis())
+//				        .field("@timestamp", new Timestamp(System.currentTimeMillis()))
+				        .field("@timestamp", logTime)
+				    .endObject();
+
+			return new Values(builder.string(), systemID, logType, logTime,
+					apName, functionID, who, from, at, to, action, result,
+					keyword, messageLevel, message, messageCode, tableName,
+					dataCount);
+
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Fields getOutputFields() {
+		return new Fields(FIELD_ES_SOURCE, FIELD_SYSTEM_ID,
+				FIELD_LOG_TYPE, FIELD_LOG_TIME, FIELD_AP_NAME,
+				FIELD_FUNCTION_ID, FIELD_WHO, FIELD_FROM, FIELD_AT,
+				FIELD_TO, FIELD_ACTION, FIELD_RESULT, FIELD_KEYWORD,
+				FIELD_MESSAGE_LEVEL, FIELD_MESSAGE, FIELD_MESSAGE_CODE,
+				FIELD_TABLE_NAME, FIELD_DATA_COUNT);
+	}
+
+	private String cleanup(String str) {
+		if (str != null) {
+			return str.trim().replace("\n", "").replace("\t", "");
+		} else {
+			return str;
+		}
+	}
 
 	public void setCounterColumnName(String counterColumnName) {
 		this.counterColumnName = counterColumnName;
@@ -64,107 +157,63 @@ public class ApLogScheme implements Scheme {
 		return this.counterColumnName;
 	}
 
-	class TimestampJSON {
-		protected boolean enabled = true;
-		TimestampJSON() {
-			enabled = true;
+	/**
+	 * 檢查某字串是否為整數？
+	 *
+	 * http://stackoverflow.com/questions/237159/whats-the-best-way-to-check-to-see-if-a-string-represents-an-integer-in-java
+	 *
+	 * @param str
+	 * @return
+	 */
+	public static boolean isInteger(String str) {
+		if (str == null) {
+			return false;
 		}
+		int length = str.length();
+		if (length == 0) {
+			return false;
+		}
+		int i = 0;
+		if (str.charAt(0) == '-') {
+			if (length == 1) {
+				return false;
+			}
+			i = 1;
+		}
+		for (; i < length; i++) {
+			char c = str.charAt(i);
+			if (c < '0' || c > '9') {
+				return false;
+			}
+		}
+		return true;
 	}
 
-	public List<Object> deserialize(byte[] bytes) {
-		try {
-
-			String logEntry = new String(bytes, "UTF-8");
-			String[] pieces = logEntry.split("\\$\\$");
-			// aes3g-AESRCT1-AES-job-ERROR-2015-01-05 10:50:31,346
-
-			String hostIP = cleanup(pieces[0]);
-			String apId = cleanup(pieces[1]);
-			String logTime = cleanup(pieces[2]);
-			String logLevel = cleanup(pieces[3]);
-			String classMethod = cleanup(pieces[4]);
-			String keyword1 = cleanup(pieces[5]);
-			String keyword2 = cleanup(pieces[6]);
-			String keyword3 = cleanup(pieces[7]);
-			String message = cleanup(pieces[8]);
-			String logId = SYSTEM_ID + "-" + hostIP + "-" + apId + "-" + LOG_TYPE + "-" + classMethod + "-" + logTime;
-
-			//
-			// @TODO fix the following code to make it stabler!
-
-			DateTime dateTime = formatter.parseDateTime(cleanup(pieces[2]));
-			long timestamp = System.currentTimeMillis();
-
-			int year = dateTime.getYear();
-			int month = dateTime.getMonthOfYear();
-			int day = dateTime.getDayOfMonth();
-			int hour = dateTime.getHourOfDay();
-			int minute = dateTime.getMinuteOfHour();
-
-			String hourMinute = String.valueOf(hour) + "-" + String.valueOf(minute);
-			String yearMonthDay = String.valueOf(year) + "-" + String.valueOf(month)
-									+ "-" + String.valueOf(day);
-			String aggId = yearMonthDay;
-
-			setCounterColumnName(hourMinute);
-
-			XContentBuilder builder = jsonBuilder()
-				    .startObject()
-				        .field("systemId", SYSTEM_ID)
-				        .field("logTime", logTime)
-				        .field("logLevel", logLevel)
-				        .field("classMethod", classMethod)
-				        .field("hostIP", hostIP)
-				        .field("keyword1", keyword1)
-				        .field("keyword2", keyword2)
-				        .field("keyword3", keyword3)
-				        .field("message", message)
-				        .field("timestamp_ms", System.currentTimeMillis())
-				        .field("@timestamp", new Timestamp(timestamp))
-				    .endObject();
-
-//			logJsonObj.put("messageId", messageId);
-//			logJsonObj.put("systemId", SYSTEM_ID);
-//			logJsonObj.put("logTime", logTime);
-//			logJsonObj.put("logLevel", logLevel);
-//			logJsonObj.put("classMethod", classMethod);
-//			logJsonObj.put("hostIP", hostIP);
-////			logJsonObj.put("appId", value);
-////			logJsonObj.put("action", value);
-////			logJsonObj.put("functionId", value);
-////			logJsonObj.put("result", value);
-//			logJsonObj.put("keyword1", keyword1);
-//			logJsonObj.put("keyword2", keyword2);
-//			logJsonObj.put("keyword3", keyword3);
-//			logJsonObj.put("message", message);
-////			logJsonObj.put("dataCount", value);
-//
-//			logJsonObj.put("timestamp_ms", System.currentTimeMillis());
-//			logJsonObj.put("@timestamp", new Timestamp(timestamp));
-
-			return new Values(builder.string(), ES_INDEX, LOG_TYPE, logId,
-					hostIP, logTime, logLevel, classMethod, keyword1, keyword2,
-					keyword3, message, aggId, hourMinute);
-
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			throw new RuntimeException(e);
-		}
+	/**
+	 * http://stackoverflow.com/questions/2563608/check-whether-a-string-is-parsable-into-long-without-try-catch
+	 *
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumeric(String str) {
+	    if (str == null) {
+	        return false;
+	    }
+	    int sz = str.length();
+	    if (sz == 0) {
+	    	return false;
+	    }
+	    for (int i = 0; i < sz; i++) {
+	        if (Character.isDigit(str.charAt(i)) == false) {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 
-	public Fields getOutputFields() {
-		return new Fields(FIELD_ES_SOURCE, FIELD_ES_INDEX_NAME, FIELD_ES_INDEX_TYPE,
-				FIELD_LOG_ID, FIELD_HOSTIP, FIELD_LOG_TIME, FIELD_LOG_LEVEL,
-				FIELD_CLASS_METHOD, FIELD_KEYWORD1,	FIELD_KEYWORD2, FIELD_KEYWORD3,
-				FIELD_MESSAGE, FIELD_AGG_ID, FIELD_HOUR_MINUTE);
-	}
-
-	private String cleanup(String str) {
-		if (str != null) {
-			return str.trim().replace("\n", "").replace("\t", "");
-		} else {
-			return str;
-		}
+	private static String dateToString(String str) {
+		DateTime dt = dateTimeFormatter.parseDateTime(str);
+		return dt.toString(fmt);
 	}
 
 }
