@@ -43,10 +43,11 @@ public class ApLogGenerator extends ApLogBaseTopology {
 	public ApLogGenerator(String configFileLocation) throws Exception {
 		super(configFileLocation);
 		conf = new Config();
+		conf.setNumWorkers(1);
 	}
 
 	private void configureRandomLogSpout(TopologyBuilder builder) {
-		builder.setSpout("RandomLogSpout", new RandomLogSpout(), 2);
+		builder.setSpout("RandomLogSpout", new RandomLogSpout(), 3);
 	}
 
 	private void configureKafkaBolt(TopologyBuilder builder) {
@@ -61,7 +62,7 @@ public class ApLogGenerator extends ApLogBaseTopology {
 		conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
 		KafkaBolt kafka = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(topic))
 										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "log"));
-		builder.setBolt("KafkaBolt", kafka, 1).shuffleGrouping("RandomLogSpout");
+		builder.setBolt("KafkaBolt", kafka, 3).shuffleGrouping("RandomLogSpout");
 	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {

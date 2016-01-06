@@ -68,7 +68,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		config.put("es.conf", esConfig);
 
 		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
-		builder.setBolt(ES_BOLT_ID, esBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
+		builder.setBolt(ES_BOLT_ID, esBolt, 3).shuffleGrouping(KAFKA_SPOUT_ID);
 
 //		EsConfig esConfig = new EsConfig("elasticsearch", new String[]{"hdp01.localdomain:9300"});
 //		EsTupleMapper tupleMapper = new CustomEsTupleMapper();
@@ -107,6 +107,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
 		Config config = new Config();
 		config.setDebug(true);
+		config.setNumWorkers(3);
 
 		TopologyBuilder builder = new TopologyBuilder();
 		configureKafkaSpout(builder, config);

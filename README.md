@@ -23,7 +23,7 @@ curl -XDELETE 'localhost:9200/aplog_pos?pretty'
 curl -XDELETE 'localhost:9200/aplog_upcc?pretty'
 curl -XDELETE 'localhost:9200/aplog_wds?pretty'
 
-# 2. CREATE the new topic & indexes:
+# 2. RECREATE the topic & indexes:
 /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdp01.localdomain:2181 --replication-factor 1 --partition 1 --topic ap_logs_test_222
 
 curl -XPUT 'localhost:9200/aplog_aes3g?pretty'
