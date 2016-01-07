@@ -21,7 +21,7 @@ public class RandomLogSpout extends BaseRichSpout {
 
 	@Override
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-		_collector = collector;
+		this._collector = collector;
 		_rand = new Random();
 	}
 

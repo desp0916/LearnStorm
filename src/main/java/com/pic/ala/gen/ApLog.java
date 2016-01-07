@@ -69,7 +69,7 @@ public class ApLog {
 			this.systemID = DEFAULT_SYSTEM.toLowerCase();
 		}
 
-		System.out.println("logType:"+logType);
+//		System.out.println("logType:"+logType);
 
 		if (logType == null || ("").equals(logType) || !LOG_TYPES.contains(logType)) {
 			this.logType = DEFAULT_LOG_TYPE;

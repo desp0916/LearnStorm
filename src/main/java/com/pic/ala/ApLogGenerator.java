@@ -60,9 +60,9 @@ public class ApLogGenerator extends ApLogBaseTopology {
 		props.put("request.required.acks", "1");
 		props.put(ProducerConfig.CLIENT_ID_CONFIG, "storm-kafka-producer");
 		conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
-		KafkaBolt kafka = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(topic))
+		KafkaBolt kafkaBolt = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(topic))
 										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "log"));
-		builder.setBolt("KafkaBolt", kafka, 3).shuffleGrouping("RandomLogSpout");
+		builder.setBolt("KafkaBolt", kafkaBolt, 3).shuffleGrouping("RandomLogSpout");
 	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {

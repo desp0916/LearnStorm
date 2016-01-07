@@ -25,7 +25,9 @@ import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
 
 public class ESBolt extends BaseRichBolt {
 
@@ -34,7 +36,7 @@ public class ESBolt extends BaseRichBolt {
     private static final Logger LOG = Logger.getLogger(ESBolt.class);
 
 	private Client client;
-//	private OutputCollector collector;
+	private OutputCollector collector;
 
 	protected String configKey;
 
@@ -50,18 +52,19 @@ public class ESBolt extends BaseRichBolt {
 
 	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-//		this.collector = collector;
+		this.collector = collector;
+
+		if (stormConf == null) {
+			throw new IllegalArgumentException(
+					"ElasticSearch configuration not found using key '" + this.configKey + "'");
+		}
+
 		Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
 
 		String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
 		String esHost = (String) conf.get(ES_HOST);
 		String esIndexName = (String) conf.get(ES_INDEX_NAME);
 		String esIndexType = (String) conf.get(ES_INDEX_TYPE);
-
-		if (conf == null) {
-			throw new IllegalArgumentException(
-					"ElasticSearch configuration not found using key '" + this.configKey + "'");
-		}
 
 		if (esClusterName == null) {
 			LOG.warn("No '" + ES_CLUSTER_NAME + "' value found in configuration! Using ElasticSearch defaults.");
@@ -95,6 +98,9 @@ public class ESBolt extends BaseRichBolt {
 		}
 	}
 
+	/**
+	 * http://storm.apache.org/documentation/Guaranteeing-message-processing.html
+	 */
 	@Override
 	public void execute(Tuple tuple) {
 		String systemID = (String) tuple.getValueByField(APLogScheme.FIELD_SYSTEM_ID);
@@ -107,20 +113,26 @@ public class ESBolt extends BaseRichBolt {
 		}
 		IndexResponse response = client.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase(), logType.toLowerCase())
 									.setSource(toBeIndexed).execute().actionGet();
-		if (response == null)
+		if (response == null) {
 			LOG.error("Failed to index Tuple: " + tuple.toString());
-		else {
-			if (response.getId() == null)
+			collector.fail(tuple);
+		} else {
+			String documentIndexId = response.getId();
+			response.getIndex();
+			if (documentIndexId == null) {
 				LOG.error("Failed to index Tuple: " + tuple.toString());
-			else {
-				LOG.debug("Indexing success ["+response.getId()+"] on Tuple: " + tuple.toString());
-//				collector.emit(new Values(entry, response.getId()));
+				collector.fail(tuple);
+			} else {
+				LOG.debug("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
+				collector.emit(new Values(documentIndexId));
+				collector.ack(tuple);
 			}
 		}
 	}
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields("documentIndexId"));
 	}
 
 	@Override
