@@ -103,9 +103,9 @@ public class ESBolt extends BaseRichBolt {
 	 */
 	@Override
 	public void execute(Tuple tuple) {
-		String systemID = (String) tuple.getValueByField(APLogScheme.FIELD_SYSTEM_ID);
-		String logType = (String) tuple.getValueByField(APLogScheme.FIELD_LOG_TYPE);
-		String toBeIndexed = (String) tuple.getValueByField(APLogScheme.FIELD_ES_SOURCE);
+		String systemID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYSTEM_ID);
+		String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
+		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
 		if (toBeIndexed == null) {
 			LOG.warn("Received null or incorrect value from tuple");

@@ -19,13 +19,13 @@ import backtype.storm.spout.Scheme;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-public class APLogScheme implements Scheme {
+public class ApLogScheme implements Scheme {
 
     TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
 
 //	private static final long serialVersionUID = 7102546688047309944L;
 //	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
-    private static final Logger LOG = Logger.getLogger(APLogScheme.class);
+    private static final Logger LOG = Logger.getLogger(ApLogScheme.class);
 //	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();

@@ -35,11 +35,11 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
 	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
 	private static final String CONSUMER_GROUP_ID = "ApLogAnalyzerSpout";
-	private APLogScheme apLogScheme;
+	private ApLogScheme apLogScheme;
 
 	public ApLogAnalyzer(String configFileLocation) throws Exception {
 		super(configFileLocation);
-		apLogScheme = new APLogScheme();
+		apLogScheme = new ApLogScheme();
 	}
 
 	private SpoutConfig constructKafkaSpoutConf() {
