@@ -85,6 +85,9 @@ public class ESBolt extends BaseRichBolt {
 			LOG.warn("No '" + ES_INDEX_TYPE + "' value found in configuration! Using ElasticSearch defaults.");
 		}
 
+		/**
+		 * @TODO add mapping, see: http://stackoverflow.com/questions/22071198/adding-mapping-to-a-type-from-java-how-do-i-do-it
+		 */
 		try {
 //			Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
 			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
