@@ -30,7 +30,7 @@ public class ApLogScheme implements Scheme {
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
-	// The fields will be stored.
+	// The following fields will be used or stored by Elasticsearch.
 	public static final String FIELD_ES_SOURCE = "es_source";	// ElasticSearch 物件的 source 欄位
 	public static final String FIELD_SYSTEM_ID = "systemID";
 	public static final String FIELD_LOG_TYPE = "logType";
@@ -50,7 +50,10 @@ public class ApLogScheme implements Scheme {
 	public static final String FIELD_TABLE_NAME = "tableName";
 	public static final String FIELD_DATA_COUNT = "dataCount";
 
+	// The following fields will be used or stored by HBase.
 	private String counterColumnName;
+	public static final String FIELD_AGG_ID = "aggID";
+	public static final String FIELD_HOUR_MINUTE = "hourMinute";
 
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
