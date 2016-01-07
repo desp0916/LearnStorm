@@ -2,6 +2,9 @@
  * ElasticSearch 2.1.1 的作法：
  * https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
  *
+ * Adding mapping to a type from Java - how do I do it?
+ * http://stackoverflow.com/questions/22071198/adding-mapping-to-a-type-from-java-how-do-i-do-it
+ *
  * At first, you should create the index just like this:
  *  curl -XPUT 'localhost:9200/aplog_aes3g?pretty'
  *  curl -XPUT 'localhost:9200/aplog_pos?pretty'
@@ -85,14 +88,14 @@ public class ESBolt extends BaseRichBolt {
 		try {
 //			Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
 			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
-//			synchronized (ESBolt.class) {
+			synchronized (ESBolt.class) {
 				if (client == null) {
 //					client = TransportClient.builder().settings(settings).build().addTransportAddress(
 //								new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
 					client = new TransportClient(settings)
 								.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
 				}
-//			}
+			}
 		} catch (Exception e) {
 			LOG.warn("Unable to initialize ESBolt", e);
 		}

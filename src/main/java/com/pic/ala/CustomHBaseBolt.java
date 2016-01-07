@@ -57,7 +57,7 @@ public class CustomHBaseBolt extends HBaseBolt {
 			}
 		}
 
-        List<Mutation> mutations = hBaseClient.constructMutationReq(rowKey, cols, writeToWAL? Durability.SYNC_WAL : Durability.SKIP_WAL);
+        List<Mutation> mutations = hBaseClient.constructMutationReq(rowKey, cols, writeToWAL ? Durability.SYNC_WAL : Durability.SKIP_WAL);
 
         try {
             this.hBaseClient.batchMutate(mutations);

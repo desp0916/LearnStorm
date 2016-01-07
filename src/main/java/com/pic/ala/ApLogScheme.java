@@ -99,7 +99,7 @@ public class ApLogScheme implements Scheme {
 //			setCounterColumnName(hourMinute);
 
 			// ElasticSearch 物件的 _source 欄位
-			XContentBuilder builder = jsonBuilder()
+			final XContentBuilder builder = jsonBuilder()
 				    .startObject()
 				        .field(FIELD_SYSTEM_ID, systemID)
 				        .field(FIELD_LOG_TYPE, logType)
