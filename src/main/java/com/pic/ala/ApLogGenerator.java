@@ -3,7 +3,7 @@
  *
  * 2. Create a topic 'mytopic' with command line:
  *
- *     kafka-topics.sh --create --zookeeper hdp01.localdomain:2181 --replication-factor 1 --partition 1 --topic mytopic
+ *     /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdp01.localdomain:2181 --replication-factor 1 --partition 1 --topic mytopic
  *
  * 3. Submit this topology:
  *
@@ -11,11 +11,11 @@
  *
  * 4. Monitor the topic:
  *
- *     bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic mytopic --from-beginning
+ *     /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic mytopic --from-beginning
  *
  * How to delete the topic?
  *
- *     bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181 --delete --topic mytopic
+ *     /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181 --delete --topic mytopic
  *
  */
 
