@@ -43,11 +43,9 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalyzer
 
 # 6. SUBMIT Storm topology: ApLogGenerator
 storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
-```
 
 # 7. MODIFY Elasticsearch Mappings:
 
-```bash
 curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
       "properties" : {
         "apName" : {
