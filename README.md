@@ -71,3 +71,5 @@ curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
       }
 }'
 ```
+
+# 8. MONITOR the logs with Kibana
