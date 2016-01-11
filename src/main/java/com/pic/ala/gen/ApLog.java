@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ApLog {
 
@@ -18,29 +19,29 @@ public class ApLog {
 	public static final List<String> SYSTEMS = Arrays.asList(DEFAULT_SYSTEM, "pos", "upcc", "wds");
 	public static final List<String> LOG_TYPES = Arrays.asList(DEFAULT_LOG_TYPE, "ui", "tpipas");
 
-	private static List<String> apNames = Arrays.asList("APv1", "WebAppV1", "WebServiceV2", "RESTAPIv1", "TransBatchv1");
-	private static List<String> functionIDs = Arrays.asList("FUNC10000", "FUNC10001", "FUNC10002", "FUNC10002", "FUNC10003");
-	private static List<String> users = Arrays.asList("艾莉絲", "班潔明", "王小明", "丹尼爾");
+	private static List<String> apNames = Arrays.asList("App01V4", "App02V2", "App03V4", "App04V3", "App05V1");
+	private static List<String> functionIDs = Arrays.asList("FUNC_10001", "FUNC_10002", "FUNC_10004", "FUNC_10004", "FUNC_10005");
+	private static List<String> users = Arrays.asList("聞氫哥", "魯蛇", "一拳超人", "Kung Fury", "金正恩", "機器人", "駭客先生", "聖誕老公公", "聖戰士");
 	private static List<String> allServers = new ArrayList<String>();
 	private static List<String> webServers = Arrays.asList("apache", "iis", "nginx", "proxy");
 	private static List<String> apServers = Arrays.asList("tomcat", "jboss", "iis", "websphere");
 	private static List<String> batchServers = Arrays.asList("batch01", "batch02", "batch03", "batch04");
 	private static List<String> dbServers = Arrays.asList("edb", "mssql", "mysql", "oracle", "postgres");
 
-	private static List<String> actions = Arrays.asList("登入", "登出", "註冊", "訂單成立", "放入購物車");
+	private static List<String> actions = Arrays.asList("登入", "取消訂單", "填寫個人資料", "訂單成立", "放入購物車");
 	private static List<String> results = Arrays.asList("成功", "失敗", "放棄", "取消", "逾時");
-	private static List<String> keywords = Arrays.asList("原力覺醒", "史努比", "玩命關頭", "侏羅紀世界", "怪物遊戲");
+	private static List<String> keywords = Arrays.asList("原力覺醒", "史努比", "玩命關頭", "侏儸紀世界", "怪物遊戲");
 	private static List<String> messageLevels = Arrays.asList("FATAL", "ERROR", "WARNING", "NOTICE", "INFO", "DEBUG");
 	private static List<String> messages = Arrays.asList("Wrong password.", "Lost connection.", "Invalid arguments", "Unsufficient privilege", "Disk full");
-	private static List<String> messageCodes = Arrays.asList("10001", "23001", "12345", "56789", "23245");
+//	private static List<String> messageCodes = Arrays.asList("10001", "23001", "12345", "56789", "23245");
 	private static List<String> tableNames = Arrays.asList("SYS_USERS", "TRA_ORDERS", "TRA_INVOICES", "CODES", "ITEMS");
-	private static List<String> dataCounts = Arrays.asList("1", "24", "100", "1234", "20344");
+//	private static List<String> dataCounts = Arrays.asList("1", "24", "100", "1234", "20344");
 
 	private String systemID;		// 系統名稱 (new)
 	private String logType;			// Log 類型 (new)
 	private String logTime;			// Log 寫入時間，必須符合「yyyy-mm-dd hh:mm:ss.sss」格式
 
-	private String apName = "APv1";	// AP 名稱，可帶版本
+	private String apName = "";		// AP 名稱，可帶版本
 	private String functionID = "";	// 功能代碼或原始碼中的 class、method
 
 	private String who = "";		// 誰發起這個 request 或觸發這個 event，例如： User ID
@@ -78,7 +79,7 @@ public class ApLog {
 		}
 
 		if (logType == "ui") {
-			this.apName = "WebAppv1";
+			this.apName = "UI" +  getRandomOption(apNames);
 			this.from = getRandomOption(webServers);
 			this.at = getRandomOption(apServers);
 			this.to = getRandomOption(dbServers);
@@ -86,14 +87,14 @@ public class ApLog {
 			this.action = getRandomOption(actions);
 		} else if (logType == "tpipas") {
 			getAllServers();
-			this.apName = getRandomOption(apNames);
+			this.apName = "TPIPAS" +  getRandomOption(apNames);
 			this.from = getRandomOption(allServers);
 			this.at = getRandomOption(allServers);
 			this.to = getRandomOption(allServers);
 			this.who = getRandomOption(users);
 			this.action = getRandomOption(actions);
 		} else if (logType == "batch") {
-			this.apName = "TransBatchv4";
+			this.apName = "Batch" +  getRandomOption(apNames);
 			this.from = getRandomOption(apServers);
 			this.at = getRandomOption(batchServers);
 			this.to = getRandomOption(dbServers);
@@ -107,9 +108,11 @@ public class ApLog {
 		this.keyword = getRandomOption(keywords);
 		this.messageLevel = getRandomOption(messageLevels);
 		this.message = getRandomOption(messages);
-		this.messageCode = getRandomOption(messageCodes);
+//		this.messageCode = getRandomOption(messageCodes);
+		this.messageCode = String.valueOf(getRandomInt(1000, 9999));
 		this.tableName = getRandomOption(tableNames);
-		this.dataCount = getRandomOption(dataCounts);
+//		this.dataCount = getRandomOption(dataCounts);
+		this.dataCount = String.valueOf(getRandomInt(1, 200));
 	}
 
 	@Override
@@ -149,6 +152,10 @@ public class ApLog {
 	public static String getRandomOption(List<String> options) {
 		Random rand = new Random();
 		return options.get(rand.nextInt(options.size()));
+	}
+
+	public static int getRandomInt(int minInt, int maxInt) {
+		return ThreadLocalRandom.current().nextInt(minInt, maxInt + 1);
 	}
 
 	public static void main(String[] args) {

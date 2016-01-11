@@ -17,6 +17,7 @@ package com.pic.ala;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
