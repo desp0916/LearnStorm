@@ -11,6 +11,7 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -33,9 +34,10 @@ public class ApLogScheme implements Scheme {
 	// The following fields will be used or stored by Elasticsearch.
 	public static final String FIELD_ES_SOURCE = "es_source";	// ElasticSearch 物件的 source 欄位
 	public static final String FIELD_SYSTEM_ID = "systemID";
+	public static final String FIELD_LOG_DATE = "logDate";
 	public static final String FIELD_LOG_TYPE = "logType";
 	public static final String FIELD_LOG_TIME = "logTime";
-	public static final String FIELD_AP_NAME = "apName";
+	public static final String FIELD_AP_ID = "apID";
 	public static final String FIELD_FUNCTION_ID = "functionID";
 	public static final String FIELD_WHO = "who";
 	public static final String FIELD_FROM = "from";
@@ -65,8 +67,9 @@ public class ApLogScheme implements Scheme {
 
 			String systemID = cleanup(pieces[0]);
 			String logType = cleanup(pieces[1]);
-			DateTime logTime = dateTimeFormatter.parseDateTime(cleanup(pieces[2]));
-			String apName = cleanup(pieces[3]);
+			String logTimeString = cleanup(pieces[2]);
+			DateTime logTime = dateTimeFormatter.parseDateTime(logTimeString);
+			String apID = cleanup(pieces[3]);
 			String functionID = cleanup(pieces[4]);
 			String who = cleanup(pieces[5]);
 			String from = cleanup(pieces[6]);
@@ -80,6 +83,9 @@ public class ApLogScheme implements Scheme {
 			String messageCode = cleanup(pieces[14]);
 			String tableName = cleanup(pieces[15]);
 			String dataCount = cleanup(pieces[16]);
+
+			LocalDate localDate = LocalDate.parse(logTimeString, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+			String logDate = localDate.toString("yyyy-MM-dd");
 
 			// The following fields are for HBase:
 //			DateTime dateTime = DateTimeFormatter.parseDateTime(cleanup(pieces[2]));
@@ -104,7 +110,7 @@ public class ApLogScheme implements Scheme {
 				        .field(FIELD_SYSTEM_ID, systemID)
 				        .field(FIELD_LOG_TYPE, logType)
 				        .field(FIELD_LOG_TIME, logTime)
-				        .field(FIELD_AP_NAME, apName)
+				        .field(FIELD_AP_ID, apID)
 				        .field(FIELD_FUNCTION_ID, functionID)
 				        .field(FIELD_WHO, who)
 				        .field(FIELD_FROM, from)
@@ -123,8 +129,8 @@ public class ApLogScheme implements Scheme {
 				        .field("@timestamp", logTime)
 				    .endObject();
 
-			return new Values(builder.string(), systemID, logType, logTime,
-					apName, functionID, who, from, at, to, action, result,
+			return new Values(builder.string(), systemID, logType, logDate, logTime,
+					apID, functionID, who, from, at, to, action, result,
 					keyword, messageLevel, message, messageCode, tableName,
 					dataCount);
 
@@ -136,8 +142,8 @@ public class ApLogScheme implements Scheme {
 
 	@Override
 	public Fields getOutputFields() {
-		return new Fields(FIELD_ES_SOURCE, FIELD_SYSTEM_ID,
-				FIELD_LOG_TYPE, FIELD_LOG_TIME, FIELD_AP_NAME,
+		return new Fields(FIELD_ES_SOURCE, FIELD_SYSTEM_ID, FIELD_LOG_TYPE,
+				FIELD_LOG_DATE, FIELD_LOG_TIME, FIELD_AP_ID,
 				FIELD_FUNCTION_ID, FIELD_WHO, FIELD_FROM, FIELD_AT,
 				FIELD_TO, FIELD_ACTION, FIELD_RESULT, FIELD_KEYWORD,
 				FIELD_MESSAGE_LEVEL, FIELD_MESSAGE, FIELD_MESSAGE_CODE,

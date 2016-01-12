@@ -48,7 +48,7 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
 
 curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
       "properties" : {
-        "apName" : {
+        "apID" : {
           "type" : "string",
           "index": "not_analyzed" 
         },

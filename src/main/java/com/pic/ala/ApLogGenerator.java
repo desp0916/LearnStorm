@@ -13,7 +13,7 @@
  *
  *     /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic mytopic --from-beginning
  *
- * How to delete the topic?
+ * 5. How to delete the topic?
  *
  *     /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181 --delete --topic mytopic
  *

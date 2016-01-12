@@ -19,7 +19,7 @@ public class ApLog {
 	public static final List<String> SYSTEMS = Arrays.asList(DEFAULT_SYSTEM, "pos", "upcc", "wds");
 	public static final List<String> LOG_TYPES = Arrays.asList(DEFAULT_LOG_TYPE, "ui", "tpipas");
 
-	private static List<String> apNames = Arrays.asList("App01V4", "App02V2", "App03V4", "App04V3", "App05V1");
+	private static List<String> apIDs = Arrays.asList("App01V4", "App02V2", "App03V4", "App04V3", "App05V1");
 	private static List<String> functionIDs = Arrays.asList("FUNC_10001", "FUNC_10002", "FUNC_10004", "FUNC_10004", "FUNC_10005");
 	private static List<String> users = Arrays.asList("聞氫哥", "魯蛇", "一拳超人", "Kung Fury", "金正恩", "機器人", "駭客先生", "聖誕老公公", "聖戰士");
 	private static List<String> allServers = new ArrayList<String>();
@@ -41,7 +41,7 @@ public class ApLog {
 	private String logType;			// Log 類型 (new)
 	private String logTime;			// Log 寫入時間，必須符合「yyyy-mm-dd hh:mm:ss.sss」格式
 
-	private String apName = "";		// AP 名稱，可帶版本
+	private String apID = "";		// AP 名稱，可帶版本
 	private String functionID = "";	// 功能代碼或原始碼中的 class、method
 
 	private String who = "";		// 誰發起這個 request 或觸發這個 event，例如： User ID
@@ -79,7 +79,7 @@ public class ApLog {
 		}
 
 		if (logType == "ui") {
-			this.apName = "UI" +  getRandomOption(apNames);
+			this.apID = "UI" +  getRandomOption(apIDs);
 			this.from = getRandomOption(webServers);
 			this.at = getRandomOption(apServers);
 			this.to = getRandomOption(dbServers);
@@ -87,14 +87,14 @@ public class ApLog {
 			this.action = getRandomOption(actions);
 		} else if (logType == "tpipas") {
 			getAllServers();
-			this.apName = "TPIPAS" +  getRandomOption(apNames);
+			this.apID = "TPIPAS" +  getRandomOption(apIDs);
 			this.from = getRandomOption(allServers);
 			this.at = getRandomOption(allServers);
 			this.to = getRandomOption(allServers);
 			this.who = getRandomOption(users);
 			this.action = getRandomOption(actions);
 		} else if (logType == "batch") {
-			this.apName = "Batch" +  getRandomOption(apNames);
+			this.apID = "Batch" +  getRandomOption(apIDs);
 			this.from = getRandomOption(apServers);
 			this.at = getRandomOption(batchServers);
 			this.to = getRandomOption(dbServers);
@@ -121,7 +121,7 @@ public class ApLog {
 		builder.append(systemID).append(LOG_SEPARATOR)
 				.append(logType).append(LOG_SEPARATOR)
 				.append(logTime).append(LOG_SEPARATOR)
-				.append(apName).append(LOG_SEPARATOR)
+				.append(apID).append(LOG_SEPARATOR)
 				.append(functionID).append(LOG_SEPARATOR)
 				.append(who).append(LOG_SEPARATOR)
 				.append(from).append(LOG_SEPARATOR)

@@ -17,7 +17,6 @@ package com.pic.ala;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -112,13 +111,14 @@ public class ESBolt extends BaseRichBolt {
 	public void execute(Tuple tuple) {
 		String systemID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYSTEM_ID);
 		String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
+		String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
 		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
 		if (toBeIndexed == null) {
 			LOG.warn("Received null or incorrect value from tuple");
 			return;
 		}
-		IndexResponse response = client.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase(), logType.toLowerCase())
+		IndexResponse response = client.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase() + "_" + logDate, logType.toLowerCase())
 									.setSource(toBeIndexed).execute().actionGet();
 		if (response == null) {
 			LOG.error("Failed to index Tuple: " + tuple.toString());
