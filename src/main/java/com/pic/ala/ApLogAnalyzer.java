@@ -14,6 +14,10 @@
 package com.pic.ala;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.storm.hbase.bolt.HBaseBolt;
+import org.apache.storm.hbase.bolt.mapper.SimpleHBaseMapper;
 
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
@@ -76,33 +80,33 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //		builder.setBolt(ES_BOLT_ID, indexBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
 	}
 
-//	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
-//		Map<String, Object> hbaseConfig = new HashMap<String, Object>();
-//		hbaseConfig.put("hbase.rootdir", "hdfs://hdpha/apps/hbase/data");
-//		config.put("hbase.conf", hbaseConfig);
-//
-//		// the bolt to write raw AP logs
-//		SimpleHBaseMapper rawMapper = new SimpleHBaseMapper()
-//				.withRowKeyField(APLogScheme.FIELD_LOG_ID)
-//				.withColumnFields(new Fields(
-//						APLogScheme.FIELD_HOSTIP,
-//						APLogScheme.FIELD_LOG_TIME,
-//						APLogScheme.FIELD_LOG_LEVEL,
-//						APLogScheme.FIELD_CLASS_METHOD,
-//						APLogScheme.FIELD_KEYWORD1,
-//						APLogScheme.FIELD_KEYWORD2,
-//						APLogScheme.FIELD_KEYWORD3,
-//						APLogScheme.FIELD_MESSAGE))
-////				.withCounterFields(new Fields("count"))
-//				.withColumnFamily("cf");
-//		HBaseBolt hbase = new HBaseBolt(APLogScheme.SYSTEM_ID, rawMapper).withConfigKey("hbase.conf");
-//		builder.setBolt(HBASE_DETAIL_BOLT_ID, hbase, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(APLogScheme.FIELD_LOG_ID));
-//
-//		// the bolt to write aggregations
-//		SimpleHBaseMapper aggMapper = new SimpleHBaseMapper();
-//		HBaseBolt hbase2 = new CustomHBaseBolt(APLogScheme.AGG_TABLE, aggMapper).withConfigKey("hbase.conf");
-//		builder.setBolt(HBASE_AGG_BOLT_ID, hbase2, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(APLogScheme.FIELD_AGG_ID));
-//	}
+	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
+		Map<String, Object> hbaseConfig = new HashMap<String, Object>();
+		hbaseConfig.put("hbase.rootdir", "hdfs://hdpha/apps/hbase/data");
+		config.put("hbase.conf", hbaseConfig);
+
+		// the bolt to write raw AP logs
+		SimpleHBaseMapper rawMapper = new SimpleHBaseMapper()
+				.withRowKeyField(ApLogScheme.FIELD_LOG_ID)
+				.withColumnFields(new Fields(
+						ApLogScheme.FIELD_HOSTIP,
+						ApLogScheme.FIELD_LOG_TIME,
+						ApLogScheme.FIELD_LOG_LEVEL,
+						ApLogScheme.FIELD_CLASS_METHOD,
+						ApLogScheme.FIELD_KEYWORD1,
+						ApLogScheme.FIELD_KEYWORD2,
+						ApLogScheme.FIELD_KEYWORD3,
+						ApLogScheme.FIELD_MESSAGE))
+//				.withCounterFields(new Fields("count"))
+				.withColumnFamily("cf");
+		HBaseBolt hbase = new HBaseBolt(APLogScheme.SYSTEM_ID, rawMapper).withConfigKey("hbase.conf");
+		builder.setBolt(HBASE_DETAIL_BOLT_ID, hbase, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(APLogScheme.FIELD_LOG_ID));
+
+		// the bolt to write aggregations
+		SimpleHBaseMapper aggMapper = new SimpleHBaseMapper();
+		HBaseBolt hbase2 = new CustomHBaseBolt(APLogScheme.AGG_TABLE, aggMapper).withConfigKey("hbase.conf");
+		builder.setBolt(HBASE_AGG_BOLT_ID, hbase2, 1).fieldsGrouping(KAFKA_SPOUT_ID, new Fields(APLogScheme.FIELD_AGG_ID));
+	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
 		Config config = new Config();
