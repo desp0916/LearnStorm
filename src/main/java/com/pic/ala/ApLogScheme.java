@@ -56,6 +56,7 @@ public class ApLogScheme implements Scheme {
 	private String counterColumnName;
 	public static final String FIELD_AGG_ID = "aggID";
 	public static final String FIELD_HOUR_MINUTE = "hourMinute";
+	public static final String FIELD_ROWKEY = "rowKey";
 
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
@@ -88,6 +89,9 @@ public class ApLogScheme implements Scheme {
 			String logDate = localDate.toString("yyyy-MM-dd");
 
 			// The following fields are for HBase:
+
+//			String rowKey = systemID + apID + functionID +;
+
 //			DateTime dateTime = DateTimeFormatter.parseDateTime(cleanup(pieces[2]));
 //			long timestamp = System.currentTimeMillis();
 //

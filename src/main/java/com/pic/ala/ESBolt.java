@@ -38,7 +38,7 @@ public class ESBolt extends BaseRichBolt {
 //	private static final long serialVersionUID = -26161992456930984L;
     private static final Logger LOG = Logger.getLogger(ESBolt.class);
 
-	private Client client;
+	private transient Client client;
 	private OutputCollector collector;
 
 	protected String configKey;
@@ -100,7 +100,7 @@ public class ESBolt extends BaseRichBolt {
 				}
 			}
 		} catch (Exception e) {
-			LOG.warn("Unable to initialize ESBolt", e);
+			LOG.warn("Unable to initialize ESBolt: ", e);
 		}
 	}
 

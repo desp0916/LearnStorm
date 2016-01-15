@@ -62,7 +62,7 @@ public class ApLog {
 	private String tableName = "";	// 資料表名稱 (optional)
 	private String dataCount = "";	// 資料筆數 (optional)
 
-	public ApLog(String systemID, String logType) {
+	public ApLog(final String systemID, final String logType) {
 
 		if (systemID != null && !("").equals(systemID) && SYSTEMS.contains(systemID)) {
 			this.systemID = systemID.toLowerCase();
@@ -149,12 +149,12 @@ public class ApLog {
 		allServers.addAll(dbServers);
 	}
 
-	public static String getRandomOption(List<String> options) {
+	public static String getRandomOption(final List<String> options) {
 		Random rand = new Random();
 		return options.get(rand.nextInt(options.size()));
 	}
 
-	public static int getRandomInt(int minInt, int maxInt) {
+	public static int getRandomInt(final int minInt, final int maxInt) {
 		return ThreadLocalRandom.current().nextInt(minInt, maxInt + 1);
 	}
 
