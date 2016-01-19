@@ -6,9 +6,9 @@ package com.pic.ala;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -16,13 +16,15 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import com.pic.ala.gen.ApLog;
+
 import backtype.storm.spout.Scheme;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
 public class ApLogScheme implements Scheme {
 
-    TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
+//	TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
 
 //	private static final long serialVersionUID = 7102546688047309944L;
 //	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
@@ -58,10 +60,48 @@ public class ApLogScheme implements Scheme {
 	public static final String FIELD_HOUR_MINUTE = "hourMinute";
 	public static final String FIELD_ROWKEY = "rowKey";
 
+	/**
+	 * http://www.mkyong.com/java/jackson-2-convert-java-object-to-from-json/
+	 */
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
 		try {
+			String logEntry = new String(bytes, "UTF-8");
 
+			ObjectMapper objectMapper = new ObjectMapper();
+			ApLog apLog = objectMapper.readValue(logEntry, ApLog.class);
+			String systemID = apLog.getSystemID();
+			String logType = apLog.getLogType();
+			String logTime = apLog.getLogTime();
+			LocalDate localDate = LocalDate.parse(logTime, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+			String logDate = localDate.toString("yyyy-MM-dd");
+			String apID = apLog.getApID();
+			String functionID = apLog.getFunctionID();
+			String who = apLog.getWho();
+			String from = apLog.getFrom();
+			String at = apLog.getAt();
+			String to = apLog.getTo();
+			String action = apLog.getAction();
+			String result = apLog.getResult();
+			String keyword = apLog.getKeyword();
+			String messageLevel = apLog.getMessageLevel();
+			String message = apLog.getMessage();
+			String messageCode = apLog.getMessageCode();
+			String tableName = apLog.getTableName();
+			int dataCount = apLog.getDataCount();
+
+			return new Values(logEntry, systemID, logType, logDate, logTime,
+					apID, functionID, who, from, at, to, action, result,
+					keyword, messageLevel, message, messageCode, tableName,
+					dataCount);
+		}  catch (Exception e) {
+			LOG.error(e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<Object> deserializeOld(byte[] bytes) {
+		try {
 			// @TODO fix the following code to make it stabler!
 			String logEntry = new String(bytes, "UTF-8");
 			String[] pieces = logEntry.split("\\$\\$");

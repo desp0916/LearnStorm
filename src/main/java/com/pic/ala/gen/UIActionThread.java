@@ -4,7 +4,7 @@ public class UIActionThread extends Thread implements Command {
 
 	private UIAction uiAction;
 
-	public UIActionThread(UIAction uiAction) {
+	public UIActionThread(final UIAction uiAction) {
 		this.uiAction = uiAction;
 		this.setName(uiAction.getSystemId() + "-UIAction");
 	}

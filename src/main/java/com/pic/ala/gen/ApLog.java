@@ -26,6 +26,7 @@ public class ApLog {
 	private static List<String> webServers = Arrays.asList("apache", "iis", "nginx", "proxy");
 	private static List<String> apServers = Arrays.asList("tomcat", "jboss", "iis", "websphere");
 	private static List<String> batchServers = Arrays.asList("batch01", "batch02", "batch03", "batch04");
+
 	private static List<String> dbServers = Arrays.asList("edb", "mssql", "mysql", "oracle", "postgres");
 
 	private static List<String> actions = Arrays.asList("登入", "取消訂單", "填寫個人資料", "訂單成立", "放入購物車");
@@ -60,7 +61,9 @@ public class ApLog {
 	private String messageCode = "";		// 訊息代碼
 
 	private String tableName = "";	// 資料表名稱 (optional)
-	private String dataCount = "";	// 資料筆數 (optional)
+	private int dataCount;	// 資料筆數 (optional)
+
+	public ApLog() {}
 
 	public ApLog(final String systemID, final String logType) {
 
@@ -112,7 +115,7 @@ public class ApLog {
 		this.messageCode = String.valueOf(getRandomInt(1000, 9999));
 		this.tableName = getRandomOption(tableNames);
 //		this.dataCount = getRandomOption(dataCounts);
-		this.dataCount = String.valueOf(getRandomInt(1, 200));
+		this.dataCount = getRandomInt(1, 200);
 	}
 
 	@Override
@@ -139,6 +142,142 @@ public class ApLog {
 		return builder.toString();
 	}
 
+	public String getSystemID() {
+		return systemID;
+	}
+
+	public void setSystemID(String systemID) {
+		this.systemID = systemID;
+	}
+
+	public String getLogType() {
+		return logType;
+	}
+
+	public void setLogType(String logType) {
+		this.logType = logType;
+	}
+
+	public String getLogTime() {
+		return logTime;
+	}
+
+	public void setLogTime(String logTime) {
+		this.logTime = logTime;
+	}
+
+	public String getApID() {
+		return apID;
+	}
+
+	public void setApID(String apID) {
+		this.apID = apID;
+	}
+
+	public String getFunctionID() {
+		return functionID;
+	}
+
+	public void setFunctionID(String functionID) {
+		this.functionID = functionID;
+	}
+
+	public String getWho() {
+		return who;
+	}
+
+	public void setWho(String who) {
+		this.who = who;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public String getAt() {
+		return at;
+	}
+
+	public void setAt(String at) {
+		this.at = at;
+	}
+
+	public String getTo() {
+		return to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
+	public String getMessageLevel() {
+		return messageLevel;
+	}
+
+	public void setMessageLevel(String messageLevel) {
+		this.messageLevel = messageLevel;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessageCode() {
+		return messageCode;
+	}
+
+	public void setMessageCode(String messageCode) {
+		this.messageCode = messageCode;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public int getDataCount() {
+		return dataCount;
+	}
+
+	public void setDataCount(int dataCount) {
+		this.dataCount = dataCount;
+	}
+
 	/**
 	 * Merge and return all servers.
 	 */
@@ -162,4 +301,5 @@ public class ApLog {
 		ApLog log = new ApLog(DEFAULT_SYSTEM, DEFAULT_LOG_TYPE);
 		System.out.println(log.toString());
 	}
+
 }

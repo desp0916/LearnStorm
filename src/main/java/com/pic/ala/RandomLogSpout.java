@@ -1,7 +1,11 @@
 package com.pic.ala;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.pic.ala.gen.ApLog;
 
@@ -16,22 +20,28 @@ import backtype.storm.utils.Utils;
 public class RandomLogSpout extends BaseRichSpout {
 
 	private static final long serialVersionUID = 1L;
-	SpoutOutputCollector _collector;
-	Random _rand;
+	private SpoutOutputCollector _collector;
+	private final Random _rand = new Random();
+	private ObjectMapper objectMapper;
 
 	@Override
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 		this._collector = collector;
-		_rand = new Random();
+		this.objectMapper = new ObjectMapper();
 	}
 
 	@Override
 	public void nextTuple() {
-		Utils.sleep(1000);
+		Utils.sleep(ThreadLocalRandom.current().nextInt(1, 11) * 1000);
 		String systemID = ApLog.getRandomOption(ApLog.SYSTEMS);
 		String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
 		ApLog log = new ApLog(systemID, logType);
-		_collector.emit(new Values(log.toString()));
+//		_collector.emit(new Values(log.toString()));
+		try {
+			_collector.emit(new Values(objectMapper.writeValueAsString(log)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

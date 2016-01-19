@@ -69,6 +69,7 @@ public class ApLogGenerator extends ApLogBaseTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 		configureRandomLogSpout(builder);
 		configureKafkaBolt(builder);
+//		LocalCluster cluster = new LocalCluster();
 		StormSubmitter.submitTopology("ApLogGenerator", conf, builder.createTopology());
 	}
 

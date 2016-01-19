@@ -3,8 +3,6 @@ package learn.storm;
 import java.util.Objects;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.HTableInterface;
 
 public class TestHBase {
 
@@ -25,6 +23,6 @@ public class TestHBase {
 	}
 
 	private static void testBasicCRUD() {
-		HTableInterface usersTable = new HTable("users");
+//		HTableInterface usersTable = new HTable("users");
 	}
 }
