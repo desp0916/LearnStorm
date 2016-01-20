@@ -115,10 +115,10 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //		configureHBaseBolts(builder, config);
 		configureESBolts(builder, config);
 
-//		LocalCluster cluster = new LocalCluster();
 //		conf.put(Config.NIMBUS_HOST, "hdp01.localdomain");
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");
-		System.setProperty("hadoop.home.dir", "/tmp");
+//		System.setProperty("hadoop.home.dir", "/tmp");
+//		LocalCluster cluster = new LocalCluster();
 		StormSubmitter.submitTopology("ApLogAnalyzer", config, builder.createTopology());
 	}
 
