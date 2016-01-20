@@ -1,10 +1,15 @@
 /**
  * https://www.elastic.co/guide/en/elasticsearch/client/java-api/1.7/generate.html
+ * https://www.elastic.co/guide/en/elasticsearch/reference/1.7/mapping-date-format.html#built-in-date-formats
  */
 package com.pic.ala;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,13 +29,18 @@ import backtype.storm.tuple.Values;
 
 public class ApLogScheme implements Scheme {
 
+	private static final String[] FORMATS = new String[] {
+			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+			"yyyy-MM-dd HH:mm:ss.SSS",
+			"yyyy-MM-dd'T'HH:mm:ss.SSSZ" };
+
 //	TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
 
 //	private static final long serialVersionUID = 7102546688047309944L;
 //	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
     private static final Logger LOG = Logger.getLogger(ApLogScheme.class);
 //	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 	// The following fields will be used or stored by Elasticsearch.
@@ -72,9 +82,12 @@ public class ApLogScheme implements Scheme {
 			ApLog apLog = objectMapper.readValue(logEntry, ApLog.class);
 			String systemID = apLog.getSystemID();
 			String logType = apLog.getLogType();
-			String logTime = apLog.getLogTime();
-			LocalDate localDate = LocalDate.parse(logTime, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-			String logDate = localDate.toString("yyyy-MM-dd");
+			Date logTime = parseDate(apLog.getLogTime());
+			// Multiple patterns:
+//			LocalDate localDate = LocalDate.parse(logTime, DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+//			String logDate = localDate.toString("yyyy-MM-dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String logDate = sdf.format(logTime);
 			String apID = apLog.getApID();
 			String functionID = apLog.getFunctionID();
 			String who = apLog.getWho();
@@ -94,8 +107,10 @@ public class ApLogScheme implements Scheme {
 					apID, functionID, who, from, at, to, action, result,
 					keyword, messageLevel, message, messageCode, tableName,
 					dataCount);
+
 		}  catch (Exception e) {
 			LOG.error(e.getMessage());
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -208,6 +223,22 @@ public class ApLogScheme implements Scheme {
 
 	public String getCounterColumnName() {
 		return this.counterColumnName;
+	}
+
+	private static Date parseDate(String value) {
+		for (int i = 0; i < FORMATS.length; i++) {
+			SimpleDateFormat format = new SimpleDateFormat(FORMATS[i]);
+			Date temp;
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			try {
+				temp = format.parse(value);
+				if (temp != null)
+					return temp;
+			} catch (ParseException e) {
+			}
+		}
+		LOG.error("Could not parse timestamp for log");
+		return null;
 	}
 
 	/**

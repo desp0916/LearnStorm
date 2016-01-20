@@ -1,6 +1,10 @@
+/**
+ * https://www.elastic.co/guide/en/elasticsearch/reference/1.7/mapping-date-format.html#built-in-date-formats
+ */
 package com.pic.ala.gen;
 
-import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -105,7 +109,8 @@ public class ApLog {
 			this.action = getRandomOption(actions);
 		}
 
-		this.logTime = new Timestamp(new Date().getTime()).toString();
+//		this.logTime = new Timestamp(new Date().getTime()).toString();
+		this.logTime = getISO8601Time();
 		this.functionID = getRandomOption(functionIDs);
 		this.result = getRandomOption(results);
 		this.keyword = getRandomOption(keywords);
@@ -295,6 +300,18 @@ public class ApLog {
 
 	public static int getRandomInt(final int minInt, final int maxInt) {
 		return ThreadLocalRandom.current().nextInt(minInt, maxInt + 1);
+	}
+
+	/**
+	 * http://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format
+	 * 2016-01-20T10:53:52.457+0800
+	 * 2016-01-20T11:11:42.915Z
+	 */
+	public static String getISO8601Time() {
+//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//		df.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
+		return df.format(new Date());
 	}
 
 	public static void main(String[] args) {

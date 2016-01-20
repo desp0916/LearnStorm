@@ -10,6 +10,9 @@
  *  curl -XPUT 'localhost:9200/aplog_pos?pretty'
  *  curl -XPUT 'localhost:9200/aplog_upcc?pretty'
  *  curl -XPUT 'localhost:9200/aplog_wds?pretty'
+ *
+ * ElasticSearch - Index document:
+ * https://www.elastic.co/guide/en/elasticsearch/client/java-api/1.7/index-doc.html
  */
 
 package com.pic.ala;
@@ -57,46 +60,46 @@ public class ESBolt extends BaseRichBolt {
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
 
-		if (stormConf == null) {
-			throw new IllegalArgumentException(
-					"ElasticSearch configuration not found using key '" + this.configKey + "'");
-		}
-
-		Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
-
-		String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
-		String esHost = (String) conf.get(ES_HOST);
-		String esIndexName = (String) conf.get(ES_INDEX_NAME);
-		String esIndexType = (String) conf.get(ES_INDEX_TYPE);
-
-		if (esClusterName == null) {
-			LOG.warn("No '" + ES_CLUSTER_NAME + "' value found in configuration! Using ElasticSearch defaults.");
-		}
-
-		if (esHost == null) {
-			LOG.warn("No '" + ES_HOST + "' value found in configuration! Using ElasticSearch defaults.");
-		}
-
-		if (esIndexName == null) {
-			LOG.warn("No '" + ES_INDEX_NAME + "' value found in configuration! Using ElasticSearch defaults.");
-		}
-
-		if (esIndexType == null) {
-			LOG.warn("No '" + ES_INDEX_TYPE + "' value found in configuration! Using ElasticSearch defaults.");
-		}
-
-		/**
-		 * @TODO add mapping, see: http://stackoverflow.com/questions/22071198/adding-mapping-to-a-type-from-java-how-do-i-do-it
-		 */
 		try {
+			if (stormConf == null) {
+				throw new IllegalArgumentException(
+						"ElasticSearch configuration not found using key '" + this.configKey + "'");
+			}
+			/**
+			 * @TODO add mapping, see:
+			 * http://stackoverflow.com/questions/22071198/adding-mapping-to-a-type-from-java-how-do-i-do-it
+			 */
+			Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
+
+			String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
+			String esHost = (String) conf.get(ES_HOST);
+			String esIndexName = (String) conf.get(ES_INDEX_NAME);
+			String esIndexType = (String) conf.get(ES_INDEX_TYPE);
+
+			if (esClusterName == null) {
+				LOG.warn("No '" + ES_CLUSTER_NAME + "' value found in configuration! Using ElasticSearch defaults.");
+			}
+
+			if (esHost == null) {
+				LOG.warn("No '" + ES_HOST + "' value found in configuration! Using ElasticSearch defaults.");
+			}
+
+			if (esIndexName == null) {
+				LOG.warn("No '" + ES_INDEX_NAME + "' value found in configuration! Using ElasticSearch defaults.");
+			}
+
+			if (esIndexType == null) {
+				LOG.warn("No '" + ES_INDEX_TYPE + "' value found in configuration! Using ElasticSearch defaults.");
+			}
+
 //			Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
 			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
 			synchronized (ESBolt.class) {
 				if (client == null) {
-//					client = TransportClient.builder().settings(settings).build().addTransportAddress(
-//								new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
+//					client = TransportClient.builder().settings(settings).build()
+//							.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
 					client = new TransportClient(settings)
-								.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
+							.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
 				}
 			}
 		} catch (Exception e) {
@@ -109,31 +112,41 @@ public class ESBolt extends BaseRichBolt {
 	 */
 	@Override
 	public void execute(Tuple tuple) {
-		String systemID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYSTEM_ID);
-		String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
-		String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
-		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
+		try {
+			String systemID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYSTEM_ID);
+			String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
+			String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
+			String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
-		if (toBeIndexed == null) {
-			LOG.warn("Received null or incorrect value from tuple");
-			return;
-		}
-		IndexResponse response = client.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase() + "_" + logDate, logType.toLowerCase())
-									.setSource(toBeIndexed).execute().actionGet();
-		if (response == null) {
-			LOG.error("Failed to index Tuple: " + tuple.toString());
-			collector.fail(tuple);
-		} else {
-			String documentIndexId = response.getId();
-			response.getIndex();
-			if (documentIndexId == null) {
-				LOG.error("Failed to index Tuple: " + tuple.toString());
-				collector.fail(tuple);
-			} else {
-				LOG.debug("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
-				collector.emit(new Values(documentIndexId));
+			if (toBeIndexed == null) {
+				LOG.warn("Received null or incorrect value from tuple");
 				collector.ack(tuple);
 			}
+			IndexResponse response = client
+					.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase() + "_" + logDate, logType.toLowerCase())
+					.setSource(toBeIndexed).execute().actionGet();
+			if (response == null) {
+				LOG.error("Failed to index Tuple: " + tuple.toString());
+//				collector.fail(tuple);
+				collector.ack(tuple);
+			} else {
+				String documentIndexId = response.getId();
+				response.getIndex();
+				if (documentIndexId == null) {
+					LOG.error("Failed to index Tuple: " + tuple.toString());
+//					collector.fail(tuple);
+					collector.ack(tuple);
+				} else {
+					LOG.debug("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
+					collector.emit(new Values(documentIndexId));
+					collector.ack(tuple);
+				}
+			}
+		} catch (Exception e) {
+//			LOG.error(e.getMessage());
+			collector.reportError(e);
+//			collector.fail(tuple);
+			collector.ack(tuple);
 		}
 	}
 

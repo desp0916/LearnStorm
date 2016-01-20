@@ -32,15 +32,15 @@ public class RandomLogSpout extends BaseRichSpout {
 
 	@Override
 	public void nextTuple() {
-		Utils.sleep(ThreadLocalRandom.current().nextInt(1, 11) * 1000);
-		String systemID = ApLog.getRandomOption(ApLog.SYSTEMS);
-		String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
-		ApLog log = new ApLog(systemID, logType);
-//		_collector.emit(new Values(log.toString()));
 		try {
+			Utils.sleep(ThreadLocalRandom.current().nextInt(1, 11) * 1000);
+			String systemID = ApLog.getRandomOption(ApLog.SYSTEMS);
+			String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
+			ApLog log = new ApLog(systemID, logType);
+//			_collector.emit(new Values(log.toString()));
 			_collector.emit(new Values(objectMapper.writeValueAsString(log)));
 		} catch (IOException e) {
-			e.printStackTrace();
+			_collector.reportError(e);
 		}
 	}
 
