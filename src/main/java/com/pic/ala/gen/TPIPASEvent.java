@@ -12,8 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class TPIPASEvent extends Event {
 
-	public TPIPASEvent(final String systemID) {
-		this.systemID = systemID;
+	public TPIPASEvent(final String sysID) {
+		this.sysID = sysID;
 		this.logger = Logger.getLogger(TPIPASEvent.class);
 		this.mapper = new ObjectMapper();
 	}
@@ -23,7 +23,7 @@ public class TPIPASEvent extends Event {
 			try {
 				synchronized (this) {
 					wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
-					ApLog log = new ApLog(systemID, "tpipas");
+					ApLog log = new ApLog(sysID, "tpipas");
 //					logger.info(log.toString());
 					logger.info(mapper.writeValueAsString(log));
 				}

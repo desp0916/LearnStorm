@@ -113,7 +113,7 @@ public class ESBolt extends BaseRichBolt {
 	@Override
 	public void execute(Tuple tuple) {
 		try {
-			String systemID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYSTEM_ID);
+			String sysID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYS_ID);
 			String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
 			String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
 			String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
@@ -123,7 +123,7 @@ public class ESBolt extends BaseRichBolt {
 				collector.ack(tuple);
 			}
 			IndexResponse response = client
-					.prepareIndex(ES_INDEX_PREFIX + systemID.toLowerCase() + "_" + logDate, logType.toLowerCase())
+					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "_" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).execute().actionGet();
 			if (response == null) {
 				LOG.error("Failed to index Tuple: " + tuple.toString());

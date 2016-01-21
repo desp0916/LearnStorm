@@ -16,11 +16,11 @@ public class ApLog {
 
 	public static final String LOG_SEPARATOR = "$$";
 
-	public static final String DEFAULT_SYSTEM = "aes3g";
+	public static final String DEFAULT_SYS_ID = "aes3g";
 	public static final String DEFAULT_LOG_TYPE = "batch";
 
 	// Index names of Elasticsearch should be lower cases.
-	public static final List<String> SYSTEMS = Arrays.asList(DEFAULT_SYSTEM, "pos", "upcc", "wds");
+	public static final List<String> SYSTEMS = Arrays.asList(DEFAULT_SYS_ID, "pos", "upcc", "wds");
 	public static final List<String> LOG_TYPES = Arrays.asList(DEFAULT_LOG_TYPE, "ui", "tpipas");
 
 	private static List<String> apIDs = Arrays.asList("App01V4", "App02V2", "App03V4", "App04V3", "App05V1");
@@ -42,42 +42,40 @@ public class ApLog {
 	private static List<String> tableNames = Arrays.asList("SYS_USERS", "TRA_ORDERS", "TRA_INVOICES", "CODES", "ITEMS");
 //	private static List<String> dataCounts = Arrays.asList("1", "24", "100", "1234", "20344");
 
-	private String systemID;		// 系統名稱 (new)
-	private String logType;			// Log 類型 (new)
-	private String logTime;			// Log 寫入時間，必須符合「yyyy-mm-dd hh:mm:ss.sss」格式
+	private String sysID;				// 系統名稱 (new)
+	private String logType;				// Log 類型 (new)
+	private String logTime;				// Log 寫入時間，必須符合「yyyy-mm-dd hh:mm:ss.sss」格式
 
-	private String apID = "";		// AP 名稱，可帶版本
-	private String functionID = "";	// 功能代碼或原始碼中的 class、method
+	private String apID = "";			// AP 名稱，可帶版本
+	private String functID = "";		// 功能代碼或原始碼中的 class、method
 
-	private String who = "";		// 誰發起這個 request 或觸發這個 event，例如： User ID
+	private String who = "";			// 誰發起這個 request 或觸發這個 event，例如： User ID
 
-	private String from = ""; 		// 請求的來源，例如：client ip
-	private String at = "";			// 處理請求的地方，例如：本機的 host name
-	private String to = "";			// 目的地，例：DB 的 host name、遠端的 Web Service / API
+	private String from = ""; 			// 請求的來源，例如：client ip
+	private String at = "";				// 處理請求的地方，例如：本機的 host name
+	private String to = "";				// 目的地，例：DB 的 host name、遠端的 Web Service / API
 
-	private String action = "";		// 執行動作
-	private String result = "";		// 執行結果
+	private String action = "";			// 執行動作
+	private String result = "";			// 執行結果
 
-	private String keyword = "";	// 關鍵字
+	private String kw = "";				// 關鍵字
 
-	private String messageLevel = "INFO";	// 訊息層級
-	private String message = "";			// 訊息內容
-	private String messageCode = "";		// 訊息代碼
+	private String msgLevel = "INFO";	// 訊息層級
+	private String msg = "";			// 訊息內容
+	private String msgCode = "";		// 訊息代碼
 
-	private String tableName = "";	// 資料表名稱 (optional)
-	private int dataCount;	// 資料筆數 (optional)
+	private String table = "";			// 資料表名稱 (optional)
+	private int dataCnt;				// 資料筆數 (optional)
 
 	public ApLog() {}
 
 	public ApLog(final String systemID, final String logType) {
 
 		if (systemID != null && !("").equals(systemID) && SYSTEMS.contains(systemID)) {
-			this.systemID = systemID.toLowerCase();
+			this.sysID = systemID.toLowerCase();
 		} else {
-			this.systemID = DEFAULT_SYSTEM.toLowerCase();
+			this.sysID = DEFAULT_SYS_ID.toLowerCase();
 		}
-
-//		System.out.println("logType:"+logType);
 
 		if (logType == null || ("").equals(logType) || !LOG_TYPES.contains(logType)) {
 			this.logType = DEFAULT_LOG_TYPE;
@@ -109,50 +107,47 @@ public class ApLog {
 			this.action = getRandomOption(actions);
 		}
 
-//		this.logTime = new Timestamp(new Date().getTime()).toString();
 		this.logTime = getISO8601Time();
-		this.functionID = getRandomOption(functionIDs);
+		this.functID = getRandomOption(functionIDs);
 		this.result = getRandomOption(results);
-		this.keyword = getRandomOption(keywords);
-		this.messageLevel = getRandomOption(messageLevels);
-		this.message = getRandomOption(messages);
-//		this.messageCode = getRandomOption(messageCodes);
-		this.messageCode = String.valueOf(getRandomInt(1000, 9999));
-		this.tableName = getRandomOption(tableNames);
-//		this.dataCount = getRandomOption(dataCounts);
-		this.dataCount = getRandomInt(1, 200);
+		this.kw = getRandomOption(keywords);
+		this.msgLevel = getRandomOption(messageLevels);
+		this.msg = getRandomOption(messages);
+		this.msgCode = String.valueOf(getRandomInt(1000, 9999));
+		this.table = getRandomOption(tableNames);
+		this.dataCnt = getRandomInt(1, 200);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(systemID).append(LOG_SEPARATOR)
+		builder.append(sysID).append(LOG_SEPARATOR)
 				.append(logType).append(LOG_SEPARATOR)
 				.append(logTime).append(LOG_SEPARATOR)
 				.append(apID).append(LOG_SEPARATOR)
-				.append(functionID).append(LOG_SEPARATOR)
+				.append(functID).append(LOG_SEPARATOR)
 				.append(who).append(LOG_SEPARATOR)
 				.append(from).append(LOG_SEPARATOR)
 				.append(at).append(LOG_SEPARATOR)
 				.append(to).append(LOG_SEPARATOR)
 				.append(action).append(LOG_SEPARATOR)
 				.append(result).append(LOG_SEPARATOR)
-				.append(keyword).append(LOG_SEPARATOR)
-				.append(messageLevel).append(LOG_SEPARATOR)
-				.append(message).append(LOG_SEPARATOR)
-				.append(messageCode).append(LOG_SEPARATOR)
-				.append(tableName).append(LOG_SEPARATOR)
-				.append(dataCount);
+				.append(kw).append(LOG_SEPARATOR)
+				.append(msgLevel).append(LOG_SEPARATOR)
+				.append(msg).append(LOG_SEPARATOR)
+				.append(msgCode).append(LOG_SEPARATOR)
+				.append(table).append(LOG_SEPARATOR)
+				.append(dataCnt);
 
 		return builder.toString();
 	}
 
-	public String getSystemID() {
-		return systemID;
+	public String getSysID() {
+		return sysID;
 	}
 
-	public void setSystemID(String systemID) {
-		this.systemID = systemID;
+	public void setSysID(String sysID) {
+		this.sysID = sysID;
 	}
 
 	public String getLogType() {
@@ -179,12 +174,12 @@ public class ApLog {
 		this.apID = apID;
 	}
 
-	public String getFunctionID() {
-		return functionID;
+	public String getFunctID() {
+		return functID;
 	}
 
-	public void setFunctionID(String functionID) {
-		this.functionID = functionID;
+	public void setFunctID(String functID) {
+		this.functID = functID;
 	}
 
 	public String getWho() {
@@ -235,52 +230,52 @@ public class ApLog {
 		this.result = result;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public String getKw() {
+		return kw;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setKw(String kw) {
+		this.kw = kw;
 	}
 
-	public String getMessageLevel() {
-		return messageLevel;
+	public String getMsgLevel() {
+		return msgLevel;
 	}
 
-	public void setMessageLevel(String messageLevel) {
-		this.messageLevel = messageLevel;
+	public void setMsgLevel(String msgLevel) {
+		this.msgLevel = msgLevel;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getMsg() {
+		return msg;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
-	public String getMessageCode() {
-		return messageCode;
+	public String getMsgCode() {
+		return msgCode;
 	}
 
-	public void setMessageCode(String messageCode) {
-		this.messageCode = messageCode;
+	public void setMsgCode(String msgCode) {
+		this.msgCode = msgCode;
 	}
 
-	public String getTableName() {
-		return tableName;
+	public String getTable() {
+		return table;
 	}
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	public void setTable(String table) {
+		this.table = table;
 	}
 
-	public int getDataCount() {
-		return dataCount;
+	public int getDataCnt() {
+		return dataCnt;
 	}
 
-	public void setDataCount(int dataCount) {
-		this.dataCount = dataCount;
+	public void setDataCnt(int dataCnt) {
+		this.dataCnt = dataCnt;
 	}
 
 	/**
@@ -315,7 +310,7 @@ public class ApLog {
 	}
 
 	public static void main(String[] args) {
-		ApLog log = new ApLog(DEFAULT_SYSTEM, DEFAULT_LOG_TYPE);
+		ApLog log = new ApLog(DEFAULT_SYS_ID, DEFAULT_LOG_TYPE);
 		System.out.println(log.toString());
 	}
 

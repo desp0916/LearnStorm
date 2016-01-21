@@ -52,7 +52,7 @@ curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
           "type" : "string",
           "index": "not_analyzed" 
         },
-        "functionID" : {
+        "functID" : {
           "type" : "string",
           "index": "not_analyzed" 
         },
@@ -60,11 +60,11 @@ curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
           "type" : "string",
           "index": "not_analyzed" 
         },
-        "messageLevel" : {
+        "msgLevel" : {
           "type" : "string",
           "index": "not_analyzed" 
         },
-        "systemID" : {
+        "sysID" : {
           "type" : "string",
           "index": "not_analyzed" 
         }

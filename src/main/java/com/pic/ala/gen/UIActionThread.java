@@ -6,7 +6,7 @@ public class UIActionThread extends Thread implements Command {
 
 	public UIActionThread(final UIAction uiAction) {
 		this.uiAction = uiAction;
-		this.setName(uiAction.getSystemId() + "-UIAction");
+		this.setName(uiAction.getSysID() + "-UIAction");
 	}
 
 	@Override

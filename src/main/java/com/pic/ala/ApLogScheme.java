@@ -29,6 +29,8 @@ import backtype.storm.tuple.Values;
 
 public class ApLogScheme implements Scheme {
 
+	private static final long serialVersionUID = 1L;
+
 	private static final String[] FORMATS = new String[] {
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
 			"yyyy-MM-dd HH:mm:ss.SSS",
@@ -45,24 +47,25 @@ public class ApLogScheme implements Scheme {
 
 	// The following fields will be used or stored by Elasticsearch.
 	public static final String FIELD_ES_SOURCE = "es_source";	// ElasticSearch 物件的 source 欄位
-	public static final String FIELD_SYSTEM_ID = "systemID";
+	public static final String FIELD_SYS_ID = "sysID";
 	public static final String FIELD_LOG_DATE = "logDate";
 	public static final String FIELD_LOG_TYPE = "logType";
 	public static final String FIELD_LOG_TIME = "logTime";
 	public static final String FIELD_AP_ID = "apID";
-	public static final String FIELD_FUNCTION_ID = "functionID";
+	public static final String FIELD_FUNCT_ID = "functID";
 	public static final String FIELD_WHO = "who";
 	public static final String FIELD_FROM = "from";
 	public static final String FIELD_AT = "at";
 	public static final String FIELD_TO = "to";
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_RESULT = "result";
-	public static final String FIELD_KEYWORD = "keyword";
-	public static final String FIELD_MESSAGE_LEVEL = "messageLevel";
-	public static final String FIELD_MESSAGE = "message";
-	public static final String FIELD_MESSAGE_CODE = "messageCode";
-	public static final String FIELD_TABLE_NAME = "tableName";
-	public static final String FIELD_DATA_COUNT = "dataCount";
+	public static final String FIELD_KW = "kw";
+	public static final String FIELD_MSG_LEVEL = "msgLevel";
+	public static final String FIELD_MSG = "msg";
+	public static final String FIELD_MSG_CODE = "msgCode";
+	public static final String FIELD_TABLE = "table";
+	public static final String FIELD_DATA_CNT = "dataCnt";
+	public static final String FIELD_PROC_TIME = "procTime";
 
 	// The following fields will be used or stored by HBase.
 	private String counterColumnName;
@@ -76,11 +79,11 @@ public class ApLogScheme implements Scheme {
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
 		try {
-			String logEntry = new String(bytes, "UTF-8");
+			String esSource = new String(bytes, "UTF-8");
 
 			ObjectMapper objectMapper = new ObjectMapper();
-			ApLog apLog = objectMapper.readValue(logEntry, ApLog.class);
-			String systemID = apLog.getSystemID();
+			ApLog apLog = objectMapper.readValue(esSource, ApLog.class);
+			String systemID = apLog.getSysID();
 			String logType = apLog.getLogType();
 			Date logTime = parseDate(apLog.getLogTime());
 			// Multiple patterns:
@@ -88,25 +91,28 @@ public class ApLogScheme implements Scheme {
 //			String logDate = localDate.toString("yyyy-MM-dd");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String logDate = sdf.format(logTime);
-			String apID = apLog.getApID();
-			String functionID = apLog.getFunctionID();
-			String who = apLog.getWho();
-			String from = apLog.getFrom();
-			String at = apLog.getAt();
-			String to = apLog.getTo();
-			String action = apLog.getAction();
-			String result = apLog.getResult();
-			String keyword = apLog.getKeyword();
-			String messageLevel = apLog.getMessageLevel();
-			String message = apLog.getMessage();
-			String messageCode = apLog.getMessageCode();
-			String tableName = apLog.getTableName();
-			int dataCount = apLog.getDataCount();
+//			String apID = apLog.getApID();
+//			String functID = apLog.getFunctID();
+//			String who = apLog.getWho();
+//			String from = apLog.getFrom();
+//			String at = apLog.getAt();
+//			String to = apLog.getTo();
+//			String action = apLog.getAction();
+//			String result = apLog.getResult();
+//			String keyword = apLog.getKeyword();
+//			String msgLevel = apLog.getMsgLevel();
+//			String msg = apLog.getMsg();
+//			String msgCode = apLog.getMsgCode();
+//			String table = apLog.getTable();
+//			int dataCnt = apLog.getDataCnt();
+//			int procTime = apLog.getProcTime();
 
-			return new Values(logEntry, systemID, logType, logDate, logTime,
-					apID, functionID, who, from, at, to, action, result,
-					keyword, messageLevel, message, messageCode, tableName,
-					dataCount);
+//			return new Values(esSource, sysID, logType, logDate, logTime,
+//					apID, functID, who, from, at, to, action, result,
+//					kw, msgLevel, msg, msgCode, table,
+//					dataCnt, procTime);
+
+			return new Values(esSource, systemID, logType, logDate, logTime);
 
 		}  catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -121,12 +127,12 @@ public class ApLogScheme implements Scheme {
 			String logEntry = new String(bytes, "UTF-8");
 			String[] pieces = logEntry.split("\\$\\$");
 
-			String systemID = cleanup(pieces[0]);
+			String sysID = cleanup(pieces[0]);
 			String logType = cleanup(pieces[1]);
 			String logTimeString = cleanup(pieces[2]);
 			DateTime logTime = dateTimeFormatter.parseDateTime(logTimeString);
 			String apID = cleanup(pieces[3]);
-			String functionID = cleanup(pieces[4]);
+			String functID = cleanup(pieces[4]);
 			String who = cleanup(pieces[5]);
 			String from = cleanup(pieces[6]);
 			String at = cleanup(pieces[7]);
@@ -134,18 +140,19 @@ public class ApLogScheme implements Scheme {
 			String action = cleanup(pieces[9]);
 			String result = cleanup(pieces[10]);
 			String keyword = cleanup(pieces[11]);
-			String messageLevel = cleanup(pieces[12]);
-			String message = cleanup(pieces[13]);
-			String messageCode = cleanup(pieces[14]);
-			String tableName = cleanup(pieces[15]);
-			String dataCount = cleanup(pieces[16]);
+			String msgLevel = cleanup(pieces[12]);
+			String msg = cleanup(pieces[13]);
+			String msgCode = cleanup(pieces[14]);
+			String table = cleanup(pieces[15]);
+			String dataCnt = cleanup(pieces[16]);
+			String procTime = cleanup(pieces[17]);
 
 			LocalDate localDate = LocalDate.parse(logTimeString, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 			String logDate = localDate.toString("yyyy-MM-dd");
 
 			// The following fields are for HBase:
 
-//			String rowKey = systemID + apID + functionID +;
+//			String rowKey = sysID + apID + functID +;
 
 //			DateTime dateTime = DateTimeFormatter.parseDateTime(cleanup(pieces[2]));
 //			long timestamp = System.currentTimeMillis();
@@ -166,32 +173,33 @@ public class ApLogScheme implements Scheme {
 			// ElasticSearch 物件的 _source 欄位
 			final XContentBuilder builder = jsonBuilder()
 				    .startObject()
-				        .field(FIELD_SYSTEM_ID, systemID)
+				        .field(FIELD_SYS_ID, sysID)
 				        .field(FIELD_LOG_TYPE, logType)
 				        .field(FIELD_LOG_TIME, logTime)
 				        .field(FIELD_AP_ID, apID)
-				        .field(FIELD_FUNCTION_ID, functionID)
+				        .field(FIELD_FUNCT_ID, functID)
 				        .field(FIELD_WHO, who)
 				        .field(FIELD_FROM, from)
 				        .field(FIELD_AT, at)
 				        .field(FIELD_TO, to)
 				        .field(FIELD_ACTION, action)
 				        .field(FIELD_RESULT, result)
-				        .field(FIELD_KEYWORD, keyword)
-				        .field(FIELD_MESSAGE_LEVEL, messageLevel)
-				        .field(FIELD_MESSAGE, message)
-				        .field(FIELD_MESSAGE_CODE, messageCode)
-				        .field(FIELD_TABLE_NAME, tableName)
-				        .field(FIELD_DATA_COUNT, isNumeric(dataCount) ? Long.valueOf(dataCount) : dataCount)
+				        .field(FIELD_KW, keyword)
+				        .field(FIELD_MSG_LEVEL, msgLevel)
+				        .field(FIELD_MSG, msg)
+				        .field(FIELD_MSG_CODE, msgCode)
+				        .field(FIELD_TABLE, table)
+				        .field(FIELD_DATA_CNT, isNumeric(dataCnt) ? Integer.valueOf(dataCnt) : dataCnt)
+				        .field(FIELD_PROC_TIME, isNumeric(procTime) ? Integer.valueOf(procTime) : procTime)
 				        .field("timestamp_ms", logTime.getMillis())
 //				        .field("@timestamp", new Timestamp(System.currentTimeMillis()))
 				        .field("@timestamp", logTime)
 				    .endObject();
 
-			return new Values(builder.string(), systemID, logType, logDate, logTime,
-					apID, functionID, who, from, at, to, action, result,
-					keyword, messageLevel, message, messageCode, tableName,
-					dataCount);
+			return new Values(builder.string(), sysID, logType, logDate, logTime,
+					apID, functID, who, from, at, to, action, result,
+					keyword, msgLevel, msg, msgCode, table,
+					dataCnt, procTime);
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -201,12 +209,14 @@ public class ApLogScheme implements Scheme {
 
 	@Override
 	public Fields getOutputFields() {
-		return new Fields(FIELD_ES_SOURCE, FIELD_SYSTEM_ID, FIELD_LOG_TYPE,
-				FIELD_LOG_DATE, FIELD_LOG_TIME, FIELD_AP_ID,
-				FIELD_FUNCTION_ID, FIELD_WHO, FIELD_FROM, FIELD_AT,
-				FIELD_TO, FIELD_ACTION, FIELD_RESULT, FIELD_KEYWORD,
-				FIELD_MESSAGE_LEVEL, FIELD_MESSAGE, FIELD_MESSAGE_CODE,
-				FIELD_TABLE_NAME, FIELD_DATA_COUNT);
+		// Required: esSource, systemID, logType, logDate, logTime
+//		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE,
+//				FIELD_LOG_DATE, FIELD_LOG_TIME, FIELD_AP_ID,
+//				FIELD_FUNCT_ID, FIELD_WHO, FIELD_FROM, FIELD_AT,
+//				FIELD_TO, FIELD_ACTION, FIELD_RESULT, FIELD_KW,
+//				FIELD_MSG_LEVEL, FIELD_MSG, FIELD_MSG_CODE,
+//				FIELD_TABLE, FIELD_DATA_CNT);
+		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE, FIELD_LOG_DATE, FIELD_LOG_TIME);
 	}
 
 	private String cleanup(String str) {

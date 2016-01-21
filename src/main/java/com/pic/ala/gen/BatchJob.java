@@ -12,8 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class BatchJob extends Event {
 
-	public BatchJob(final String systemID) {
-		this.systemID = systemID;
+	public BatchJob(final String sysID) {
+		this.sysID = sysID;
 		this.logger = Logger.getLogger(BatchJob.class);
 		this.mapper = new ObjectMapper();
 	}
@@ -22,7 +22,7 @@ public class BatchJob extends Event {
 		while (true) {
 			try {
 				synchronized (this) {
-					ApLog log = new ApLog(systemID, "batch");
+					ApLog log = new ApLog(sysID, "batch");
 //					logger.info(log.toString());
 					wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
 //					logger.info(log.toString());

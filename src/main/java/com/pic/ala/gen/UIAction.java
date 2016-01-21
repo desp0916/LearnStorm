@@ -12,8 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class UIAction extends Event {
 
-	public UIAction(final String systemID) {
-		this.systemID = systemID;
+	public UIAction(final String sysID) {
+		this.sysID = sysID;
 		this.logger = Logger.getLogger(UIAction.class);
 		this.mapper = new ObjectMapper();
 	}
@@ -23,7 +23,7 @@ public class UIAction extends Event {
 			try {
 				synchronized (this) {
 					wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
-					ApLog log = new ApLog(systemID, "ui");
+					ApLog log = new ApLog(sysID, "ui");
 //					logger.info(log.toString());
 					logger.info(mapper.writeValueAsString(log));
 				}
