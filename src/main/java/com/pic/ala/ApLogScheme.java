@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.joda.time.DateTime;
@@ -20,6 +19,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.pic.ala.gen.ApLog;
 
@@ -40,7 +41,7 @@ public class ApLogScheme implements Scheme {
 
 //	private static final long serialVersionUID = 7102546688047309944L;
 //	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
-    private static final Logger LOG = Logger.getLogger(ApLogScheme.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
 //	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
@@ -83,7 +84,7 @@ public class ApLogScheme implements Scheme {
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			ApLog apLog = objectMapper.readValue(esSource, ApLog.class);
-			String systemID = apLog.getSysID();
+			String sysID = apLog.getSysID();
 			String logType = apLog.getLogType();
 			Date logTime = parseDate(apLog.getLogTime());
 			// Multiple patterns:
@@ -112,12 +113,13 @@ public class ApLogScheme implements Scheme {
 //					kw, msgLevel, msg, msgCode, table,
 //					dataCnt, procTime);
 
-			return new Values(esSource, systemID, logType, logDate, logTime);
+			return new Values(esSource, sysID, logType, logDate, logTime);
 
 		}  catch (Exception e) {
 			LOG.error(e.getMessage());
 			e.printStackTrace();
-			throw new RuntimeException(e);
+//			throw new RuntimeException(e);
+			return new Values("", "", "", "", "");
 		}
 	}
 
