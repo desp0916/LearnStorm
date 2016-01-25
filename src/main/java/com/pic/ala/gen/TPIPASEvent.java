@@ -18,15 +18,14 @@ public class TPIPASEvent extends Event {
 		this.mapper = new ObjectMapper();
 	}
 
-	public void fire() {
+	public synchronized void fire() {
 		while (true) {
 			try {
-				synchronized (this) {
-					wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
-					ApLog log = new ApLog(sysID, "tpipas");
-//					logger.info(log.toString());
-					logger.info(mapper.writeValueAsString(log));
-				}
+				wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+				ApLog log = new ApLog(sysID, "tpipas");
+//				logger.info(log.toString());
+				logger.info(mapper.writeValueAsString(log));
+
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			} catch (JsonMappingException e) {

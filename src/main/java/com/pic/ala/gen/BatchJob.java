@@ -18,16 +18,14 @@ public class BatchJob extends Event {
 		this.mapper = new ObjectMapper();
 	}
 
-	public void run() {
+	public synchronized void run() {
 		while (true) {
 			try {
-				synchronized (this) {
-					ApLog log = new ApLog(sysID, "batch");
-//					logger.info(log.toString());
-					wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
-//					logger.info(log.toString());
-					logger.info(mapper.writeValueAsString(log));
-				}
+				ApLog log = new ApLog(sysID, "batch");
+//				logger.info(log.toString());
+				wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+//				logger.info(log.toString());
+				logger.info(mapper.writeValueAsString(log));
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			} catch (JsonMappingException e) {

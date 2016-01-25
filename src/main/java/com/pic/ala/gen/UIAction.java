@@ -18,15 +18,13 @@ public class UIAction extends Event {
 		this.mapper = new ObjectMapper();
 	}
 
-	public void take() {
+	public synchronized void take() {
 		while (true) {
 			try {
-				synchronized (this) {
-					wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
-					ApLog log = new ApLog(sysID, "ui");
-//					logger.info(log.toString());
-					logger.info(mapper.writeValueAsString(log));
-				}
+				wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+				ApLog log = new ApLog(sysID, "ui");
+//				logger.info(log.toString());
+				logger.info(mapper.writeValueAsString(log));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
