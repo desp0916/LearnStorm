@@ -18,10 +18,10 @@ public class UIAction extends Event {
 		this.mapper = new ObjectMapper();
 	}
 
-	public synchronized void take() {
+	public void take() {
 		while (true) {
 			try {
-				wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
 				ApLog log = new ApLog(sysID, "ui");
 //				logger.info(log.toString());
 				logger.info(mapper.writeValueAsString(log));

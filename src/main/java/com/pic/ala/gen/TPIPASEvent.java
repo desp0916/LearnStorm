@@ -18,10 +18,10 @@ public class TPIPASEvent extends Event {
 		this.mapper = new ObjectMapper();
 	}
 
-	public synchronized void fire() {
+	public void fire() {
 		while (true) {
 			try {
-				wait(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
 				ApLog log = new ApLog(sysID, "tpipas");
 //				logger.info(log.toString());
 				logger.info(mapper.writeValueAsString(log));
