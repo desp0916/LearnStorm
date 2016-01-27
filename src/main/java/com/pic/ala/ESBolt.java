@@ -17,15 +17,19 @@
 
 package com.pic.ala;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -37,73 +41,73 @@ import backtype.storm.tuple.Values;
 
 public class ESBolt extends BaseRichBolt {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ESBolt.class);
+
 	private static final String ES_INDEX_PREFIX = "aplog_";
 //	private static final long serialVersionUID = -26161992456930984L;
-    private static final Logger LOG = Logger.getLogger(ESBolt.class);
 
-	private transient Client client;
+	private static Client client;
 	private OutputCollector collector;
 
 	protected String configKey;
 
 	public static final String ES_CLUSTER_NAME = "es.cluster.name";
-	public static final String ES_HOST = "es.host";
-	public static final String ES_INDEX_NAME = "es.index.nameg";
-	public static final String ES_INDEX_TYPE = "es.index.type";
+	public static final String ES_NODES = "es.nodes";
+	public static final int MIN_CONNECTED_NODES = 5;
+//	public static final String ES_INDEX_NAME = "es.index.name";
+//	public static final String ES_INDEX_TYPE = "es.index.type";
 
-	public ESBolt withConfigKey(String configKey) {
+	public ESBolt withConfigKey(final String configKey) {
 		this.configKey = configKey;
 		return this;
 	}
 
+	/**
+	 * @TODO add mapping, see:
+	 * http://stackoverflow.com/questions/22071198/adding-mapping-to-a-type-from-java-how-do-i-do-it
+	 */
 	@Override
-	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+	public void prepare(final Map stormConf, final TopologyContext context, final OutputCollector collector) {
+
+		if (stormConf == null) {
+			throw new IllegalArgumentException(
+					"ElasticSearch configuration not found using key '" + this.configKey + "'");
+		}
+
+		Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
+
+		String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
+		String esNodes = (String) conf.get(ES_NODES);
+
+		if (esClusterName == null) {
+			throw new IllegalArgumentException("No '" + ES_CLUSTER_NAME + "' value found in configuration!");
+		}
+
+		if (esNodes == null) {
+			throw new IllegalArgumentException("No '" + ES_NODES + "' value found in configuration!");
+		}
+
+		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
+		TransportClient transportClient = new TransportClient(settings);
+
 		this.collector = collector;
-
-		try {
-			if (stormConf == null) {
-				throw new IllegalArgumentException(
-						"ElasticSearch configuration not found using key '" + this.configKey + "'");
-			}
-			/**
-			 * @TODO add mapping, see:
-			 * http://stackoverflow.com/questions/22071198/adding-mapping-to-a-type-from-java-how-do-i-do-it
-			 */
-			Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
-
-			String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
-			String esHost = (String) conf.get(ES_HOST);
-			String esIndexName = (String) conf.get(ES_INDEX_NAME);
-			String esIndexType = (String) conf.get(ES_INDEX_TYPE);
-
-			if (esClusterName == null) {
-				LOG.warn("No '" + ES_CLUSTER_NAME + "' value found in configuration! Using ElasticSearch defaults.");
-			}
-
-			if (esHost == null) {
-				LOG.warn("No '" + ES_HOST + "' value found in configuration! Using ElasticSearch defaults.");
-			}
-
-			if (esIndexName == null) {
-				LOG.warn("No '" + ES_INDEX_NAME + "' value found in configuration! Using ElasticSearch defaults.");
-			}
-
-			if (esIndexType == null) {
-				LOG.warn("No '" + ES_INDEX_TYPE + "' value found in configuration! Using ElasticSearch defaults.");
-			}
-
-//			Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
-			Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
-			synchronized (ESBolt.class) {
-				if (client == null) {
-//					client = TransportClient.builder().settings(settings).build()
-//							.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(ES_HOST), 9300));
-					client = new TransportClient(settings)
-							.addTransportAddress(new InetSocketTransportAddress(esHost, 9300));
+		synchronized (ESBolt.class) {
+			if (client == null) {
+				List<String> esNodesList = Arrays.asList(esNodes.split("\\s*,\\s*"));
+				for (String esNode : esNodesList) {
+					try {
+						transportClient.addTransportAddress(new InetSocketTransportAddress(esNode, 9300));
+					} catch (Exception e) {
+						LOG.warn("Unable to add ElasticSearch node: " + esNode);
+					}
+				}
+				if (transportClient.connectedNodes().size() >= MIN_CONNECTED_NODES) {
+					client = transportClient;
+				} else {
+					transportClient.close();
+					throw new RuntimeException("Unable to initialize ElasticSearch client.");
 				}
 			}
-		} catch (Exception e) {
-			LOG.warn("Unable to initialize ESBolt: ", e);
 		}
 	}
 
@@ -112,41 +116,51 @@ public class ESBolt extends BaseRichBolt {
 	 */
 	@Override
 	public void execute(Tuple tuple) {
-		try {
-			String sysID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYS_ID);
-			String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
-			String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
-			String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
+		String sysID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYS_ID);
+		String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
+		String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
+		String apID = (String) tuple.getValueByField(ApLogScheme.FIELD_AP_ID);
+		String at = (String) tuple.getValueByField(ApLogScheme.FIELD_AT);
+		String msg = (String) tuple.getValueByField(ApLogScheme.FIELD_MSG);
+		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
-			if (toBeIndexed == null) {
-				LOG.warn("Received null or incorrect value from tuple");
-				collector.ack(tuple);
-			}
+		if (isNullOrEmpty(sysID) || isNullOrEmpty(logType) || isNullOrEmpty(logDate)
+				|| isNullOrEmpty(apID) || isNullOrEmpty(at) || isNullOrEmpty(msg)
+				|| isNullOrEmpty(toBeIndexed)) {
+			LOG.error("Received null or incorrect value from tuple.");
+			collector.ack(tuple);
+			return;
+		}
+
+		if (client == null) {
+			collector.fail(tuple);
+			throw new RuntimeException("Unable to get ES client!");
+		}
+
+		try {
 			IndexResponse response = client
 					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "_" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).execute().actionGet();
 			if (response == null) {
 				LOG.error("Failed to index Tuple: " + tuple.toString());
-//				collector.fail(tuple);
-				collector.ack(tuple);
 			} else {
-				String documentIndexId = response.getId();
-				response.getIndex();
-				if (documentIndexId == null) {
-					LOG.error("Failed to index Tuple: " + tuple.toString());
-//					collector.fail(tuple);
-					collector.ack(tuple);
-				} else {
+				if (response.isCreated()) {
+					String documentIndexId = response.getId();
 					LOG.debug("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
 					collector.emit(new Values(documentIndexId));
-					collector.ack(tuple);
+				} else {
+					LOG.error("Failed to index Tuple: " + tuple.toString());
 				}
 			}
-		} catch (Exception e) {
-//			LOG.error(e.getMessage());
-			collector.reportError(e);
-//			collector.fail(tuple);
 			collector.ack(tuple);
+		} catch (ElasticsearchException nnae) {
+			collector.reportError(nnae);
+			collector.fail(tuple);
+			throw new ElasticsearchException("Unknown ElasticsearchException!");
+		} catch (Exception e) {
+			collector.reportError(e);
+			collector.fail(tuple);
+			throw new RuntimeException("Unknown Exception!");
 		}
 	}
 
@@ -158,5 +172,12 @@ public class ESBolt extends BaseRichBolt {
 	@Override
 	public void cleanup() {
 		client.close();
+	}
+
+	private static boolean isNullOrEmpty(String str) {
+		if (str == null || ("").equals(str)) {
+			return true;
+		}
+		return false;
 	}
 }

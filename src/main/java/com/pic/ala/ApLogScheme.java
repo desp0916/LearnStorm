@@ -92,17 +92,17 @@ public class ApLogScheme implements Scheme {
 //			String logDate = localDate.toString("yyyy-MM-dd");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String logDate = sdf.format(logTime);
-//			String apID = apLog.getApID();
+			String apID = apLog.getApID();
 //			String functID = apLog.getFunctID();
 //			String who = apLog.getWho();
 //			String from = apLog.getFrom();
-//			String at = apLog.getAt();
+			String at = apLog.getAt();
 //			String to = apLog.getTo();
 //			String action = apLog.getAction();
 //			String result = apLog.getResult();
 //			String keyword = apLog.getKeyword();
 //			String msgLevel = apLog.getMsgLevel();
-//			String msg = apLog.getMsg();
+			String msg = apLog.getMsg();
 //			String msgCode = apLog.getMsgCode();
 //			String table = apLog.getTable();
 //			int dataCnt = apLog.getDataCnt();
@@ -113,7 +113,7 @@ public class ApLogScheme implements Scheme {
 //					kw, msgLevel, msg, msgCode, table,
 //					dataCnt, procTime);
 
-			return new Values(esSource, sysID, logType, logDate, logTime);
+			return new Values(esSource, sysID, logType, logDate, logTime, apID, at, msg);
 
 		}  catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -218,7 +218,8 @@ public class ApLogScheme implements Scheme {
 //				FIELD_TO, FIELD_ACTION, FIELD_RESULT, FIELD_KW,
 //				FIELD_MSG_LEVEL, FIELD_MSG, FIELD_MSG_CODE,
 //				FIELD_TABLE, FIELD_DATA_CNT);
-		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE, FIELD_LOG_DATE, FIELD_LOG_TIME);
+		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE,
+				FIELD_LOG_DATE, FIELD_LOG_TIME, FIELD_AP_ID, FIELD_AT, FIELD_MSG);
 	}
 
 	private String cleanup(String str) {

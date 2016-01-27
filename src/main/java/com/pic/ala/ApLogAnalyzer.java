@@ -30,6 +30,7 @@ import storm.kafka.ZkHosts;
 public class ApLogAnalyzer extends ApLogBaseTopology {
 
 //	private static final Logger LOG = Logger.getLogger(ApLogAnalyzer.class);
+
 	private static final String KAFKA_SPOUT_ID = "kafkaSpout";
 	private static final String ES_BOLT_ID = "ESBolt";
 	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
@@ -62,18 +63,11 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private void configureESBolts(TopologyBuilder builder, Config config) {
 		HashMap<String, Object> esConfig = new HashMap<String, Object>();
 		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
-		esConfig.put(ESBolt.ES_HOST, topologyConfig.getProperty(ESBolt.ES_HOST));
-		esConfig.put(ESBolt.ES_INDEX_NAME, topologyConfig.getProperty(ESBolt.ES_INDEX_NAME));
-		esConfig.put(ESBolt.ES_INDEX_TYPE, topologyConfig.getProperty(ESBolt.ES_INDEX_TYPE));
+		esConfig.put(ESBolt.ES_NODES, topologyConfig.getProperty(ESBolt.ES_NODES));
 		config.put("es.conf", esConfig);
 
 		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
 		builder.setBolt(ES_BOLT_ID, esBolt, 3).shuffleGrouping(KAFKA_SPOUT_ID);
-
-//		EsConfig esConfig = new EsConfig("elasticsearch", new String[]{"hdp01.localdomain:9300"});
-//		EsTupleMapper tupleMapper = new CustomEsTupleMapper();
-//		EsIndexBolt indexBolt = new EsIndexBolt(esConfig, tupleMapper);
-//		builder.setBolt(ES_BOLT_ID, indexBolt, 1).shuffleGrouping(KAFKA_SPOUT_ID);
 	}
 
 //	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
