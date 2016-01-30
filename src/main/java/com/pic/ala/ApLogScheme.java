@@ -1,6 +1,8 @@
 /**
  * https://www.elastic.co/guide/en/elasticsearch/client/java-api/1.7/generate.html
  * https://www.elastic.co/guide/en/elasticsearch/reference/1.7/mapping-date-format.html#built-in-date-formats
+ *
+ * @TODO Discard undefined fields in ApLog.
  */
 package com.pic.ala;
 
@@ -37,12 +39,10 @@ public class ApLogScheme implements Scheme {
 			"yyyy-MM-dd HH:mm:ss.SSS",
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ" };
 
-//	TimeZone taipeiTimeZone = TimeZone.getTimeZone("GMT+8");
+	private static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	private static final String FORMAT_DATE = "yyyy-MM-dd";
 
-//	private static final long serialVersionUID = 7102546688047309944L;
-//	private static final Logger LOG = LoggerFactory.getLogger(APLogScheme.class);
     private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
-//	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
@@ -51,7 +51,7 @@ public class ApLogScheme implements Scheme {
 	public static final String FIELD_SYS_ID = "sysID";
 	public static final String FIELD_LOG_DATE = "logDate";
 	public static final String FIELD_LOG_TYPE = "logType";
-	public static final String FIELD_LOG_TIME = "logTime";
+	public static final String FIELD_LOG_DATETIME = "logDateTime";
 	public static final String FIELD_AP_ID = "apID";
 	public static final String FIELD_FUNCT_ID = "functID";
 	public static final String FIELD_WHO = "who";
@@ -79,48 +79,43 @@ public class ApLogScheme implements Scheme {
 	 */
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
+
+		String esSource = "";
+		String sysID = "";
+		String logType = "";
+		String apID = "";
+		String at = "";
+		String msg = "";
+		String logDateTime = "";
+		String logDate = "";
+
 		try {
-			String esSource = new String(bytes, "UTF-8");
+			esSource = new String(bytes, "UTF-8");
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			ApLog apLog = objectMapper.readValue(esSource, ApLog.class);
-			String sysID = apLog.getSysID();
-			String logType = apLog.getLogType();
-			Date logTime = parseDate(apLog.getLogTime());
-			// Multiple patterns:
-//			LocalDate localDate = LocalDate.parse(logTime, DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-//			String logDate = localDate.toString("yyyy-MM-dd");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String logDate = sdf.format(logTime);
-			String apID = apLog.getApID();
-//			String functID = apLog.getFunctID();
-//			String who = apLog.getWho();
-//			String from = apLog.getFrom();
-			String at = apLog.getAt();
-//			String to = apLog.getTo();
-//			String action = apLog.getAction();
-//			String result = apLog.getResult();
-//			String keyword = apLog.getKeyword();
-//			String msgLevel = apLog.getMsgLevel();
-			String msg = apLog.getMsg();
-//			String msgCode = apLog.getMsgCode();
-//			String table = apLog.getTable();
-//			int dataCnt = apLog.getDataCnt();
-//			int procTime = apLog.getProcTime();
 
-//			return new Values(esSource, sysID, logType, logDate, logTime,
-//					apID, functID, who, from, at, to, action, result,
-//					kw, msgLevel, msg, msgCode, table,
-//					dataCnt, procTime);
+			sysID = apLog.getSysID();
+			logType = apLog.getLogType();
+			apID = apLog.getApID();
+			at = apLog.getAt();
+			msg = apLog.getMsg();
+			String tmpLogDateTime = parseDateTime(apLog.getLogTime(), FORMAT_DATETIME);
+			String tmpLogDate = parseDateTime(apLog.getLogTime(), FORMAT_DATE);
 
-			return new Values(esSource, sysID, logType, logDate, logTime, apID, at, msg);
+			if (tmpLogDateTime != null && tmpLogDate != null) {
+				logDateTime = tmpLogDateTime;
+				logDate = tmpLogDate;
+				System.out.println("xxx");
+			}
 
 		}  catch (Exception e) {
 			LOG.error(e.getMessage());
 			e.printStackTrace();
 //			throw new RuntimeException(e);
-			return new Values("", "", "", "", "");
 		}
+
+		return new Values(esSource, sysID, logType, logDate, logDateTime, apID, at, msg);
 	}
 
 	public List<Object> deserializeOld(byte[] bytes) {
@@ -177,7 +172,7 @@ public class ApLogScheme implements Scheme {
 				    .startObject()
 				        .field(FIELD_SYS_ID, sysID)
 				        .field(FIELD_LOG_TYPE, logType)
-				        .field(FIELD_LOG_TIME, logTime)
+				        .field(FIELD_LOG_DATETIME, logTime)
 				        .field(FIELD_AP_ID, apID)
 				        .field(FIELD_FUNCT_ID, functID)
 				        .field(FIELD_WHO, who)
@@ -211,15 +206,10 @@ public class ApLogScheme implements Scheme {
 
 	@Override
 	public Fields getOutputFields() {
-		// Required: esSource, systemID, logType, logDate, logTime
-//		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE,
-//				FIELD_LOG_DATE, FIELD_LOG_TIME, FIELD_AP_ID,
-//				FIELD_FUNCT_ID, FIELD_WHO, FIELD_FROM, FIELD_AT,
-//				FIELD_TO, FIELD_ACTION, FIELD_RESULT, FIELD_KW,
-//				FIELD_MSG_LEVEL, FIELD_MSG, FIELD_MSG_CODE,
-//				FIELD_TABLE, FIELD_DATA_CNT);
+		// Required Fields: esSource, systemID, logType, logDate, logTime
 		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE,
-				FIELD_LOG_DATE, FIELD_LOG_TIME, FIELD_AP_ID, FIELD_AT, FIELD_MSG);
+				FIELD_LOG_DATE, FIELD_LOG_DATETIME, FIELD_AP_ID, FIELD_AT,
+				FIELD_MSG);
 	}
 
 	private String cleanup(String str) {
@@ -238,19 +228,19 @@ public class ApLogScheme implements Scheme {
 		return this.counterColumnName;
 	}
 
-	private static Date parseDate(String value) {
+	private static String parseDateTime(String DateTimeString, String DateTimeFormat) {
 		for (int i = 0; i < FORMATS.length; i++) {
 			SimpleDateFormat format = new SimpleDateFormat(FORMATS[i]);
-			Date temp;
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+			DateFormat df = new SimpleDateFormat(DateTimeFormat);
+			format.setLenient(false);
 			try {
-				temp = format.parse(value);
-				if (temp != null)
-					return temp;
+				Date temp = format.parse(DateTimeString);
+				if (temp != null) {
+					return df.format(temp);
+				}
 			} catch (ParseException e) {
 			}
 		}
-		LOG.error("Could not parse timestamp for log");
 		return null;
 	}
 

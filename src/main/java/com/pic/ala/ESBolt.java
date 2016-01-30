@@ -17,6 +17,9 @@
 
 package com.pic.ala;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -125,8 +128,8 @@ public class ESBolt extends BaseRichBolt {
 		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
 		if (isNullOrEmpty(sysID) || isNullOrEmpty(logType) || isNullOrEmpty(logDate)
-				|| isNullOrEmpty(apID) || isNullOrEmpty(at) || isNullOrEmpty(msg)
-				|| isNullOrEmpty(toBeIndexed)) {
+				|| !isDateValid(logDate) || isNullOrEmpty(apID) || isNullOrEmpty(at)
+				|| isNullOrEmpty(msg) || isNullOrEmpty(toBeIndexed)) {
 			LOG.error("Received null or incorrect value from tuple.");
 			collector.ack(tuple);
 			return;
@@ -179,5 +182,17 @@ public class ESBolt extends BaseRichBolt {
 			return true;
 		}
 		return false;
+	}
+
+	// http://stackoverflow.com/questions/4528047/checking-the-validity-of-a-date
+	public static boolean isDateValid(String date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		df.setLenient(false);
+		try {
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 }
