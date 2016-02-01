@@ -32,7 +32,7 @@ import backtype.storm.tuple.Values;
 
 public class ApLogScheme implements Scheme {
 
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 
 	private static final String[] FORMATS = new String[] {
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
@@ -106,7 +106,6 @@ public class ApLogScheme implements Scheme {
 			if (tmpLogDateTime != null && tmpLogDate != null) {
 				logDateTime = tmpLogDateTime;
 				logDate = tmpLogDate;
-				System.out.println("xxx");
 			}
 
 		}  catch (Exception e) {

@@ -64,12 +64,13 @@ public class ApLog {
 
 	private String kw = "";				// 關鍵字
 
-	private String msgLevel = "INFO";	// 訊息層級
+	private String msgLevel = "INFO";	// 訊息層級 (optional)
 	private String msg = "";			// 訊息內容
-	private String msgCode = "";		// 訊息代碼
+	private String msgCode = "";		// 訊息代碼 (optional)
 
 	private String table = "";			// 資料表名稱 (optional)
 	private int dataCnt;				// 資料筆數 (optional)
+	private int procTime;				// 處理時間（optional）
 
 	public ApLog() {}
 
@@ -120,6 +121,7 @@ public class ApLog {
 		this.msgCode = String.valueOf(getRandomInt(1000, 9999));
 		this.table = getRandomOption(tableNames);
 		this.dataCnt = getRandomInt(1, 200);
+		this.procTime = getRandomInt(1, 200);
 	}
 
 	@Override
@@ -141,7 +143,8 @@ public class ApLog {
 				.append(msg).append(LOG_SEPARATOR)
 				.append(msgCode).append(LOG_SEPARATOR)
 				.append(table).append(LOG_SEPARATOR)
-				.append(dataCnt);
+				.append(dataCnt).append(LOG_SEPARATOR)
+				.append(procTime);
 
 		return builder.toString();
 	}
@@ -280,6 +283,14 @@ public class ApLog {
 
 	public void setDataCnt(int dataCnt) {
 		this.dataCnt = dataCnt;
+	}
+
+	public int getProcTime() {
+		return procTime;
+	}
+
+	public void setProcTime(int procTime) {
+		this.procTime = procTime;
 	}
 
 	/**
