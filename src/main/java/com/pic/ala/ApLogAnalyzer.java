@@ -101,7 +101,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
 		Config config = new Config();
 		config.setDebug(true);
-		config.setNumWorkers(3);
+		config.setNumWorkers(5);
 		config.setMaxSpoutPending(20);
 
 		TopologyBuilder builder = new TopologyBuilder();

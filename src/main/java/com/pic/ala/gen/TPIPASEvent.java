@@ -25,7 +25,6 @@ public class TPIPASEvent extends Event {
 				ApLog log = new ApLog(sysID, "tpipas");
 //				logger.info(log.toString());
 				logger.info(mapper.writeValueAsString(log));
-
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			} catch (JsonMappingException e) {
