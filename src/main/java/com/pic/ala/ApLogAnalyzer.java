@@ -9,6 +9,9 @@
  *
  *     storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalyzer
  *
+ * 3. Understanding the Parallelism of a Storm Topology
+ *
+ *   http://www.michael-noll.com/blog/2012/10/16/understanding-the-parallelism-of-a-storm-topology/
  */
 
 package com.pic.ala;
@@ -56,7 +59,8 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 
 	private void configureKafkaSpout(TopologyBuilder builder, Config config) {
 		KafkaSpout kafkaSpout = new KafkaSpout(constructKafkaSpoutConf());
-		int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.thread.count"));
+		int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.kafkaSpout.threads"));
+
 		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads);
 	}
 
@@ -65,9 +69,10 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
 		esConfig.put(ESBolt.ES_NODES, topologyConfig.getProperty(ESBolt.ES_NODES));
 		config.put("es.conf", esConfig);
-
 		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
-		builder.setBolt(ES_BOLT_ID, esBolt, 3).shuffleGrouping(KAFKA_SPOUT_ID);
+		int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESBolt.threads"));
+
+		builder.setBolt(ES_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID);
 	}
 
 //	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
@@ -99,9 +104,10 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
+		int numWorkers = Integer.valueOf(topologyConfig.getProperty("num.workers"));
 		Config config = new Config();
 		config.setDebug(true);
-		config.setNumWorkers(5);
+		config.setNumWorkers(numWorkers);
 		config.setMaxSpoutPending(20);
 
 		TopologyBuilder builder = new TopologyBuilder();
@@ -113,7 +119,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");
 //		System.setProperty("hadoop.home.dir", "/tmp");
 //		LocalCluster cluster = new LocalCluster();
-		StormSubmitter.submitTopology("ApLogAnalyzer", config, builder.createTopology());
+		StormSubmitter.submitTopology("ApLogAnalyzerV1", config, builder.createTopology());
 	}
 
 	public static void main(String args[]) throws Exception {

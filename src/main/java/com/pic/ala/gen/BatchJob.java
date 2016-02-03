@@ -4,7 +4,6 @@
 package com.pic.ala.gen;
 
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -23,11 +22,11 @@ public class BatchJob extends Event {
 			try {
 				ApLog log = new ApLog(sysID, "batch");
 //				logger.info(log.toString());
-				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+//				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
 //				logger.info(log.toString());
 				logger.info(mapper.writeValueAsString(log));
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+//			} catch (InterruptedException ie) {
+//				ie.printStackTrace();
 			} catch (JsonMappingException e) {
 				e.printStackTrace();
 			} catch (IOException ioe) {

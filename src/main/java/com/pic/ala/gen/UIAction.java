@@ -4,7 +4,6 @@
 package com.pic.ala.gen;
 
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -21,12 +20,12 @@ public class UIAction extends Event {
 	public void take() {
 		while (true) {
 			try {
-				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
+//				Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
 				ApLog log = new ApLog(sysID, "ui");
 //				logger.info(log.toString());
 				logger.info(mapper.writeValueAsString(log));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
 			} catch (JsonMappingException e) {
 				e.printStackTrace();
 			} catch (IOException ioe) {
