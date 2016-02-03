@@ -12,6 +12,10 @@
  * 3. Understanding the Parallelism of a Storm Topology
  *
  *   http://www.michael-noll.com/blog/2012/10/16/understanding-the-parallelism-of-a-storm-topology/
+ *
+ * 4.  KafkaSpout 浅析
+ *
+ *   http://www.cnblogs.com/cruze/p/4241181.html
  */
 
 package com.pic.ala;
