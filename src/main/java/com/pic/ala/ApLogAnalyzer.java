@@ -13,9 +13,13 @@
  *
  *   http://www.michael-noll.com/blog/2012/10/16/understanding-the-parallelism-of-a-storm-topology/
  *
- * 4.  KafkaSpout 浅析
+ * 4. KafkaSpout 浅析
  *
  *   http://www.cnblogs.com/cruze/p/4241181.html
+ *
+ * 5. Unofficial Storm and Kafka Best Practices Guide
+ *
+ *   https://community.hortonworks.com/articles/550/unofficial-storm-and-kafka-best-practices-guide.html
  */
 
 package com.pic.ala;
@@ -42,7 +46,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private static final String ES_BOLT_ID = "ESBolt";
 	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
 	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
-	private static final String CONSUMER_GROUP_ID = "ApLogAnalyzerSpout";
+	private static final String CONSUMER_GROUP_ID = "ApLogAnalyzerKafkaSpout";
 	private ApLogScheme apLogScheme;
 
 	public ApLogAnalyzer(String configFileLocation) throws Exception {

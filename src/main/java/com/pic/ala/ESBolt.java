@@ -104,12 +104,13 @@ public class ESBolt extends BaseRichBolt {
 						LOG.warn("Unable to add ElasticSearch node: " + esNode);
 					}
 				}
-				if (transportClient.connectedNodes().size() >= MIN_CONNECTED_NODES) {
-					client = transportClient;
-				} else {
-					transportClient.close();
-					throw new RuntimeException("Unable to initialize ElasticSearch client.");
-				}
+				client = transportClient;
+//				if (transportClient.connectedNodes().size() >= MIN_CONNECTED_NODES) {
+//					client = transportClient;
+//				} else {
+//					transportClient.close();
+//					throw new RuntimeException("Unable to initialize ElasticSearch client.");
+//				}
 			}
 		}
 	}

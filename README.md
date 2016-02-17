@@ -12,7 +12,7 @@ storm jar target/TestTopology-0.0.1-SNAPSHOT.jar com.pic.ala.learn.TestTopology.
 
 https://azure.microsoft.com/zh-tw/documentation/articles/hdinsight-storm-sensor-data-analysis/
 
-## HOW TO USE:
+## 1. HOW TO USE:
 
 ```bash
 # 1. DELETE the old topic & indexes:
@@ -23,8 +23,11 @@ curl -XDELETE 'localhost:9200/aplog_pos*?pretty'
 curl -XDELETE 'localhost:9200/aplog_upcc*?pretty'
 curl -XDELETE 'localhost:9200/aplog_wds*?pretty'
 
+# 1.1 Delete the topic znode on Zookeeper by zookeeper-client
+# 1.2 Delete the topic commit logs
+
 # 2. RECREATE the topic & indexes:
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdp01.localdomain:2181,hdp02.localdomain:2181,hdp03.localdomain:2181 --replication-factor 1 --partition 3 --topic ap_logs_test_222
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdp01.localdomain:2181,hdp02.localdomain:2181,hdp03.localdomain:2181 --replication-factor 1 --partition 6 --topic ap_logs_test_222
 
 curl -XPUT 'localhost:9200/aplog_aes3g?pretty'
 curl -XPUT 'localhost:9200/aplog_pos?pretty'
@@ -74,3 +77,8 @@ curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
 # 8. MONITOR the logs with Kibana
 ```
 
+
+## 2. References:
+
+ * [Unofficial Storm and Kafka Best Practices Guide](https://community.hortonworks.com/articles/550/unofficial-storm-and-kafka-best-practices-guide.html)
+ * [KafkaSpout 浅析](http://www.cnblogs.com/cruze/p/4241181.html)
