@@ -10,10 +10,11 @@ public class ApLogTest {
 	}
 
 	public static void startAllThreads() {
+		boolean enableSleep = false;
 		for (String sysID : ApLog.SYSTEMS) {
-			(new BatchJobThread(new BatchJob(sysID))).start();
-			(new UIActionThread(new UIAction(sysID))).start();
-			(new TPIPASEventThread(new TPIPASEvent(sysID))).start();
+			(new BatchJobThread(new BatchJob(sysID, enableSleep))).start();
+			(new UIActionThread(new UIAction(sysID, enableSleep))).start();
+			(new TPIPASEventThread(new TPIPASEvent(sysID, enableSleep))).start();
 		}
 	}
 

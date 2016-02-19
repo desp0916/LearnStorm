@@ -8,6 +8,7 @@ public class Event {
 	protected ObjectMapper mapper;
 	protected String sysID; // 系統 ID
 	protected Logger logger;
+	protected boolean enableSleep;
 
 	public String getSysID() {
 		return sysID;
