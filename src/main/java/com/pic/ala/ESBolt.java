@@ -160,15 +160,15 @@ public class ESBolt extends BaseRichBolt {
 		} catch (ElasticsearchException ee) {
 			ee.printStackTrace();
 			collector.reportError(ee);
-//			collector.fail(tuple);
+			collector.fail(tuple);
 //			throw new ElasticsearchException("Unknown ElasticsearchException!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			collector.reportError(e);
-//			collector.fail(tuple);
+			collector.fail(tuple);
 //			throw new RuntimeException("Unknown Exception!");
-		} finally {
-			collector.ack(tuple);
+//		} finally {
+//			collector.ack(tuple);
 		}
 	}
 
