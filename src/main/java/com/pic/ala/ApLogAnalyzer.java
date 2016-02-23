@@ -25,7 +25,6 @@
 package com.pic.ala;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
@@ -47,7 +46,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private static final String ES_BOLT_ID = "ESBolt";
 	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
 	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
-	private static final String CONSUMER_GROUP_ID = "kafkaSpoutConsumer";
+	private static final String CONSUMER_GROUP_ID = "kafkaSpoutConsumerGroup";
 	private ApLogScheme apLogScheme;
 
 	public ApLogAnalyzer(String configFileLocation) throws Exception {
@@ -59,8 +58,8 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		BrokerHosts hosts = new ZkHosts(topologyConfig.getProperty("kafka.zookeeper.host.port"));
 		String topic = topologyConfig.getProperty("kafka.topic");
 		String zkRoot = topologyConfig.getProperty("kafka.zkRoot");
-		String consumerGroupId = UUID.randomUUID().toString();
-		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, consumerGroupId);
+//		String consumerGroupId = UUID.randomUUID().toString();
+		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
 		spoutConfig.scheme = new SchemeAsMultiScheme(apLogScheme);
 		return spoutConfig;
