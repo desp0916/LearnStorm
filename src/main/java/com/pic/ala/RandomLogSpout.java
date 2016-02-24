@@ -2,7 +2,6 @@ package com.pic.ala;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -21,7 +20,6 @@ public class RandomLogSpout extends BaseRichSpout {
 
 	private static final long serialVersionUID = 1L;
 	private SpoutOutputCollector _collector;
-	private final Random _rand = new Random();
 	private ObjectMapper objectMapper;
 
 	@Override
@@ -34,9 +32,9 @@ public class RandomLogSpout extends BaseRichSpout {
 	public void nextTuple() {
 		try {
 			Utils.sleep(ThreadLocalRandom.current().nextInt(1, 11) * 1000);
-			String sysID = ApLog.getRandomOption(ApLog.SYSTEMS);
-			String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
-			ApLog log = new ApLog(sysID, logType);
+			final String sysID = ApLog.getRandomOption(ApLog.SYSTEMS);
+			final String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
+			final ApLog log = new ApLog(sysID, logType);
 //			_collector.emit(new Values(log.toString()));
 			_collector.emit(new Values(objectMapper.writeValueAsString(log)));
 		} catch (IOException e) {

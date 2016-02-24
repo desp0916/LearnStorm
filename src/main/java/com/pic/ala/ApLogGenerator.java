@@ -37,8 +37,8 @@ import storm.kafka.bolt.selector.DefaultTopicSelector;
 
 public class ApLogGenerator extends ApLogBaseTopology {
 
-	private static String brokerUrl;
 	private Config conf;
+	private static String brokerUrl;
 
 	public ApLogGenerator(String configFileLocation) throws Exception {
 		super(configFileLocation);
@@ -52,13 +52,13 @@ public class ApLogGenerator extends ApLogBaseTopology {
 
 	private void configureKafkaBolt(TopologyBuilder builder) {
 		String topic = topologyConfig.getProperty("kafka.topic");
-		conf.setMaxSpoutPending(20);
 		Properties props = new Properties();
-		props.put("metadata.broker.list", brokerUrl);
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);
+		props.put(ProducerConfig.CLIENT_ID_CONFIG, "storm-kafka-producer");
+		props.put("metadata.broker.list", brokerUrl);
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 		props.put("request.required.acks", "1");
-		props.put(ProducerConfig.CLIENT_ID_CONFIG, "storm-kafka-producer");
+		conf.setMaxSpoutPending(20);
 		conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
 		KafkaBolt kafkaBolt = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(topic))
 										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "log"));
@@ -74,8 +74,7 @@ public class ApLogGenerator extends ApLogBaseTopology {
 	}
 
 	public static void main(String[] args) throws Exception {
-
-		String configFileLocation = "ApLogAnalyzer.properties";
+		final String configFileLocation = "ApLogAnalyzer.properties";
 		ApLogGenerator topology = new ApLogGenerator(configFileLocation);
 
 		if (args.length == 0) {
@@ -86,7 +85,6 @@ public class ApLogGenerator extends ApLogBaseTopology {
 			System.out.println("Usage: ApLogKafkaTopology [kafka broker url]");
 			System.exit(1);
 		}
-
 		topology.buildAndSubmit();
 	}
 

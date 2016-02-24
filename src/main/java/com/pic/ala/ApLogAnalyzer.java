@@ -55,11 +55,11 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	}
 
 	private SpoutConfig constructKafkaSpoutConf() {
-		BrokerHosts hosts = new ZkHosts(topologyConfig.getProperty("kafka.zookeeper.host.port"));
-		String topic = topologyConfig.getProperty("kafka.topic");
-		String zkRoot = topologyConfig.getProperty("kafka.zkRoot");
+		final BrokerHosts hosts = new ZkHosts(topologyConfig.getProperty("kafka.zookeeper.host.port"));
+		final String topic = topologyConfig.getProperty("kafka.topic");
+		final String zkRoot = topologyConfig.getProperty("kafka.zkRoot");
 //		String consumerGroupId = UUID.randomUUID().toString();
-		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
+		final SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
 		spoutConfig.scheme = new SchemeAsMultiScheme(apLogScheme);
 		return spoutConfig;
@@ -67,7 +67,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 
 	private void configureKafkaSpout(TopologyBuilder builder, Config config) {
 		KafkaSpout kafkaSpout = new KafkaSpout(constructKafkaSpoutConf());
-		int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.kafkaSpout.threads"));
+		final int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.kafkaSpout.threads"));
 
 		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads);
 	}
@@ -78,7 +78,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		esConfig.put(ESBolt.ES_NODES, topologyConfig.getProperty(ESBolt.ES_NODES));
 		config.put("es.conf", esConfig);
 		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
-		int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESBolt.threads"));
+		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESBolt.threads"));
 
 		builder.setBolt(ES_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID);
 	}
@@ -112,7 +112,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
-		int numWorkers = Integer.valueOf(topologyConfig.getProperty("num.workers"));
+		final int numWorkers = Integer.valueOf(topologyConfig.getProperty("num.workers"));
 		Config config = new Config();
 		config.setDebug(true);
 		config.setNumWorkers(numWorkers);
@@ -131,7 +131,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	}
 
 	public static void main(String args[]) throws Exception {
-		String configFileLocation = "ApLogAnalyzer.properties";
+		final String configFileLocation = "ApLogAnalyzer.properties";
 		ApLogAnalyzer topology = new ApLogAnalyzer(configFileLocation);
 		topology.buildAndSubmit();
 	}
