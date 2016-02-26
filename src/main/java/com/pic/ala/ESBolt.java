@@ -153,7 +153,7 @@ public class ESBolt extends BaseRichBolt {
 					LOG.debug("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
 					collector.emit(new Values(documentIndexId));
 				} else {
-					LOG.error("Failed to index Tuple: " + tuple.toString());
+					LOG.error("Failed to index Tuple: {} ", tuple.toString());
 				}
 			}
 			collector.ack(tuple);
