@@ -146,18 +146,20 @@ public class ESBolt extends BaseRichBolt {
 					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "_" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).execute().actionGet();
 			if (response == null) {
-				LOG.error("Failed to index Tuple: " + tuple.toString());
+				LOG.error("Failed to index Tuple: {} ", tuple.toString());
 			} else {
 				if (response.isCreated()) {
 					String documentIndexId = response.getId();
-					LOG.debug("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
-					collector.emit(new Values(documentIndexId));
+					LOG.info("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
+					// Anchored
+					collector.emit(tuple, new Values(documentIndexId));
 				} else {
 					LOG.error("Failed to index Tuple: {} ", tuple.toString());
 				}
 			}
 			collector.ack(tuple);
 		} catch (ElasticsearchException ee) {
+			// https://groups.google.com/forum/#!topic/storm-user/CGaKwFTa9TY
 			ee.printStackTrace();
 			collector.reportError(ee);
 			collector.fail(tuple);

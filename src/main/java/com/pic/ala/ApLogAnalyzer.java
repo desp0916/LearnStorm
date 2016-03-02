@@ -69,7 +69,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		KafkaSpout kafkaSpout = new KafkaSpout(constructKafkaSpoutConf());
 		final int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.kafkaSpout.threads"));
 
-		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads);
+		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads).setDebug(true);
 	}
 
 	private void configureESBolts(TopologyBuilder builder, Config config) {
@@ -80,7 +80,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
 		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESBolt.threads"));
 
-		builder.setBolt(ES_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID);
+		builder.setBolt(ES_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID).setDebug(true);
 	}
 
 //	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
