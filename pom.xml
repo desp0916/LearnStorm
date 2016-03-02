@@ -27,10 +27,8 @@
 			<id>hortonworks</id>
 			<url>http://nexus-private.hortonworks.com/nexus/content/groups/public/</url>
 		</repository>
-		<!--repository>
-            <id>hortonworks</id>
-            <url>http://repo.hortonworks.com/content/repositories/releases/</url> 
-	    </repository -->
+		<!--repository> <id>hortonworks</id> <url>http://repo.hortonworks.com/content/repositories/releases/</url> 
+			</repository -->
 		<repository>
 			<id>github-releases</id>
 			<url>http://oss.sonatype.org/content/repositories/github-releases/</url>
@@ -120,6 +118,17 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.7</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>

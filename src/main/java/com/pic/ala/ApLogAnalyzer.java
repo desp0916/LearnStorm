@@ -27,7 +27,6 @@ package com.pic.ala;
 import java.util.HashMap;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
@@ -47,7 +46,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 	private static final String ES_BOLT_ID = "ESBolt";
 	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
 	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
-	private static final String CONSUMER_GROUP_ID = "kafkaSpoutConsumerGroup";
+	private static final String CONSUMER_GROUP_ID = "aplog-analyzer";
 	private ApLogScheme apLogScheme;
 
 	public ApLogAnalyzer(String configFileLocation) throws Exception {
@@ -127,7 +126,7 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //		conf.put(Config.NIMBUS_HOST, "hdp01.localdomain");
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");
 //		System.setProperty("hadoop.home.dir", "/tmp");
-		LocalCluster cluster = new LocalCluster();
+//		LocalCluster cluster = new LocalCluster();
 		StormSubmitter.submitTopology("ApLogAnalyzerV1", config, builder.createTopology());
 	}
 

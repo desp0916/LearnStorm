@@ -80,6 +80,7 @@ curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
 ## 2. Kafka Maintainance
 
 ```bash
+/usr/hdp/current/kafka-broker/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --zookeeper hdp01.localdomain:2181 --group aplog-analyzer
 /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181 --topic ap_logs_test_222 --describe
 ```
 
