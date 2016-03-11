@@ -95,7 +95,7 @@ public class ESBolt extends BaseRichBolt {
 //		TransportClient transportClient = new TransportClient(settings);
 
 		// ElasticSearch 2.2
-		final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
+		final Settings settings = Settings.settingsBuilder().put("cluster.name", "esClusterName").build();
 		TransportClient transportClient = TransportClient.builder().build();
 
 		this.collector = collector;
