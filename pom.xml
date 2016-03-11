@@ -16,7 +16,7 @@
 		<storm.version>0.10.0-beta1</storm.version>
 		<kafka.version>0.8.2.2.3.2.0-2950</kafka.version>
 		<curator.version>2.5.0</curator.version>
-		<elasticsearch.version>1.7.4</elasticsearch.version>
+		<elasticsearch.version>2.2.0</elasticsearch.version>
 		<!-- kafka.version>0.8.1.1</kafka.version -->
 		<!-- log4j.version>1.2.17</log4j.version -->
 		<!-- mockito.version>1.9.5</mockito.version -->
@@ -170,7 +170,7 @@
 				<exclusion>
 					<groupId>tomcat</groupId>
 					<artifactId>jasper-runtime</artifactId>
-				</exclusion>
+				</exclusion> 
 				<exclusion>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-yarn-common</artifactId>

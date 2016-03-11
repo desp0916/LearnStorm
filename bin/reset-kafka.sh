@@ -8,7 +8,7 @@ do
 done
 
 /usr/bin/zookeeper-client <<EOF
-rmr /consumers/aplog-analyzer
+rmr /aplog-analyzer
 rmr /admin
 rmr /brokers
 rmr /config

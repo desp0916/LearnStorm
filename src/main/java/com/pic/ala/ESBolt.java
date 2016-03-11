@@ -1,5 +1,5 @@
 /**
- * ElasticSearch 2.1.1 的作法：
+ * ElasticSearch 最新版的作法：
  * https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
  *
  * Adding mapping to a type from Java - how do I do it?
@@ -17,6 +17,7 @@
 
 package com.pic.ala;
 
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,6 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
@@ -90,8 +90,13 @@ public class ESBolt extends BaseRichBolt {
 			throw new IllegalArgumentException("No '" + ES_NODES + "' value found in configuration!");
 		}
 
-		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
-		TransportClient transportClient = new TransportClient(settings);
+		// ElasticSearch 1.7
+//		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
+//		TransportClient transportClient = new TransportClient(settings);
+
+		// ElasticSearch 2.2
+		final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
+		TransportClient transportClient = TransportClient.builder().build();
 
 		this.collector = collector;
 		synchronized (ESBolt.class) {
@@ -99,7 +104,10 @@ public class ESBolt extends BaseRichBolt {
 				List<String> esNodesList = Arrays.asList(esNodes.split("\\s*,\\s*"));
 				for (String esNode : esNodesList) {
 					try {
-						transportClient.addTransportAddress(new InetSocketTransportAddress(esNode, 9300));
+						// ElasticSearch 1.7
+//						transportClient.addTransportAddress(new InetSocketTransportAddress(esNode, 9300));
+						// ElasticSearch 2.2
+						transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(esNode), 9300));
 					} catch (Exception e) {
 						LOG.warn("Unable to add ElasticSearch node: " + esNode);
 					}
