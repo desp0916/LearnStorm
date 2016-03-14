@@ -17,7 +17,6 @@
 
 package com.pic.ala;
 
-import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,6 +28,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
@@ -91,12 +91,12 @@ public class ESBolt extends BaseRichBolt {
 		}
 
 		// ElasticSearch 1.7
-//		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
-//		TransportClient transportClient = new TransportClient(settings);
+		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
+		TransportClient transportClient = new TransportClient(settings);
 
 		// ElasticSearch 2.2
-		final Settings settings = Settings.settingsBuilder().put("cluster.name", "esClusterName").build();
-		TransportClient transportClient = TransportClient.builder().build();
+//		final Settings settings = Settings.settingsBuilder().put("cluster.name", "esClusterName").build();
+//		TransportClient transportClient = TransportClient.builder().build();
 
 		this.collector = collector;
 		synchronized (ESBolt.class) {
@@ -105,9 +105,9 @@ public class ESBolt extends BaseRichBolt {
 				for (String esNode : esNodesList) {
 					try {
 						// ElasticSearch 1.7
-//						transportClient.addTransportAddress(new InetSocketTransportAddress(esNode, 9300));
+						transportClient.addTransportAddress(new InetSocketTransportAddress(esNode, 9300));
 						// ElasticSearch 2.2
-						transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(esNode), 9300));
+//						transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(esNode), 9300));
 					} catch (Exception e) {
 						LOG.warn("Unable to add ElasticSearch node: " + esNode);
 					}
