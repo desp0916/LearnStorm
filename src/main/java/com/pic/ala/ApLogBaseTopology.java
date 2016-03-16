@@ -4,11 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ApLogBaseTopology {
 
-	private static final Logger LOG = Logger.getLogger(ApLogBaseTopology.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApLogBaseTopology.class);
+
 	protected static Properties topologyConfig;
 
 	public ApLogBaseTopology(String configFileLocation) throws Exception {
