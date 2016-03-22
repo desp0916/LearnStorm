@@ -88,3 +88,6 @@ curl -XPUT 'http://localhost:9200/aplog_*/_mapping/*' -d  '{
 
  * [Unofficial Storm and Kafka Best Practices Guide](https://community.hortonworks.com/articles/550/unofficial-storm-and-kafka-best-practices-guide.html)
  * [KafkaSpout 浅析](http://www.cnblogs.com/cruze/p/4241181.html)
+ * [STORM : How do I fix the google.guava dependency while running mvn clean install -DskipTests=true ?](https://community.hortonworks.com/questions/14998/storm-how-do-i-fix-the-googleguava-dependency-whil.html)
+ * [What is the maven-shade-plugin used for, and why would you want to relocate java packages?](http://stackoverflow.com/questions/13620281/what-is-the-maven-shade-plugin-used-for-and-why-would-you-want-to-relocate-java)
+ * [Apache Maven Shade Plugin / shade:shade](https://maven.apache.org/plugins/maven-shade-plugin/shade-mojo.html)
