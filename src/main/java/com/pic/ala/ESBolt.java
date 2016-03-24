@@ -31,6 +31,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.shield.ShieldPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,12 +51,16 @@ public class ESBolt extends BaseRichBolt {
 //	private static final long serialVersionUID = -26161992456930984L;
 
 	private static Client client;
+	private static TransportClient transportClient;
 	private OutputCollector collector;
 
 	protected String configKey;
 
 	public static final String ES_CLUSTER_NAME = "es.cluster.name";
 	public static final String ES_NODES = "es.nodes";
+	public static final String ES_SHIELD_ENABLED = "es.shield.enabled";
+	public static final String ES_SHIELD_USER = "es.shield.user";
+	public static final String ES_SHIELD_PASS = "es.shield.pass";
 	public static final int MIN_CONNECTED_NODES = 5;
 //	public static final String ES_INDEX_NAME = "es.index.name";
 //	public static final String ES_INDEX_TYPE = "es.index.type";
@@ -81,6 +86,11 @@ public class ESBolt extends BaseRichBolt {
 
 		String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
 		String esNodes = (String) conf.get(ES_NODES);
+		boolean esShieldEnabled = Boolean.parseBoolean((String) conf.get(ES_SHIELD_ENABLED));
+		String esShieldUser = (String) conf.get(ES_SHIELD_USER);
+		String esShieldPass = (String) conf.get(ES_SHIELD_PASS);
+
+		LOG.error("esShieldEnabled:"+esShieldEnabled+", esShieldUser:"+esShieldUser+", esShieldPass:"+esShieldPass);
 
 		if (esClusterName == null) {
 			throw new IllegalArgumentException("No '" + ES_CLUSTER_NAME + "' value found in configuration!");
@@ -90,15 +100,32 @@ public class ESBolt extends BaseRichBolt {
 			throw new IllegalArgumentException("No '" + ES_NODES + "' value found in configuration!");
 		}
 
+		if (esShieldEnabled && esShieldUser == null) {
+			throw new IllegalArgumentException("No '" + ES_SHIELD_USER + "' value found in configuration!");
+		}
+
+		if (esShieldEnabled && esShieldPass == null) {
+			throw new IllegalArgumentException("No '" + ES_SHIELD_PASS + "' value found in configuration!");
+		}
+
+		this.collector = collector;
+
 		// ElasticSearch 1.7
 //		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
 //		TransportClient transportClient = new TransportClient(settings);
 
 		// ElasticSearch 2.2
-		final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName).build();
-		TransportClient transportClient = TransportClient.builder().settings(settings).build();
+		if (esShieldEnabled) {
+			final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName)
+					.put("client.transport.sniff", true).put("shield.user", esShieldUser + ":" + esShieldPass).build();
+			transportClient = TransportClient.builder().addPlugin(ShieldPlugin.class)
+					.settings(settings).build();
+		} else {
+			final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName)
+					.put("client.transport.sniff", true).build();
+			transportClient = TransportClient.builder().settings(settings).build();
+		}
 
-		this.collector = collector;
 		synchronized (ESBolt.class) {
 			if (client == null) {
 				List<String> esNodesList = Arrays.asList(esNodes.split("\\s*,\\s*"));
@@ -152,7 +179,7 @@ public class ESBolt extends BaseRichBolt {
 		try {
 			IndexResponse response = client
 					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "_" + logDate, logType.toLowerCase())
-					.setSource(toBeIndexed).execute().actionGet();
+					.setSource(toBeIndexed).get();
 			if (response == null) {
 				LOG.error("Failed to index Tuple: {} ", tuple.toString());
 			} else {

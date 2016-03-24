@@ -76,6 +76,9 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 		HashMap<String, Object> esConfig = new HashMap<String, Object>();
 		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
 		esConfig.put(ESBolt.ES_NODES, topologyConfig.getProperty(ESBolt.ES_NODES));
+		esConfig.put(ESBolt.ES_SHIELD_ENABLED, topologyConfig.getProperty(ESBolt.ES_SHIELD_ENABLED));
+		esConfig.put(ESBolt.ES_SHIELD_USER, topologyConfig.getProperty(ESBolt.ES_SHIELD_USER));
+		esConfig.put(ESBolt.ES_SHIELD_PASS, topologyConfig.getProperty(ESBolt.ES_SHIELD_PASS));
 		config.put("es.conf", esConfig);
 		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
 		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESBolt.threads"));
