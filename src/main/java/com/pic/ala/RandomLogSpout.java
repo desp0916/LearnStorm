@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.pic.ala.gen.ApLog;
+import com.pic.ala.model.ApLog;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;

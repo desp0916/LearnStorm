@@ -2,7 +2,7 @@
  * https://www.elastic.co/guide/en/elasticsearch/reference/1.7/mapping-date-format.html#built-in-date-formats
  * http://stackoverflow.com/questions/4486787/jackson-with-json-unrecognized-field-not-marked-as-ignorable
  */
-package com.pic.ala.gen;
+package com.pic.ala.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

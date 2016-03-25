@@ -17,10 +17,10 @@
 
 package com.pic.ala;
 
+import static com.pic.ala.ApLogUtil.isDateValid;
+import static com.pic.ala.ApLogUtil.isNullOrEmpty;
+
 import java.net.InetAddress;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +43,10 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
-public class ESBolt extends BaseRichBolt {
+public class ESIndexerBolt extends BaseRichBolt {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ESBolt.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(ESIndexerBolt.class);
 	private static final String ES_INDEX_PREFIX = "aplog_";
-//	private static final long serialVersionUID = -26161992456930984L;
-
 	private static Client client;
 	private static TransportClient transportClient;
 	private OutputCollector collector;
@@ -65,7 +62,7 @@ public class ESBolt extends BaseRichBolt {
 //	public static final String ES_INDEX_NAME = "es.index.name";
 //	public static final String ES_INDEX_TYPE = "es.index.type";
 
-	public ESBolt withConfigKey(final String configKey) {
+	public ESIndexerBolt withConfigKey(final String configKey) {
 		this.configKey = configKey;
 		return this;
 	}
@@ -84,11 +81,11 @@ public class ESBolt extends BaseRichBolt {
 
 		Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
 
-		String esClusterName = (String) conf.get(ES_CLUSTER_NAME);
-		String esNodes = (String) conf.get(ES_NODES);
-		boolean esShieldEnabled = Boolean.parseBoolean((String) conf.get(ES_SHIELD_ENABLED));
-		String esShieldUser = (String) conf.get(ES_SHIELD_USER);
-		String esShieldPass = (String) conf.get(ES_SHIELD_PASS);
+		String esClusterName = (String)conf.get(ES_CLUSTER_NAME);
+		String esNodes = (String)conf.get(ES_NODES);
+		boolean esShieldEnabled = Boolean.parseBoolean((String)conf.get(ES_SHIELD_ENABLED));
+		String esShieldUser = (String)conf.get(ES_SHIELD_USER);
+		String esShieldPass = (String)conf.get(ES_SHIELD_PASS);
 
 		LOG.error("esShieldEnabled:"+esShieldEnabled+", esShieldUser:"+esShieldUser+", esShieldPass:"+esShieldPass);
 
@@ -126,7 +123,7 @@ public class ESBolt extends BaseRichBolt {
 			transportClient = TransportClient.builder().settings(settings).build();
 		}
 
-		synchronized (ESBolt.class) {
+		synchronized (ESIndexerBolt.class) {
 			if (client == null) {
 				List<String> esNodesList = Arrays.asList(esNodes.split("\\s*,\\s*"));
 				for (String esNode : esNodesList) {
@@ -219,22 +216,4 @@ public class ESBolt extends BaseRichBolt {
 		client.close();
 	}
 
-	private static boolean isNullOrEmpty(String str) {
-		if (str == null || ("").equals(str)) {
-			return true;
-		}
-		return false;
-	}
-
-	// http://stackoverflow.com/questions/4528047/checking-the-validity-of-a-date
-	public static boolean isDateValid(String date) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		df.setLenient(false);
-		try {
-			df.parse(date);
-			return true;
-		} catch (ParseException e) {
-			return false;
-		}
-	}
 }

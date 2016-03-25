@@ -6,12 +6,10 @@
  */
 package com.pic.ala;
 
+import static com.pic.ala.ApLogUtil.isNumeric;
+import static com.pic.ala.ApLogUtil.parseDateTime;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -20,11 +18,10 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.pic.ala.gen.ApLog;
+import com.pic.ala.model.ApLog;
 
 import backtype.storm.spout.Scheme;
 import backtype.storm.tuple.Fields;
@@ -32,19 +29,14 @@ import backtype.storm.tuple.Values;
 
 public class ApLogScheme implements Scheme {
 
-//	private static final long serialVersionUID = 1L;
-
+    private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
+	private static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	private static final String FORMAT_DATE = "yyyy-MM-dd";
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private static final String[] FORMATS = new String[] {
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
 			"yyyy-MM-dd HH:mm:ss.SSS",
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ" };
-
-	private static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-	private static final String FORMAT_DATE = "yyyy-MM-dd";
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 	// The following fields will be used or stored by Elasticsearch.
 	public static final String FIELD_ES_SOURCE = "es_source";	// ElasticSearch 物件的 source 欄位
@@ -100,8 +92,8 @@ public class ApLogScheme implements Scheme {
 			apID = apLog.getApID();
 			at = apLog.getAt();
 			msg = apLog.getMsg();
-			String tmpLogDateTime = parseDateTime(apLog.getLogTime(), FORMAT_DATETIME);
-			String tmpLogDate = parseDateTime(apLog.getLogTime(), FORMAT_DATE);
+			String tmpLogDateTime = parseDateTime(apLog.getLogTime(), dateTimeFormatter, FORMATS, FORMAT_DATETIME);
+			String tmpLogDate = parseDateTime(apLog.getLogTime(), dateTimeFormatter, FORMATS, FORMAT_DATE);
 
 			if (tmpLogDateTime != null && tmpLogDate != null) {
 				logDateTime = tmpLogDateTime;
@@ -225,81 +217,6 @@ public class ApLogScheme implements Scheme {
 
 	public String getCounterColumnName() {
 		return this.counterColumnName;
-	}
-
-	private static String parseDateTime(String DateTimeString, String DateTimeFormat) {
-		for (int i = 0; i < FORMATS.length; i++) {
-			SimpleDateFormat format = new SimpleDateFormat(FORMATS[i]);
-			DateFormat df = new SimpleDateFormat(DateTimeFormat);
-			format.setLenient(false);
-			try {
-				Date temp = format.parse(DateTimeString);
-				if (temp != null) {
-					return df.format(temp);
-				}
-			} catch (ParseException e) {
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 檢查某字串是否為整數？
-	 *
-	 * http://stackoverflow.com/questions/237159/whats-the-best-way-to-check-to-see-if-a-string-represents-an-integer-in-java
-	 *
-	 * @param str
-	 * @return
-	 */
-	public static boolean isInteger(String str) {
-		if (str == null) {
-			return false;
-		}
-		int length = str.length();
-		if (length == 0) {
-			return false;
-		}
-		int i = 0;
-		if (str.charAt(0) == '-') {
-			if (length == 1) {
-				return false;
-			}
-			i = 1;
-		}
-		for (; i < length; i++) {
-			char c = str.charAt(i);
-			if (c < '0' || c > '9') {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * http://stackoverflow.com/questions/2563608/check-whether-a-string-is-parsable-into-long-without-try-catch
-	 *
-	 * @param str
-	 * @return
-	 */
-	public static boolean isNumeric(String str) {
-	    if (str == null) {
-	        return false;
-	    }
-	    int sz = str.length();
-	    if (sz == 0) {
-	    	return false;
-	    }
-	    for (int i = 0; i < sz; i++) {
-	        if (Character.isDigit(str.charAt(i)) == false) {
-	            return false;
-	        }
-	    }
-	    return true;
-	}
-
-	private static String dateToString(String str) {
-		DateTime dt = dateTimeFormatter.parseDateTime(str);
-		return dt.toString(fmt);
 	}
 
 }

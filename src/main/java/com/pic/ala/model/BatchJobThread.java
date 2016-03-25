@@ -1,4 +1,4 @@
-package com.pic.ala.gen;
+package com.pic.ala.model;
 
 public class BatchJobThread extends Thread implements Command {
 

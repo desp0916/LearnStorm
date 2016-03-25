@@ -1,7 +1,7 @@
 /**
  * http://www.mkyong.com/java/jackson-2-convert-java-object-to-from-json/
  */
-package com.pic.ala.gen;
+package com.pic.ala.model;
 
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;

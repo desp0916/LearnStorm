@@ -43,9 +43,9 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 //	private static final Logger LOG = Logger.getLogger(ApLogAnalyzer.class);
 
 	private static final String KAFKA_SPOUT_ID = "kafkaSpout";
-	private static final String ES_BOLT_ID = "ESBolt";
-	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
-	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
+	private static final String ESINDEXER_BOLT_ID = "ESIndexerBolt";
+//	private static final String HBASE_DETAIL_BOLT_ID = "hbaseDetailBolt";
+//	private static final String HBASE_AGG_BOLT_ID = "hbaseAggBolt";
 	private static final String CONSUMER_GROUP_ID = "aplog-analyzer";
 	private ApLogScheme apLogScheme;
 
@@ -67,23 +67,23 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 
 	private void configureKafkaSpout(TopologyBuilder builder, Config config) {
 		KafkaSpout kafkaSpout = new KafkaSpout(constructKafkaSpoutConf());
-		final int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.kafkaSpout.threads"));
+		final int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.KafkaSpout.threads"));
 
 		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads).setDebug(true);
 	}
 
 	private void configureESBolts(TopologyBuilder builder, Config config) {
 		HashMap<String, Object> esConfig = new HashMap<String, Object>();
-		esConfig.put(ESBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESBolt.ES_CLUSTER_NAME));
-		esConfig.put(ESBolt.ES_NODES, topologyConfig.getProperty(ESBolt.ES_NODES));
-		esConfig.put(ESBolt.ES_SHIELD_ENABLED, topologyConfig.getProperty(ESBolt.ES_SHIELD_ENABLED));
-		esConfig.put(ESBolt.ES_SHIELD_USER, topologyConfig.getProperty(ESBolt.ES_SHIELD_USER));
-		esConfig.put(ESBolt.ES_SHIELD_PASS, topologyConfig.getProperty(ESBolt.ES_SHIELD_PASS));
+		esConfig.put(ESIndexerBolt.ES_CLUSTER_NAME, topologyConfig.getProperty(ESIndexerBolt.ES_CLUSTER_NAME));
+		esConfig.put(ESIndexerBolt.ES_NODES, topologyConfig.getProperty(ESIndexerBolt.ES_NODES));
+		esConfig.put(ESIndexerBolt.ES_SHIELD_ENABLED, topologyConfig.getProperty(ESIndexerBolt.ES_SHIELD_ENABLED));
+		esConfig.put(ESIndexerBolt.ES_SHIELD_USER, topologyConfig.getProperty(ESIndexerBolt.ES_SHIELD_USER));
+		esConfig.put(ESIndexerBolt.ES_SHIELD_PASS, topologyConfig.getProperty(ESIndexerBolt.ES_SHIELD_PASS));
 		config.put("es.conf", esConfig);
-		ESBolt esBolt = new ESBolt().withConfigKey("es.conf");
-		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESBolt.threads"));
+		ESIndexerBolt esBolt = new ESIndexerBolt().withConfigKey("es.conf");
+		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESIndexerBolt.threads"));
 
-		builder.setBolt(ES_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID).setDebug(true);
+		builder.setBolt(ESINDEXER_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID).setDebug(true);
 	}
 
 //	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
@@ -123,8 +123,8 @@ public class ApLogAnalyzer extends ApLogBaseTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
 		configureKafkaSpout(builder, config);
-//		configureHBaseBolts(builder, config);
 		configureESBolts(builder, config);
+//		configureHBaseBolts(builder, config);
 
 //		conf.put(Config.NIMBUS_HOST, "hdp01.localdomain");
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");

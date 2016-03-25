@@ -1,4 +1,4 @@
-package com.pic.ala.gen;
+package com.pic.ala.model;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
