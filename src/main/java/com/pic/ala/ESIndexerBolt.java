@@ -175,7 +175,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 
 		try {
 			IndexResponse response = client
-					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "_" + logDate, logType.toLowerCase())
+					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "-" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).get();
 			if (response == null) {
 				LOG.error("Failed to index Tuple: {} ", tuple.toString());
