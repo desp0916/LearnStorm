@@ -20,21 +20,14 @@ https://azure.microsoft.com/zh-tw/documentation/articles/hdinsight-storm-sensor-
 # 1. DELETE the old topic & indexes:
 /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181,hdp02.localdomain:2181,hdp03.localdomain:2181 --delete --topic ap_logs_test_222
 
-curl -XDELETE --user es_admin:password 'localhost:9200/aplog_aes3g*?pretty'
-curl -XDELETE --user es_admin:password 'localhost:9200/aplog_pos*?pretty'
-curl -XDELETE --user es_admin:password 'localhost:9200/aplog_upcc*?pretty'
-curl -XDELETE --user es_admin:password 'localhost:9200/aplog_wds*?pretty'
+curl -XDELETE --user es_admin:password 'localhost:9200/aplog*?pretty'
 
 # 1.1 Delete the topic znode on Zookeeper by zookeeper-client
 # 1.2 Delete the topic commit logs
 
-# 2. RECREATE the topic & indexes:
+# 2. RECREATE the topic:
 /usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdp01.localdomain:2181,hdp02.localdomain:2181,hdp03.localdomain:2181 --replication-factor 2 --partition 10 --topic ap_logs_test_222
 
-curl -XPUT --user es_admin:password 'localhost:9200/aplog_aes3g?pretty'
-curl -XPUT --user es_admin:password 'localhost:9200/aplog_pos?pretty'
-curl -XPUT --user es_admin:password 'localhost:9200/aplog_upcc?pretty'
-curl -XPUT --user es_admin:password 'localhost:9200/aplog_wds?pretty'
 
 # 3. START monitoring the topic:
 /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic ap_logs_test_222 --from-beginning

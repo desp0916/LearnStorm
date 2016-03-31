@@ -82,19 +82,19 @@ public class ApLogUtil {
 	}
 
 	/**
-	 * 將字串解析並格式化某特定日期時間格式
+	 * 將字串解析並格式化成某特定日期時間格式
 	 *
 	 * @param dateTimeString		字串（應為日期時間）
 	 * @param dateTimeFormatter		日期時間格式轉換器
 	 * @param validFormats			可接受哪些日期時間格式
-	 * @param validFormat			希望輸出的日期時間格式
+	 * @param outputFormat			希望輸出的日期時間格式
 	 * @return						格式化結果
 	 */
 	public static String parseDateTime(String dateTimeString, DateTimeFormatter dateTimeFormatter,
-			String[] validFormats, String validFormat) {
+			String[] validFormats, String outputFormat) {
 		for (int i = 0; i < validFormats.length; i++) {
 			SimpleDateFormat format = new SimpleDateFormat(validFormats[i]);
-			DateFormat df = new SimpleDateFormat(validFormat);
+			DateFormat df = new SimpleDateFormat(outputFormat);
 			format.setLenient(false);
 			try {
 				Date temp = format.parse(dateTimeString);
@@ -125,10 +125,12 @@ public class ApLogUtil {
 	 * http://stackoverflow.com/questions/4528047/checking-the-validity-of-a-date
 	 *
 	 * @param dateString		日期字串
+	 * @param validFormat		合法的日期格式
 	 * @return					檢查結果
 	 */
-	public static boolean isDateValid(String dateString) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	public static boolean isDateValid(String dateString, String validFormat) {
+		DateFormat df;
+		df = (validFormat == null) ? new SimpleDateFormat("yyyy-MM-dd") : new SimpleDateFormat(validFormat);
 		df.setLenient(false);
 		try {
 			df.parse(dateString);

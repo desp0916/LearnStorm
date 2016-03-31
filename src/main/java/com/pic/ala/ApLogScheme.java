@@ -30,8 +30,8 @@ import backtype.storm.tuple.Values;
 public class ApLogScheme implements Scheme {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
-	private static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-	private static final String FORMAT_DATE = "yyyy-MM-dd";
+	public static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	public static final String FORMAT_DATE = "yyyy.MM.dd";
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	private static final String[] FORMATS = new String[] {
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",

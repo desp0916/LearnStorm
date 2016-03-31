@@ -161,8 +161,9 @@ public class ESIndexerBolt extends BaseRichBolt {
 		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
 		if (isNullOrEmpty(sysID) || isNullOrEmpty(logType) || isNullOrEmpty(logDate)
-				|| !isDateValid(logDate) || isNullOrEmpty(apID) || isNullOrEmpty(at)
-				|| isNullOrEmpty(msg) || isNullOrEmpty(toBeIndexed)) {
+			|| !isDateValid(logDate, ApLogScheme.FORMAT_DATE) || isNullOrEmpty(apID)
+			|| isNullOrEmpty(at) || isNullOrEmpty(msg) || isNullOrEmpty(toBeIndexed))
+		{
 			LOG.error("Received null or incorrect value from tuple.");
 			collector.ack(tuple);
 			return;
@@ -178,15 +179,15 @@ public class ESIndexerBolt extends BaseRichBolt {
 					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "-" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).get();
 			if (response == null) {
-				LOG.error("Failed to index Tuple: {} ", tuple.toString());
+				LOG.error("*********--**Failed to index Tuple: {} ", tuple.toString());
 			} else {
 				if (response.isCreated()) {
 					String documentIndexId = response.getId();
-					LOG.info("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
+					LOG.info("#########Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
 					// Anchored
 					collector.emit(tuple, new Values(documentIndexId));
 				} else {
-					LOG.error("Failed to index Tuple: {} ", tuple.toString());
+					LOG.error("*************Failed to index Tuple: {} ", tuple.toString());
 				}
 			}
 			collector.ack(tuple);
