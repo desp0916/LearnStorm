@@ -87,22 +87,24 @@ public class ESIndexerBolt extends BaseRichBolt {
 		String esShieldUser = (String)conf.get(ES_SHIELD_USER);
 		String esShieldPass = (String)conf.get(ES_SHIELD_PASS);
 
-		LOG.error("esShieldEnabled:"+esShieldEnabled+", esShieldUser:"+esShieldUser+", esShieldPass:"+esShieldPass);
-
 		if (esClusterName == null) {
-			throw new IllegalArgumentException("No '" + ES_CLUSTER_NAME + "' value found in configuration!");
+			throw new IllegalArgumentException("No '" + ES_CLUSTER_NAME 
+				+ "' value found in configuration!");
 		}
 
 		if (esNodes == null) {
-			throw new IllegalArgumentException("No '" + ES_NODES + "' value found in configuration!");
+			throw new IllegalArgumentException("No '" + ES_NODES 
+				+ "' value found in configuration!");
 		}
 
 		if (esShieldEnabled && esShieldUser == null) {
-			throw new IllegalArgumentException("No '" + ES_SHIELD_USER + "' value found in configuration!");
+			throw new IllegalArgumentException("No '" + ES_SHIELD_USER 
+				+ "' value found in configuration!");
 		}
 
 		if (esShieldEnabled && esShieldPass == null) {
-			throw new IllegalArgumentException("No '" + ES_SHIELD_PASS + "' value found in configuration!");
+			throw new IllegalArgumentException("No '" + ES_SHIELD_PASS 
+				+ "' value found in configuration!");
 		}
 
 		this.collector = collector;
@@ -113,13 +115,18 @@ public class ESIndexerBolt extends BaseRichBolt {
 
 		// ElasticSearch 2.2
 		if (esShieldEnabled) {
-			final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName)
-					.put("client.transport.sniff", true).put("shield.user", esShieldUser + ":" + esShieldPass).build();
+			final Settings settings = Settings.settingsBuilder()
+					.put("cluster.name", esClusterName)
+					.put("client.transport.sniff", true)
+					.put("shield.user", esShieldUser + ":" + esShieldPass)
+					.build();
 			transportClient = TransportClient.builder().addPlugin(ShieldPlugin.class)
 					.settings(settings).build();
 		} else {
-			final Settings settings = Settings.settingsBuilder().put("cluster.name", esClusterName)
-					.put("client.transport.sniff", true).build();
+			final Settings settings = Settings.settingsBuilder()
+					.put("cluster.name", esClusterName)
+					.put("client.transport.sniff", true)
+					.build();
 			transportClient = TransportClient.builder().settings(settings).build();
 		}
 
@@ -176,18 +183,19 @@ public class ESIndexerBolt extends BaseRichBolt {
 
 		try {
 			IndexResponse response = client
-					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() + "-" + logDate, logType.toLowerCase())
+					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() 
+						+ "-" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).get();
 			if (response == null) {
-				LOG.error("*********--**Failed to index Tuple: {} ", tuple.toString());
+				LOG.error("Failed to index Tuple: {} ", tuple.toString());
 			} else {
 				if (response.isCreated()) {
 					String documentIndexId = response.getId();
-					LOG.info("#########Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
+					LOG.info("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
 					// Anchored
 					collector.emit(tuple, new Values(documentIndexId));
 				} else {
-					LOG.error("*************Failed to index Tuple: {} ", tuple.toString());
+					LOG.error("Failed to index Tuple: {} ", tuple.toString());
 				}
 			}
 			collector.ack(tuple);
