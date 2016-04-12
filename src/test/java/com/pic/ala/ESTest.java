@@ -63,9 +63,12 @@ public class ESTest {
 		}
 
 		client = transportClient;
-		String toBeIndexed = "{\"sysID\":\"wds\",\"logType\":\"ui\",\"logTime\":\"2016-03-14T13:46:31.924+0800\",\"apID\":\"UIApp01V4\",\"functID\":\"FUNC_10002\",\"who\":\"機器人\",\"from\":\"iis\",\"at\":\"websphere\",\"to\":\"postgres\",\"action\":\"訂單成立\",\"result\":\"失敗\",\"kw\":\"玩命關頭\",\"msgLevel\":\"ERROR\",\"msg\":\"Unsufficient privilege\",\"msgCode\":\"5260\",\"table\":\"CODES\",\"dataCnt\":176,\"procTime\":80}";
+		String indexName  = "aplog_aes3g-2016.04.12";
+		String indexType = "ui";
+
+		String toBeIndexed = "{\"sysID\":\"wds\",\"logType\":\""+indexType+"\",\"logTime\":\"2016-04-12T16:51:31.924+0800\",\"apID\":\"UIApp01V4\",\"functID\":\"FUNC_10002\",\"who\":\"機器人\",\"from\":\"iis\",\"at\":\"websphere\",\"to\":\"postgres\",\"action\":\"訂單成立\",\"result\":\"失敗\",\"kw\":\"玩命關頭\",\"msgLevel\":\"ERROR\",\"msg\":\"Unsufficient privilege\",\"msgCode\":\"5260\",\"table\":\"CODES\",\"dataCnt\":176,\"procTime\":80}";
 		IndexResponse response = client
-				.prepareIndex("aplog_aes3g_20160314", "batch")
+				.prepareIndex(indexName, indexType)
 				.setSource(toBeIndexed).get();
 
 		if (response.isCreated()) {
