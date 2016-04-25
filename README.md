@@ -1,6 +1,6 @@
 # Learning Apache Storm
 
-Before using this project, you must install the [shaded jar](https://github.com/desp0916/es-shaded) for ElasticSearch 2.2.1 to your local maven repository.
+Before using this project, you must install the [shaded jar](https://github.com/desp0916/es-shaded) for ElasticSearch 2.3.1 to your local maven repository.
 
 ```bash
 mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=jar -Dversion=1.7 -Dfile=tools.jar -DgeneratePom=true
@@ -30,7 +30,7 @@ curl -XPUT -u es_admin:password "http://localhost:9200/_template/aplog_1?pretty=
 {
   "template": "aplog_*",
   "settings": {
-    "number_of_replicas": 3,
+    "number_of_replicas": 1,
     "number_of_shards": 5
   },
   "mappings": {
