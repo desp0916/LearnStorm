@@ -6,7 +6,7 @@
  * http://cjjwzs.iteye.com/blog/984818
  *
  */
-package com.pic.ala;
+package com.pic.ala.scheme;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

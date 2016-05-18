@@ -4,11 +4,10 @@
  */
 package com.pic.ala.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import static com.pic.ala.util.LogUtil.getISO8601Time;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -310,18 +309,6 @@ public class ApLog {
 
 	public static int getRandomInt(final int minInt, final int maxInt) {
 		return ThreadLocalRandom.current().nextInt(minInt, maxInt + 1);
-	}
-
-	/**
-	 * http://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format
-	 * 2016-01-20T10:53:52.457+0800
-	 * 2016-01-20T11:11:42.915Z
-	 */
-	public static String getISO8601Time() {
-//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-//		df.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
-		return df.format(new Date());
 	}
 
 	public static void main(String[] args) {

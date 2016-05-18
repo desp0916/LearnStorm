@@ -26,6 +26,9 @@ package com.pic.ala;
 
 import java.util.HashMap;
 
+import com.pic.ala.bolt.ESIndexerBolt;
+import com.pic.ala.scheme.ApLogScheme;
+
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
@@ -38,7 +41,7 @@ import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
 import storm.kafka.ZkHosts;
 
-public class ApLogAnalyzer extends ApLogBaseTopology {
+public class ApLogAnalyzer extends LogBaseTopology {
 
 //	private static final Logger LOG = Logger.getLogger(ApLogAnalyzer.class);
 

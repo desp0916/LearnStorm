@@ -7,13 +7,13 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class ApLogBaseTopology {
+public abstract class LogBaseTopology {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApLogBaseTopology.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LogBaseTopology.class);
 
 	protected static Properties topologyConfig;
 
-	public ApLogBaseTopology(String configFileLocation) throws Exception {
+	public LogBaseTopology(String configFileLocation) throws Exception {
 
 		topologyConfig = new Properties();
 

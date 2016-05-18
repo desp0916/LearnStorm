@@ -1,4 +1,4 @@
-package com.pic.ala;
+package com.pic.ala.spout;
 
 import java.io.IOException;
 import java.util.Map;

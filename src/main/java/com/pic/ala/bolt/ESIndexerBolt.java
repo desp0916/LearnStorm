@@ -15,10 +15,10 @@
  * https://www.elastic.co/guide/en/elasticsearch/client/java-api/1.7/index-doc.html
  */
 
-package com.pic.ala;
+package com.pic.ala.bolt;
 
-import static com.pic.ala.ApLogUtil.isDateValid;
-import static com.pic.ala.ApLogUtil.isNullOrEmpty;
+import static com.pic.ala.util.LogUtil.isDateValid;
+import static com.pic.ala.util.LogUtil.isNullOrEmpty;
 
 import java.net.InetAddress;
 import java.util.Arrays;
@@ -34,6 +34,8 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.shield.ShieldPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.pic.ala.scheme.ApLogScheme;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -88,22 +90,22 @@ public class ESIndexerBolt extends BaseRichBolt {
 		String esShieldPass = (String)conf.get(ES_SHIELD_PASS);
 
 		if (esClusterName == null) {
-			throw new IllegalArgumentException("No '" + ES_CLUSTER_NAME 
+			throw new IllegalArgumentException("No '" + ES_CLUSTER_NAME
 				+ "' value found in configuration!");
 		}
 
 		if (esNodes == null) {
-			throw new IllegalArgumentException("No '" + ES_NODES 
+			throw new IllegalArgumentException("No '" + ES_NODES
 				+ "' value found in configuration!");
 		}
 
 		if (esShieldEnabled && esShieldUser == null) {
-			throw new IllegalArgumentException("No '" + ES_SHIELD_USER 
+			throw new IllegalArgumentException("No '" + ES_SHIELD_USER
 				+ "' value found in configuration!");
 		}
 
 		if (esShieldEnabled && esShieldPass == null) {
-			throw new IllegalArgumentException("No '" + ES_SHIELD_PASS 
+			throw new IllegalArgumentException("No '" + ES_SHIELD_PASS
 				+ "' value found in configuration!");
 		}
 
@@ -183,7 +185,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 
 		try {
 			IndexResponse response = client
-					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase() 
+					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase()
 						+ "-" + logDate, logType.toLowerCase())
 					.setSource(toBeIndexed).get();
 			if (response == null) {

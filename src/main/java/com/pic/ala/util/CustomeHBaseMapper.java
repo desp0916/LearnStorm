@@ -1,4 +1,4 @@
-package com.pic.ala;
+package com.pic.ala.util;
 
 import static org.apache.storm.hbase.common.Utils.toBytes;
 import static org.apache.storm.hbase.common.Utils.toLong;

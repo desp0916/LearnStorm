@@ -25,6 +25,8 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 
+import com.pic.ala.spout.RandomLogSpout;
+
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
@@ -35,7 +37,7 @@ import storm.kafka.bolt.KafkaBolt;
 import storm.kafka.bolt.mapper.FieldNameBasedTupleToKafkaMapper;
 import storm.kafka.bolt.selector.DefaultTopicSelector;
 
-public class ApLogGenerator extends ApLogBaseTopology {
+public class ApLogGenerator extends LogBaseTopology {
 
 	private Config conf;
 	private static String brokerUrl;

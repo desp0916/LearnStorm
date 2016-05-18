@@ -4,10 +4,10 @@
  *
  * @TODO Discard undefined fields in ApLog.
  */
-package com.pic.ala;
+package com.pic.ala.scheme;
 
-import static com.pic.ala.ApLogUtil.isNumeric;
-import static com.pic.ala.ApLogUtil.parseDateTime;
+import static com.pic.ala.util.LogUtil.isNumeric;
+import static com.pic.ala.util.LogUtil.parseDateTime;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class ApLogScheme implements Scheme {
     private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
 	public static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	public static final String FORMAT_DATE = "yyyy.MM.dd";
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(FORMAT_DATETIME);
 	private static final String[] FORMATS = new String[] {
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
 			"yyyy-MM-dd HH:mm:ss.SSS",
@@ -61,7 +61,6 @@ public class ApLogScheme implements Scheme {
 	public static final String FIELD_PROC_TIME = "procTime";
 
 	// The following fields will be used or stored by HBase.
-	private String counterColumnName;
 	public static final String FIELD_AGG_ID = "aggID";
 	public static final String FIELD_HOUR_MINUTE = "hourMinute";
 	public static final String FIELD_ROWKEY = "rowKey";
@@ -197,7 +196,6 @@ public class ApLogScheme implements Scheme {
 
 	@Override
 	public Fields getOutputFields() {
-		// Required Fields: esSource, systemID, logType, logDate, logTime
 		return new Fields(FIELD_ES_SOURCE, FIELD_SYS_ID, FIELD_LOG_TYPE,
 				FIELD_LOG_DATE, FIELD_LOG_DATETIME, FIELD_AP_ID, FIELD_AT,
 				FIELD_MSG);
@@ -209,14 +207,6 @@ public class ApLogScheme implements Scheme {
 		} else {
 			return str;
 		}
-	}
-
-	public void setCounterColumnName(String counterColumnName) {
-		this.counterColumnName = counterColumnName;
-	}
-
-	public String getCounterColumnName() {
-		return this.counterColumnName;
 	}
 
 }

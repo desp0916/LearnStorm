@@ -1,4 +1,4 @@
-package com.pic.ala;
+package com.pic.ala.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,9 +9,21 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-public class ApLogUtil {
+public class LogUtil {
 
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+
+	/**
+	 * http://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format
+	 * 2016-01-20T10:53:52.457+0800
+	 * 2016-01-20T11:11:42.915Z
+	 */
+	public static String getISO8601Time() {
+//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//		df.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
+		return df.format(new Date());
+	}
 
 	/**
 	 * 檢查某字串是否為數字？

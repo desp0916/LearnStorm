@@ -2,7 +2,7 @@
  * https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/
  * scan 'aes3g_agg', {COLUMNS => ['min:15-29:toLong'] }
  */
-package com.pic.ala;
+package com.pic.ala.bolt;
 
 import static org.apache.storm.hbase.common.Utils.toBytes;
 
@@ -15,6 +15,8 @@ import org.apache.storm.hbase.bolt.mapper.HBaseMapper;
 import org.apache.storm.hbase.common.ColumnList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.pic.ala.scheme.ApLogScheme;
 
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
