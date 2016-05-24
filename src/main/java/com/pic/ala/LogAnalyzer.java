@@ -6,7 +6,7 @@ import com.pic.ala.bolt.ESIndexBolt;
 import com.pic.ala.scheme.LogScheme;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
@@ -74,8 +74,8 @@ public class LogAnalyzer extends LogBaseTopology {
 		configureKafkaSpout(builder, config);
 		configureESBolts(builder, config);
 
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("LogAnalyzerV1", config, builder.createTopology());
+//		LocalCluster cluster = new LocalCluster();
+		StormSubmitter.submitTopology("LogAnalyzerV1", config, builder.createTopology());
 	}
 
 	public static void main(String args[]) throws Exception {
