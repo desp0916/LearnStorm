@@ -30,8 +30,8 @@ public class LogScheme implements Scheme {
 	};
 
 	public static final String FIELD_ES_SOURCE = "es_source";	// Elasticsearch "source" field
-	public static final String FIELD_INDEX = "_index";
-	public static final String FIELD_TYPE = "_type";
+	public static final String FIELD_INDEX = "index";
+	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_LOG_DATE = "logDate";
 	public static final String FIELD_LOG_DATETIME = "logDateTime";
 	public static final String FIELD_MESSAGE = "message";
@@ -42,7 +42,6 @@ public class LogScheme implements Scheme {
 		String esSource = "";
 		String index = "";
 		String type = "";
-		String host = "";
 		String message = "";
 		String logDateTime = "";
 		String logDate = "";
