@@ -197,7 +197,6 @@ public class ESIndexBolt extends BaseRichBolt {
 
 		try {
 
-			System.out.println("### index: " + index.toLowerCase());
 			IndexResponse response = client
 					.prepareIndex(ES_INDEX_PREFIX + index.toLowerCase()
 						+ "-" + logDate, type.toLowerCase())
