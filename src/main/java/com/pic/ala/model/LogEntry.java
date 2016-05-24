@@ -12,73 +12,62 @@ public class LogEntry {
 	public static final String DEFAULT_INDEX = "logstash";
 	public static final String DEFAULT_TYPE = "unknown";
 
-	private String index;
-	private String type;
-	private String logTime;
-	private String host = "";
-	private String message = "";
+	private String _index;
+	private String _type;
+	private String timestamp;
+	private String message;
 
 	public LogEntry() {}
 
 	public LogEntry(final String index, final String type) {
 		if (index != null && !("").equals(index)) {
-			this.index = index.toLowerCase();
+			this._index = index.toLowerCase();
 		} else {
-			this.index = DEFAULT_INDEX.toLowerCase();
+			this._index = DEFAULT_INDEX.toLowerCase();
 		}
 
 		if (type == null || ("").equals(type)) {
-			this.type = DEFAULT_TYPE;
+			this._type = DEFAULT_TYPE;
 		} else {
-			this.type = type;
+			this._type = type;
 		}
-		this.logTime = getISO8601Time();
-		this.host = "";
+		this.timestamp = getISO8601Time();
 		this.message = "";
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("index=").append(index).append(FIELD_SEPARATOR)
-				.append("type=").append(type).append(FIELD_SEPARATOR)
-				.append("logTime=").append(logTime).append(FIELD_SEPARATOR)
-				.append("host=").append(host).append(FIELD_SEPARATOR)
+		builder.append("_index=").append(_index).append(FIELD_SEPARATOR)
+				.append("_type=").append(_type).append(FIELD_SEPARATOR)
+				.append("timestamp=").append(timestamp).append(FIELD_SEPARATOR)
 				.append("message=").append(message).append(FIELD_SEPARATOR);
 
 		return builder.toString();
 	}
 
 	public String getIndex() {
-		return index;
+		return _index;
 	}
 
 	public void setIndex(String index) {
-		this.index = index;
+		this._index = index;
 	}
 
 	public String getType() {
-		return type;
+		return _type;
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		this._type = type;
 	}
 
-	public String getLogTime() {
-		return logTime;
+	public String getTimestamp() {
+		return timestamp;
 	}
 
-	public void setLogTime(String logTime) {
-		this.logTime = logTime;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public String getMessage() {

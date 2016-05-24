@@ -172,7 +172,6 @@ public class ESIndexBolt extends BaseRichBolt {
 		String index = (String) tuple.getValueByField(LogScheme.FIELD_INDEX);
 		String type = (String) tuple.getValueByField(LogScheme.FIELD_TYPE);
 		String logDate = (String) tuple.getValueByField(LogScheme.FIELD_LOG_DATE);
-		String host = (String) tuple.getValueByField(LogScheme.FIELD_HOST);
 		String message = (String) tuple.getValueByField(LogScheme.FIELD_MESSAGE);
 		String toBeIndexed = (String) tuple.getValueByField(LogScheme.FIELD_ES_SOURCE);
 
@@ -183,7 +182,7 @@ public class ESIndexBolt extends BaseRichBolt {
 			type = defaultType;
 		}
 		if ( isNullOrEmpty(logDate)
-			|| !isDateValid(logDate, LogScheme.FORMAT_DATE)	|| isNullOrEmpty(host)
+			|| !isDateValid(logDate, LogScheme.FORMAT_DATE)
 			|| isNullOrEmpty(message) || isNullOrEmpty(toBeIndexed))
 		{
 			LOG.error("Received null or incorrect value from tuple.");

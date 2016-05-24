@@ -1,6 +1,17 @@
 # Learning Apache Storm
 
-Before using this project, you must install the [shaded jar](https://github.com/desp0916/es-shaded) for ElasticSearch 2.3.2 to your local maven repository.
+There are two Storm topologies for ELK stack.
+
+  - [LogAnalyzer](src/main/java/com/pic/ala/LogAnalyzer.java): You can use it to ingest log stream from general Logstash json output through Kafka to Elasticsearch.
+  - [ApLogAnalyzer](src/main/java/com/pic/ala/ApLogAnalyzer.java): It is similar to the above one. Use it to ingest log stream from customized Logstash json output through Kafka to Elasticsearch.
+  
+The data flow is:
+
+```
+log stream ==> Logstash ==> Kafka ==> Storm Topology ==> Elasticsearch
+```
+
+Before using this project, you must install the [shaded jar](https://github.com/desp0916/es-shaded) for ElasticSearch 2.3.2 to your local Maven repository.
 
 ```bash
 mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=jar -Dversion=1.7 -Dfile=tools.jar -DgeneratePom=true

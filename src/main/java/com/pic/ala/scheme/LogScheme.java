@@ -11,8 +11,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.pic.ala.model.LogEntry;
-
 import backtype.storm.spout.Scheme;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
@@ -32,11 +30,10 @@ public class LogScheme implements Scheme {
 	};
 
 	public static final String FIELD_ES_SOURCE = "es_source";	// Elasticsearch "source" field
-	public static final String FIELD_INDEX = LogEntry.DEFAULT_INDEX;
-	public static final String FIELD_TYPE = LogEntry.DEFAULT_TYPE;
+	public static final String FIELD_INDEX = "_index";
+	public static final String FIELD_TYPE = "_type";
 	public static final String FIELD_LOG_DATE = "logDate";
 	public static final String FIELD_LOG_DATETIME = "logDateTime";
-	public static final String FIELD_HOST = "host";
 	public static final String FIELD_MESSAGE = "message";
 
 	@Override
@@ -54,20 +51,11 @@ public class LogScheme implements Scheme {
 			esSource = new String(bytes, "UTF-8");
 
 			ObjectMapper objectMapper = new ObjectMapper();
-//			LogEntry logEntry = objectMapper.readValue(esSource, LogEntry.class);
-//			index = logEntry.getIndex();
-//			type = logEntry.getType();
-//			host = logEntry.getHost();
-//			message = logEntry.getMessage();
-//			String tmpLogDateTime = parseDateTime(logEntry.getLogTime(), dateTimeFormatter, FORMATS, FORMAT_DATETIME);
-//			String tmpLogDate = parseDateTime(logEntry.getLogTime(), dateTimeFormatter, FORMATS, FORMAT_DATE);
-
 			Map<String,String> logEntry = objectMapper.readValue(esSource, Map.class);
 
-			index = logEntry.get("index");
-			type = logEntry.get("type");
-			host = logEntry.get("host");
-			message = logEntry.get("message");
+			index = logEntry.get(FIELD_INDEX);
+			type = logEntry.get(FIELD_TYPE);
+			message = logEntry.get(FIELD_MESSAGE);
 
 			String tmpLogDateTime = parseDateTime(logEntry.get("@timestamp"), dateTimeFormatter, FORMATS, FORMAT_DATETIME);
 			String tmpLogDate = parseDateTime(logEntry.get("@timestamp"), dateTimeFormatter, FORMATS, FORMAT_DATE);
@@ -82,13 +70,13 @@ public class LogScheme implements Scheme {
 			e.printStackTrace();
 		}
 
-		return new Values(esSource, index, type, logDate, logDateTime, host, message);
+		return new Values(esSource, index, type, logDate, logDateTime, message);
 	}
 
 	@Override
 	public Fields getOutputFields() {
 		return new Fields(FIELD_ES_SOURCE, FIELD_INDEX, FIELD_TYPE,
-				FIELD_LOG_DATE, FIELD_LOG_DATETIME, FIELD_HOST, FIELD_MESSAGE);
+				FIELD_LOG_DATE, FIELD_LOG_DATETIME, FIELD_MESSAGE);
 	}
 
 }
