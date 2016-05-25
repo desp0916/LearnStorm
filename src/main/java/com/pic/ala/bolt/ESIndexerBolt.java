@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.ListenableActionFuture;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -63,6 +64,11 @@ public class ESIndexerBolt extends BaseRichBolt {
 	public static final int MIN_CONNECTED_NODES = 5;
 //	public static final String ES_INDEX_NAME = "es.index.name";
 //	public static final String ES_INDEX_TYPE = "es.index.type";
+	public static final String ES_ASYNC_ENABLED = "es.async.enabled";
+
+	// DO NOT MODIFY HERE.
+	// Instead modify the setting "es.async.enabled" in "LogAnalyzer.properties" file.
+	private static boolean esAsyncEnabled = true;
 
 	public ESIndexerBolt withConfigKey(final String configKey) {
 		this.configKey = configKey;
@@ -83,6 +89,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 
 		Map<String, Object> conf = (Map<String, Object>) stormConf.get(this.configKey);
 
+		esAsyncEnabled = Boolean.parseBoolean((String)conf.get(ES_ASYNC_ENABLED));
 		String esClusterName = (String)conf.get(ES_CLUSTER_NAME);
 		String esNodes = (String)conf.get(ES_NODES);
 		boolean esShieldEnabled = Boolean.parseBoolean((String)conf.get(ES_SHIELD_ENABLED));
@@ -115,7 +122,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 //		final Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", esClusterName).build();
 //		TransportClient transportClient = new TransportClient(settings);
 
-		// ElasticSearch 2.2
+		// ElasticSearch 2.3
 		if (esShieldEnabled) {
 			final Settings settings = Settings.settingsBuilder()
 					.put("cluster.name", esClusterName)
@@ -184,20 +191,33 @@ public class ESIndexerBolt extends BaseRichBolt {
 		}
 
 		try {
-			IndexResponse response = client
-					.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase()
-						+ "-" + logDate, logType.toLowerCase())
-					.setSource(toBeIndexed).get();
-			if (response == null) {
-				LOG.error("Failed to index Tuple: {} ", tuple.toString());
+			if (esAsyncEnabled) {
+				// Asynchronous way
+				ListenableActionFuture<IndexResponse> future = client
+						.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase()
+							+ "-" + logDate, logType.toLowerCase())
+						.setSource(toBeIndexed).execute();
+				future.addListener(new ESIndexActionListener(tuple, collector, LOG));
+				future.actionGet();
 			} else {
-				if (response.isCreated()) {
-					String documentIndexId = response.getId();
-					LOG.info("Indexing success [" + documentIndexId + "] on Tuple: " + tuple.toString());
-					// Anchored
-					collector.emit(tuple, new Values(documentIndexId));
-				} else {
+				// Synchronous way
+				IndexResponse response = client
+						.prepareIndex(ES_INDEX_PREFIX + sysID.toLowerCase()
+							+ "-" + logDate, logType.toLowerCase())
+						.setSource(toBeIndexed).get();
+				if (response == null) {
 					LOG.error("Failed to index Tuple: {} ", tuple.toString());
+				} else {
+					if (response.isCreated()) {
+						String documentId = response.getId();
+						String logMsg = "Indexed successfully [" + sysID + "/"+ logType + "/" + documentId + "]";
+						LOG.info(logMsg);
+						LOG.debug(logMsg + " on Tuple: " + tuple.toString());
+						// Anchored
+						collector.emit(tuple, new Values(documentId));
+					} else {
+						LOG.error("Failed to index Tuple: {} ", tuple.toString());
+					}
 				}
 			}
 			collector.ack(tuple);

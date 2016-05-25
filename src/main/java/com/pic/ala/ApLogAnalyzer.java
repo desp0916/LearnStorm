@@ -82,6 +82,7 @@ public class ApLogAnalyzer extends LogBaseTopology {
 		esConfig.put(ESIndexerBolt.ES_SHIELD_ENABLED, topologyConfig.getProperty(ESIndexerBolt.ES_SHIELD_ENABLED));
 		esConfig.put(ESIndexerBolt.ES_SHIELD_USER, topologyConfig.getProperty(ESIndexerBolt.ES_SHIELD_USER));
 		esConfig.put(ESIndexerBolt.ES_SHIELD_PASS, topologyConfig.getProperty(ESIndexerBolt.ES_SHIELD_PASS));
+		esConfig.put(ESIndexerBolt.ES_ASYNC_ENABLED, topologyConfig.getProperty(ESIndexerBolt.ES_ASYNC_ENABLED));
 		config.put("es.conf", esConfig);
 		ESIndexerBolt esBolt = new ESIndexerBolt().withConfigKey("es.conf");
 		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESIndexerBolt.threads"));

@@ -56,6 +56,7 @@ public class LogAnalyzer extends LogBaseTopology {
 		esConfig.put(ESIndexBolt.ES_SHIELD_PASS, topologyConfig.getProperty(ESIndexBolt.ES_SHIELD_PASS));
 		esConfig.put(ESIndexBolt.ES_INDEX_NAME, topologyConfig.getProperty(ESIndexBolt.ES_INDEX_NAME));
 		esConfig.put(ESIndexBolt.ES_INDEX_TYPE, topologyConfig.getProperty(ESIndexBolt.ES_INDEX_TYPE));
+		esConfig.put(ESIndexBolt.ES_ASYNC_ENABLED, topologyConfig.getProperty(ESIndexBolt.ES_ASYNC_ENABLED));
 		config.put("es.conf", esConfig);
 		ESIndexBolt esBolt = new ESIndexBolt().withConfigKey("es.conf");
 		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESIndexBolt.threads"));
