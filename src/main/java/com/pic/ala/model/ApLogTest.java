@@ -6,6 +6,12 @@
  * enableSleep = true : suspend threads occasionally
  */
 /*
+
+  https://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html
+  https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
+
+  注意：將 refresh_interval 設為 -1（關閉 refresh）或調大一點，會提昇 ES 的效能。
+
   1. 先建立 indexes：
 
      curl -XPUT 'localhost:9200/aplog_aes3g-2016.05.25/?pretty'
