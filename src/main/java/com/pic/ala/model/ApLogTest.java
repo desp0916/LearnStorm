@@ -1,6 +1,9 @@
 /**
  * AP Log 產生器（於 local 端執行，使用 log4j 的「Kafka appender」寫入 Kafka ）
  * 可以用這隻程式來做 performance benchmark
+ *
+ * enableSleep = false : running threads at full speed
+ * enableSleep = true : suspend threads occasionally
  */
 /*
   1. 先建立 indexes：
@@ -52,7 +55,7 @@ public class ApLogTest {
 	}
 
 	public static void startAllThreads() {
-		boolean enableSleep = false;
+		boolean enableSleep = true;
 		for (String sysID : ApLog.SYSTEMS) {
 			(new BatchJobThread(new BatchJob(sysID, enableSleep))).start();
 			(new UIActionThread(new UIAction(sysID, enableSleep))).start();
