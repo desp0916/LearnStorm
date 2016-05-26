@@ -168,6 +168,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 	 */
 	@Override
 	public void execute(Tuple tuple) {
+
 		String sysID = (String) tuple.getValueByField(ApLogScheme.FIELD_SYS_ID);
 		String logType = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_TYPE);
 		String logDate = (String) tuple.getValueByField(ApLogScheme.FIELD_LOG_DATE);
@@ -199,6 +200,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 						.setSource(toBeIndexed).execute();
 				future.addListener(new ESIndexActionListener(tuple, collector, LOG));
 				future.actionGet();
+				collector.ack(tuple);
 			} else {
 				// Synchronous way
 				IndexResponse response = client
@@ -207,7 +209,7 @@ public class ESIndexerBolt extends BaseRichBolt {
 						.setSource(toBeIndexed).get();
 				if (response == null) {
 					collector.reportError(new Throwable("ES null response"));
-					collector.fail(tuple);
+//					collector.fail(tuple);
 					LOG.error("Failed to index tuple due to ES null reponse: {} ", tuple.toString());
 				} else {
 					if (response.isCreated()) {
@@ -215,15 +217,15 @@ public class ESIndexerBolt extends BaseRichBolt {
 						String logMsg = "Indexed successfully [" + sysID + "/"+ logType + "/" + documentId + "]";
 						// Anchored
 						collector.emit(tuple, new Values(documentId));
-						collector.ack(tuple);
 						LOG.info(logMsg);
-						LOG.debug(logMsg + " on tuple: " + tuple.toString());
+						LOG.debug("{} on tuple: {} ", logMsg, tuple.toString());
 					} else {
 						collector.reportError(new Throwable(response.toString()));
-						collector.fail(tuple);
+//						collector.fail(tuple);
 						LOG.error("Failed to index tuple: {} ", tuple.toString());
 					}
 				}
+				collector.ack(tuple);
 			}
 
 		} catch (ElasticsearchException ee) {
