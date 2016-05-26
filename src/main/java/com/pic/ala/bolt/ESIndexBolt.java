@@ -218,21 +218,26 @@ public class ESIndexBolt extends BaseRichBolt {
 							+ "-" + logDate, type.toLowerCase())
 						.setSource(toBeIndexed).get();
 				if (response == null) {
-					LOG.error("Failed to index Tuple: {} ", tuple.toString());
+					collector.reportError(new Throwable("ES null response"));
+					collector.fail(tuple);
+					LOG.error("Failed to index tuple due to ES null reponse: {} ", tuple.toString());
 				} else {
 					if (response.isCreated()) {
 						String documentId = response.getId();
 						String logMsg = "Indexed successfully [" + index + "/"+ type + "/" + documentId + "]";
-						LOG.info(logMsg);
-						LOG.debug(logMsg + " on Tuple: " + tuple.toString());
 						// Anchored
+						collector.ack(tuple);
 						collector.emit(tuple, new Values(documentId));
+						LOG.info(logMsg);
+						LOG.debug(logMsg + " on tuple: " + tuple.toString());
 					} else {
-						LOG.error("Failed to index Tuple: {} ", tuple.toString());
+						collector.reportError(new Throwable(response.toString()));
+						collector.fail(tuple);
+						LOG.error("Failed to index tuple: {} ", tuple.toString());
 					}
 				}
 			}
-			collector.ack(tuple);
+
 		} catch (ElasticsearchException ee) {
 			// https://groups.google.com/forum/#!topic/storm-user/CGaKwFTa9TY
 			ee.printStackTrace();

@@ -31,19 +31,23 @@ public class ESIndexActionListener implements ActionListener<IndexResponse> {
 			String type = response.getType();
 			String documentId = response.getId();
 			String logMsg = "Indexed successfully [" + index + "/"+ type + "/" + documentId + "]";
-			logger.info(logMsg);
-			logger.debug(logMsg + " on Tuple: " + tuple.toString());
 			// Anchored
 			collector.emit(tuple, new Values(documentId));
+			collector.ack(tuple);
+			logger.info(logMsg);
+			logger.debug(logMsg + " on tuple: " + tuple.toString());
 		} else {
-			logger.error("Failed to index Tuple: {} ", tuple.toString());
+			collector.reportError(new Throwable(response.toString()));
+			collector.fail(tuple);
+			logger.error("Failed to index tuple asynchronously: {} ", tuple.toString());
 		}
 	}
 
 	@Override
 	public void onFailure(Throwable e) {
-		logger.error("Failed to index Tuple: {} ", tuple.toString());
-
+		collector.reportError(e);
+		collector.fail(tuple);
+		logger.error("Index failure on tuple asynchronously: {} ", tuple.toString());
 	}
 
 }
