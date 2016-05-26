@@ -1,5 +1,14 @@
 /**
  * Index the log stream in asynchronous way.
+ *
+ * Ref:
+ *
+ * http://stackoverflow.com/questions/30234612/storm-kafkaspout-fails-when-bolt-is-slow
+ *
+ * Storm will fail a tuple if it takes too long to process, by default 30 seconds.
+ * Since Storm guarantees processing, once failed the Kafka spout will replay the same
+ * message *until the tuple is successfully processed*.
+ *
  */
 package com.pic.ala.bolt;
 
