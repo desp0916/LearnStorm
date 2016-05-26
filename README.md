@@ -1,11 +1,11 @@
 # Learning Apache Storm
 
-There are two Storm topologies for ELK stack.
+There are two Storm topologies for [ELK stack](https://www.elastic.co/products).
 
   - [LogAnalyzer](src/main/java/com/pic/ala/LogAnalyzer.java): You can use it to ingest log stream from general Logstash json output through Kafka to Elasticsearch.
   - [ApLogAnalyzer](src/main/java/com/pic/ala/ApLogAnalyzer.java): It is similar to the above one. Use it to ingest log stream from customized Logstash json output through Kafka to Elasticsearch.
   
-The data flow is:
+The overall data flow works as the following diagram:
 
 ```
 log stream ==> Logstash ==> Kafka ==> Storm Topology ==> Elasticsearch
@@ -13,17 +13,11 @@ log stream ==> Logstash ==> Kafka ==> Storm Topology ==> Elasticsearch
 
 Before using this project, you must install the [shaded jar](https://github.com/desp0916/es-shaded) for ElasticSearch 2.3.2 to your local Maven repository.
 
+Also, you have to install `tools.jar` first, which is normally locate at `$JAVA_HOME/lib/tools.jar`.
+
 ```bash
 mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=jar -Dversion=1.7 -Dfile=tools.jar -DgeneratePom=true
-
-mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TestTridentTopology
-mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TridentWordCount
-mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TridentKafkaWordCount
-
-storm jar target/TestTopology-0.0.1-SNAPSHOT.jar com.pic.ala.learn.TestTopology.TridentKafkaWordCount hdp01.localdomain:2181 hdp02.localdomain:6667
 ```
-
-https://azure.microsoft.com/zh-tw/documentation/articles/hdinsight-storm-sensor-data-analysis/
 
 ## 1. HOW TO USE:
 
@@ -95,7 +89,7 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
 # 7. MONITOR the logs with Kibana
 ```
 
-## 2. Kafka Maintainance
+## 2. Commands for Kafka Maintainance
 
 ```bash
 /usr/hdp/current/kafka-broker/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --zookeeper hdp01.localdomain:2181 --group aplog-analyzer
@@ -109,3 +103,18 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
  * [STORM : How do I fix the google.guava dependency while running mvn clean install -DskipTests=true ?](https://community.hortonworks.com/questions/14998/storm-how-do-i-fix-the-googleguava-dependency-whil.html)
  * [What is the maven-shade-plugin used for, and why would you want to relocate java packages?](http://stackoverflow.com/questions/13620281/what-is-the-maven-shade-plugin-used-for-and-why-would-you-want-to-relocate-java)
  * [Apache Maven Shade Plugin / shade:shade](https://maven.apache.org/plugins/maven-shade-plugin/shade-mojo.html)
+ * [在 HDInsight (Hadoop) 中使用 Apache Storm、事件中樞和 HBase 分析感應器資料](https://azure.microsoft.com/zh-tw/documentation/articles/hdinsight-storm-sensor-data-analysis/)
+
+
+## 4. Misc
+
+PLEASE IGNORE THIS SECTION.
+
+```bash
+mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TestTridentTopology
+mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TridentWordCount
+mvn compile exec:java -Dstorm.topology=com.pic.ala.learn.TestTopology.TridentKafkaWordCount
+
+storm jar target/TestTopology-0.0.1-SNAPSHOT.jar com.pic.ala.learn.TestTopology.TridentKafkaWordCount hdp01.localdomain:2181 hdp02.localdomain:6667
+```
+
