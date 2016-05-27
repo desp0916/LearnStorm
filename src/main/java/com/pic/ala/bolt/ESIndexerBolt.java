@@ -32,6 +32,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.node.NodeClosedException;
 import org.elasticsearch.shield.ShieldPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -227,7 +228,11 @@ public class ESIndexerBolt extends BaseRichBolt {
 				}
 				collector.ack(tuple);
 			}
-
+		// We should try our best to handle all exceptions to ingest all logs.
+		} catch (NodeClosedException nce) {
+			nce.printStackTrace();
+			collector.reportError(nce);
+			collector.fail(tuple);
 		} catch (ElasticsearchException ee) {
 			// https://groups.google.com/forum/#!topic/storm-user/CGaKwFTa9TY
 			ee.printStackTrace();
