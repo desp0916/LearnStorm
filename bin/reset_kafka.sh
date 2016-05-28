@@ -8,6 +8,7 @@ do
 done
 
 /usr/bin/zookeeper-client <<EOF
+rmr /LogAnalyzerV1
 rmr /ApLogAnalyzerV1
 rmr /admin
 rmr /brokers
