@@ -13,10 +13,11 @@ log stream ==> Logstash ==> Kafka ==> Storm Topology ==> Elasticsearch
 
 Before using this project, you must install the [shaded jar](https://github.com/desp0916/es-shaded) for ElasticSearch 2.3.2 to your local Maven repository.
 
-Also, you have to install `tools.jar` first, which is normally locate at `$JAVA_HOME/lib/tools.jar`.
+JDK 8 or above is required. Also, you have to install `tools.jar` first, which is normally locate at `$JAVA_HOME/lib/tools.jar`.
 
 ```bash
-mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=jar -Dversion=1.7 -Dfile=tools.jar -DgeneratePom=true
+cd $JAVA_HOME
+mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=jar -Dversion=1.8 -Dfile=tools.jar -DgeneratePom=true
 ```
 
 ## 1. HOW TO USE:
