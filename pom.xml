@@ -241,30 +241,6 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-    		<groupId>com.github.spullara.mustache.java</groupId>
-    		<artifactId>compiler</artifactId>
-    		<version>0.9.1</version>
-    		<scope>test</scope>
-		</dependency>
-        <!-- https://github.com/elastic/elasticsearch/issues/13245 -->
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>4.1.0</version>
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-			<groupId>org.apache.directory.studio</groupId>
-			<artifactId>org.apache.commons.lang</artifactId>
-			<version>2.6</version>
-		</dependency>
 		<dependency>
 			<groupId>jdk.tools</groupId>
 			<artifactId>jdk.tools</artifactId>

@@ -32,7 +32,7 @@ curl -XDELETE --user es_admin:password 'localhost:9200/aplog*?pretty'
 # 1.2 Delete the topic commit logs
 # 1.3 Create the Elasticsearch index template if needed
 
-curl -XPUT -u es_admin:password "http://localhost:9200/_template/aplog_1?pretty=true" -d  '
+curl -XPUT -u es_admin:password "http://localhost:9200/_template/aplog_*?pretty=true" -d  '
 {
   "template": "aplog_*",
   "settings": {
@@ -79,7 +79,7 @@ curl -XPUT -u es_admin:password "http://localhost:9200/_template/aplog_1?pretty=
 
 # 4. COMPILE & PACKAGE Storm topologies:
 cd /root/workspace/LearnStorm/
-mvn clean package
+mvn clean package -DskipTests
 
 # 5. SUBMIT Storm topology: ApLogAnalyzer
 storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogAnalyzer

@@ -61,7 +61,7 @@ public class ApLogTest {
 	}
 
 	public static void startAllThreads() {
-		boolean enableSleep = false;
+		boolean enableSleep = true;
 		for (String sysID : ApLog.SYSTEMS) {
 			(new BatchJobThread(new BatchJob(sysID, enableSleep))).start();
 			(new UIActionThread(new UIAction(sysID, enableSleep))).start();

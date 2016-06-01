@@ -30,7 +30,7 @@ import com.pic.ala.bolt.ESIndexerBolt;
 import com.pic.ala.scheme.ApLogScheme;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
@@ -133,8 +133,8 @@ public class ApLogAnalyzer extends LogBaseTopology {
 //		conf.put(Config.NIMBUS_HOST, "hdp01.localdomain");
 //		System.setProperty("storm.jar", "/root/workspace//LearnStorm/target/LearnStorm-0.0.1-SNAPSHOT.jar");
 //		System.setProperty("hadoop.home.dir", "/tmp");
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("ApLogAnalyzerV1", config, builder.createTopology());
+//		LocalCluster cluster = new LocalCluster();
+		StormSubmitter.submitTopology("ApLogAnalyzerV1", config, builder.createTopology());
 	}
 
 	public static void main(String args[]) throws Exception {

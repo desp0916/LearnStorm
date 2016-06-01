@@ -2,6 +2,8 @@ package com.pic.ala.spout;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -21,6 +23,8 @@ public class RandomLogSpout extends BaseRichSpout {
 	private static final long serialVersionUID = 1L;
 	private SpoutOutputCollector _collector;
 	private ObjectMapper objectMapper;
+    // _pending key = Kafka offset, value = time at which the message was first submitted to the topology
+    private SortedMap<Long,Long> _pending = new TreeMap<Long,Long>();
 
 	@Override
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
