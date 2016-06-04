@@ -11,7 +11,7 @@ public class UIActionThread extends Thread implements Command {
 
 	@Override
 	public void run() {
-		uiAction.go();
+		uiAction.take();
 	}
 
 }

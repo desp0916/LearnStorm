@@ -50,7 +50,7 @@
   8. 或是刪除 indexes：
 
      curl -XDELETE 'localhost:9200/aplog_*-2016.05.25/?pretty'
-*/
+ */
 
 package com.pic.ala.model;
 
@@ -61,13 +61,12 @@ public class ApLogTest {
 	}
 
 	public static void startAllThreads() {
-		Event.enableSleep = true;
+		boolean enableSleep = true;
 		for (String sysID : ApLog.SYSTEMS) {
-			(new BatchJobThread(new BatchJob(sysID))).start();
-			(new UIActionThread(new UIAction(sysID))).start();
-			(new TPIPASEventThread(new TPIPASEvent(sysID))).start();
+			(new BatchJobThread(new BatchJob(sysID, enableSleep))).start();
+			(new UIActionThread(new UIAction(sysID, enableSleep))).start();
+			(new TPIPASEventThread(new TPIPASEvent(sysID, enableSleep))).start();
 		}
-
 	}
 
 }
