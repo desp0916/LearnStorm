@@ -11,7 +11,7 @@ public class TPIPASEventThread extends Thread implements Command {
 
 	@Override
 	public void run() {
-		tpipasEvent.go();
+		tpipasEvent.fire();
 	}
 
 }

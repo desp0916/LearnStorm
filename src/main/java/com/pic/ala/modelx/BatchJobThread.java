@@ -11,7 +11,7 @@ public class BatchJobThread extends Thread implements Command {
 
 	@Override
 	public void run() {
-		batchJob.go();
+		batchJob.run();
 	}
 
 }
