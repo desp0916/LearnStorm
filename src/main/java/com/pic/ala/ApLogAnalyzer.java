@@ -65,6 +65,8 @@ public class ApLogAnalyzer extends LogBaseTopology {
 		final SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
 		spoutConfig.scheme = new SchemeAsMultiScheme(apLogScheme);
+		spoutConfig.retryInitialDelayMs = 10000;
+		spoutConfig.retryDelayMultiplier = 1.0;
 		return spoutConfig;
 	}
 

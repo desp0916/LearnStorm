@@ -39,20 +39,18 @@ import storm.kafka.bolt.selector.DefaultTopicSelector;
 
 public class ApLogGenerator extends LogBaseTopology {
 
-	private Config conf;
 	private static String brokerUrl;
+	private static final String SPOUT_ID = "RandomLogSpout";
 
 	public ApLogGenerator(String configFileLocation) throws Exception {
 		super(configFileLocation);
-		conf = new Config();
-		conf.setNumWorkers(1);
 	}
 
-	private void configureRandomLogSpout(TopologyBuilder builder) {
-		builder.setSpout("RandomLogSpout", new RandomLogSpout(), 3);
+	private void configureRandomLogSpout(TopologyBuilder builder, Config config) {
+		builder.setSpout(SPOUT_ID, new RandomLogSpout(), 3).setDebug(true);
 	}
 
-	private void configureKafkaBolt(TopologyBuilder builder) {
+	private void configureKafkaBolt(TopologyBuilder builder, Config config) {
 		String topic = topologyConfig.getProperty("kafka.topic");
 		Properties props = new Properties();
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);
@@ -60,25 +58,30 @@ public class ApLogGenerator extends LogBaseTopology {
 		props.put("metadata.broker.list", brokerUrl);
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 		props.put("request.required.acks", "1");
-		conf.setMaxSpoutPending(20);
-		conf.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
-		KafkaBolt kafkaBolt = new KafkaBolt().withTopicSelector(new DefaultTopicSelector(topic))
-										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper("key", "log"));
-		builder.setBolt("KafkaBolt", kafkaBolt, 3).shuffleGrouping("RandomLogSpout");
+		config.setMaxSpoutPending(20);
+		config.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
+		KafkaBolt<String, String> kafkaBolt = new KafkaBolt<String, String>().withTopicSelector(new DefaultTopicSelector(topic))
+										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper<String, String>("key", "log"));
+		builder.setBolt("KafkaBolt", kafkaBolt, 3).shuffleGrouping(SPOUT_ID).setDebug(true);
 	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
+		Config config = new Config();
+		config.setDebug(true);
+		config.setNumWorkers(1);
+
 		TopologyBuilder builder = new TopologyBuilder();
-		configureRandomLogSpout(builder);
-		configureKafkaBolt(builder);
+		configureRandomLogSpout(builder, config);
+		configureKafkaBolt(builder, config);
+
 //		LocalCluster cluster = new LocalCluster();
-		StormSubmitter.submitTopology("ApLogGeneratorV1", conf, builder.createTopology());
+		StormSubmitter.submitTopology("ApLogGeneratorV1", config, builder.createTopology());
 	}
 
 	public static void main(String[] args) throws Exception {
 		final String configFileLocation = "ApLogAnalyzer.properties";
 		ApLogGenerator topology = new ApLogGenerator(configFileLocation);
-
+		
 		if (args.length == 0) {
 			brokerUrl = topologyConfig.getProperty("metadata.broker.list");
 		} else if (args.length == 1) {

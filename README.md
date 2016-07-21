@@ -71,11 +71,11 @@ curl -XPUT -u es_admin:password "http://localhost:9200/_template/aplog_*?pretty=
 }'
 
 # 2. RECREATE the topic:
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdp01.localdomain:2181,hdp02.localdomain:2181,hdp03.localdomain:2181 --replication-factor 2 --partition 10 --topic ap_logs_test_222
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdpr01mgt:2181,hdpr01hn01:2181,hdpr01hn02:2181 --replication-factor 2 --partition 10 --topic ap_logs_test_222
 
 
 # 3. START monitoring the topic:
-/usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdp01.localdomain:2181 --topic ap_logs_test_222 --from-beginning
+/usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdpr01mgt:2181 --topic ap_logs_test_222 --from-beginning
 
 # 4. COMPILE & PACKAGE Storm topologies:
 cd /root/workspace/LearnStorm/
@@ -93,8 +93,8 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
 ## 2. Commands for Kafka Maintainance
 
 ```bash
-/usr/hdp/current/kafka-broker/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --zookeeper hdp01.localdomain:2181 --group aplog-analyzer
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181 --topic ap_logs_test_222 --describe
+/usr/hdp/current/kafka-broker/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --zookeeper hdpr01mgt:2181 --group aplog-analyzer
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181 --topic ap_logs_test_222 --describe
 ```
 
 ## 3. References:
