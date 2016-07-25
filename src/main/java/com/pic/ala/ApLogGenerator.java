@@ -38,6 +38,8 @@ import storm.kafka.bolt.mapper.FieldNameBasedTupleToKafkaMapper;
 import storm.kafka.bolt.selector.DefaultTopicSelector;
 
 public class ApLogGenerator extends LogBaseTopology {
+	
+	private static boolean DEBUG = false;
 
 	private static String brokerUrl;
 	private static final String SPOUT_ID = "RandomLogSpout";
@@ -47,7 +49,7 @@ public class ApLogGenerator extends LogBaseTopology {
 	}
 
 	private void configureRandomLogSpout(TopologyBuilder builder, Config config) {
-		builder.setSpout(SPOUT_ID, new RandomLogSpout(), 3).setDebug(true);
+		builder.setSpout(SPOUT_ID, new RandomLogSpout(), 3).setDebug(DEBUG);
 	}
 
 	private void configureKafkaBolt(TopologyBuilder builder, Config config) {
@@ -62,12 +64,12 @@ public class ApLogGenerator extends LogBaseTopology {
 		config.put(KafkaBolt.KAFKA_BROKER_PROPERTIES, props);
 		KafkaBolt<String, String> kafkaBolt = new KafkaBolt<String, String>().withTopicSelector(new DefaultTopicSelector(topic))
 										.withTupleToKafkaMapper(new FieldNameBasedTupleToKafkaMapper<String, String>("key", "log"));
-		builder.setBolt("KafkaBolt", kafkaBolt, 3).shuffleGrouping(SPOUT_ID).setDebug(true);
+		builder.setBolt("KafkaBolt", kafkaBolt, 3).shuffleGrouping(SPOUT_ID).setDebug(DEBUG);
 	}
 
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
 		Config config = new Config();
-		config.setDebug(true);
+		config.setDebug(DEBUG);
 		config.setNumWorkers(1);
 
 		TopologyBuilder builder = new TopologyBuilder();

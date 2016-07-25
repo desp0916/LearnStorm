@@ -42,6 +42,8 @@ import storm.kafka.SpoutConfig;
 import storm.kafka.ZkHosts;
 
 public class ApLogAnalyzer extends LogBaseTopology {
+	
+	private static boolean DEBUG = false;
 
 //	private static final Logger LOG = Logger.getLogger(ApLogAnalyzer.class);
 
@@ -74,7 +76,7 @@ public class ApLogAnalyzer extends LogBaseTopology {
 		KafkaSpout kafkaSpout = new KafkaSpout(constructKafkaSpoutConf());
 		final int spoutThreads = Integer.valueOf(topologyConfig.getProperty("spout.KafkaSpout.threads"));
 
-		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads).setDebug(true);
+		builder.setSpout(KAFKA_SPOUT_ID, kafkaSpout, spoutThreads).setDebug(DEBUG);
 	}
 
 	private void configureESBolts(TopologyBuilder builder, Config config) {
@@ -89,7 +91,7 @@ public class ApLogAnalyzer extends LogBaseTopology {
 		ESIndexerBolt esBolt = new ESIndexerBolt().withConfigKey("es.conf");
 		final int boltThreads = Integer.valueOf(topologyConfig.getProperty("bolt.ESIndexerBolt.threads"));
 
-		builder.setBolt(ESINDEXER_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID).setDebug(true);
+		builder.setBolt(ESINDEXER_BOLT_ID, esBolt, boltThreads).shuffleGrouping(KAFKA_SPOUT_ID).setDebug(DEBUG);
 	}
 
 //	private void configureHBaseBolts(TopologyBuilder builder, Config config) {
@@ -123,7 +125,7 @@ public class ApLogAnalyzer extends LogBaseTopology {
 	private void buildAndSubmit() throws AlreadyAliveException, InvalidTopologyException, AuthorizationException {
 		final int numWorkers = Integer.valueOf(topologyConfig.getProperty("num.workers"));
 		Config config = new Config();
-		config.setDebug(true);
+		config.setDebug(DEBUG);
 		config.setNumWorkers(numWorkers);
 		config.setMaxSpoutPending(20);
 
