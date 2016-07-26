@@ -24,7 +24,7 @@ public class ESTest {
 
 	public static void main(String[] args) {
 
-		String esNodesString = "hdp01.localdomain,hdp02.localdomain,hdp03.localdomain,hdp04.localdomain,hdp05.localdomain";
+		String esNodesString = "hdpr01wn01,hdpr01wn02,hdpr01wn03,hdpr01wn04,hdpr01wn05";
 		List<String> esNodesList = Arrays.asList(esNodesString.split("\\s*,\\s*"));
 
 //		List<InetSocketTransportAddress> esNodes = new ArrayList<InetSocketTransportAddress>();
@@ -52,7 +52,8 @@ public class ESTest {
 //			transportClient.addTransportAddress(new InetSocketTransportAddress(esNode, 9300));
 			try {
 //				 ES 2.2
-				transportClient.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(esNode), 9300));
+				transportClient
+						.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(esNode), 9300));
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
