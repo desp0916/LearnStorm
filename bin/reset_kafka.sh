@@ -2,9 +2,10 @@
 
 source ${HOME}/bin/hadoop.sh
 
-for host in $HADOOP_HOSTS
+for host in $WORKER_NODES
 do
-  ssh ${USER}@${host} rm -rf /hadoop/kafka-logs
+  echo "Removing /hdp/hadoop/kafka/kafka-logs on ${host}..."
+  ssh ${USER}@${host} rm -rf /hdp/hadoop/kafka/kafka-logs/{1,2}/*
 done
 
 /usr/bin/zookeeper-client <<EOF

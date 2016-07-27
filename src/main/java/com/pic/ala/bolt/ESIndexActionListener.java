@@ -36,6 +36,7 @@ public class ESIndexActionListener implements ActionListener<IndexResponse> {
 	@Override
 	public void onResponse(IndexResponse response) {
 		if (response.isCreated()) {
+			collector.ack(tuple);
 			String index = response.getIndex();
 			String type = response.getType();
 			String documentId = response.getId();
@@ -46,7 +47,7 @@ public class ESIndexActionListener implements ActionListener<IndexResponse> {
 			logger.debug("{} on tuple: {} ", logMsg, tuple.toString());
 		} else {
 			collector.reportError(new Throwable(response.toString()));
-//			collector.fail(tuple);
+			collector.fail(tuple);
 			logger.error("Failed to index tuple asynchronously: {} ", tuple.toString());
 		}
 	}
@@ -54,7 +55,7 @@ public class ESIndexActionListener implements ActionListener<IndexResponse> {
 	@Override
 	public void onFailure(Throwable e) {
 		collector.reportError(e);
-//		collector.fail(tuple);
+		collector.fail(tuple);
 		logger.error("Index failure on tuple asynchronously: {} ", tuple.toString());
 	}
 

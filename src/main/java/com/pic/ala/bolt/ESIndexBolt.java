@@ -212,7 +212,6 @@ public class ESIndexBolt extends BaseRichBolt {
 						.setSource(toBeIndexed).execute();
 				future.addListener(new ESIndexActionListener(tuple, collector, LOG));
 				future.actionGet();
-				collector.ack(tuple);
 			} else {
 				// Synchronous way
 				IndexResponse response = client
@@ -221,10 +220,11 @@ public class ESIndexBolt extends BaseRichBolt {
 						.setSource(toBeIndexed).get();
 				if (response == null) {
 					collector.reportError(new Throwable("ES null response"));
-//					collector.fail(tuple);
+					collector.fail(tuple);
 					LOG.error("Failed to index tuple due to ES null reponse: {} ", tuple.toString());
 				} else {
 					if (response.isCreated()) {
+						collector.ack(tuple);
 						String documentId = response.getId();
 						String logMsg = "Indexed successfully [" + index + "/"+ type + "/" + documentId + "]";
 						// Anchored
@@ -233,11 +233,10 @@ public class ESIndexBolt extends BaseRichBolt {
 						LOG.debug("{} on tuple: {} ", logMsg, tuple.toString());
 					} else {
 						collector.reportError(new Throwable(response.toString()));
-//						collector.fail(tuple);
+						collector.fail(tuple);
 						LOG.error("Failed to index tuple: {} ", tuple.toString());
 					}
 				}
-				collector.ack(tuple);
 			}
 		// We should try our best to handle all exceptions to ingest all logs.
 		} catch (NodeClosedException nce) {

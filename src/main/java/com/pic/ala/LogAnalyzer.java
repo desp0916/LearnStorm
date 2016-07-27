@@ -39,6 +39,8 @@ public class LogAnalyzer extends LogBaseTopology {
 		final SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
 		spoutConfig.scheme = new SchemeAsMultiScheme(logScheme);
+		spoutConfig.retryInitialDelayMs = 10000;
+		spoutConfig.retryDelayMultiplier = 1.0;
 		return spoutConfig;
 	}
 
@@ -71,7 +73,7 @@ public class LogAnalyzer extends LogBaseTopology {
 		Config config = new Config();
 		config.setDebug(DEBUG);
 		config.setNumWorkers(numWorkers);
-		config.setMaxSpoutPending(20);
+		config.setMaxSpoutPending(1000);
 
 		TopologyBuilder builder = new TopologyBuilder();
 		configureKafkaSpout(builder, config);

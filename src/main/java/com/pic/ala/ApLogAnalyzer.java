@@ -127,7 +127,7 @@ public class ApLogAnalyzer extends LogBaseTopology {
 		Config config = new Config();
 		config.setDebug(DEBUG);
 		config.setNumWorkers(numWorkers);
-		config.setMaxSpoutPending(20);
+		config.setMaxSpoutPending(1000);
 
 		TopologyBuilder builder = new TopologyBuilder();
 		configureKafkaSpout(builder, config);
