@@ -32,9 +32,9 @@ curl -XDELETE --user es_admin:password 'localhost:9200/aplog*?pretty'
 # 1.2 Delete the topic commit logs
 # 1.3 Create the Elasticsearch index template if needed
 
-curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog_*?pretty=true" -d  '
+curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=true" -d  '
 {
-  "template": "aplog_*",
+  "template": "aplog*",
   "settings": {
     "number_of_replicas": 1,
     "number_of_shards": 5,
