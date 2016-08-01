@@ -2,7 +2,7 @@ package com.pic.ala;
 
 import org.apache.log4j.AsyncAppender;
 
-import kafka.producer.KafkaLog4jAppender;
+import org.apache.kafka.log4jappender.KafkaLog4jAppender;
 
 public class AsyncKafkaAppender extends AsyncAppender {
 	private java.lang.String topic;

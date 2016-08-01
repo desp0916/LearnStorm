@@ -74,6 +74,11 @@ public class LogAnalyzer extends LogBaseTopology {
 		config.setDebug(DEBUG);
 		config.setNumWorkers(numWorkers);
 		config.setMaxSpoutPending(1000);
+		// https://github.com/apache/storm/tree/v0.10.0/external/storm-kafka
+		config.setMessageTimeoutSecs(61);	// This value(30 secs by default) must
+							// be larger than retryDelayMaxMs
+							// (60 secs by default) in
+							/// KafkaSpout.
 
 		TopologyBuilder builder = new TopologyBuilder();
 		configureKafkaSpout(builder, config);
