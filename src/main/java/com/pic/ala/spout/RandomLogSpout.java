@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,7 +25,7 @@ public class RandomLogSpout extends BaseRichSpout {
 	private SpoutOutputCollector _collector;
 	private ObjectMapper objectMapper;
     // _pending key = Kafka offset, value = time at which the message was first submitted to the topology
-    private SortedMap<Long,Long> _pending = new TreeMap<Long,Long>();
+    private SortedMap<String, Long> _pending = new TreeMap<String, Long>();
 
 	@Override
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
@@ -39,19 +40,23 @@ public class RandomLogSpout extends BaseRichSpout {
 			final String sysID = ApLog.getRandomOption(ApLog.SYSTEMS);
 			final String logType = ApLog.getRandomOption(ApLog.LOG_TYPES);
 			final ApLog log = new ApLog(sysID, logType);
-//			_collector.emit(new Values(log.toString()));
-			_collector.emit(new Values(objectMapper.writeValueAsString(log)));
+			String msgId = UUID.randomUUID().toString();
+			_pending.put(msgId, System.currentTimeMillis());
+			_collector.emit(new Values(objectMapper.writeValueAsString(log)), msgId);
 		} catch (IOException e) {
 			_collector.reportError(e);
 		}
 	}
 
 	@Override
-	public void ack(Object id) {
+	public void ack(Object msgId) {
+		_pending.remove(msgId);
 	}
 
 	@Override
-	public void fail(Object id) {
+	public void fail(Object msgId) {
+		// Just remove the pending/failed tuple.
+		_pending.remove(msgId);
 	}
 
 	@Override
