@@ -24,7 +24,7 @@ mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=
 
 ```bash
 # 1. DELETE the old topic & indexes:
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdp01.localdomain:2181,hdp02.localdomain:2181,hdp03.localdomain:2181 --delete --topic ap_logs_test_222
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181,hdpr01hn01:2181,hdpr01hn02:2181 --delete --topic ap_logs_test_222
 
 curl -XDELETE --user es_admin:password 'localhost:9200/aplog*?pretty'
 
