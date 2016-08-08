@@ -24,7 +24,7 @@ mvn install:install-file -DgroupId=jdk.tools -DartifactId=jdk.tools -Dpackaging=
 
 ```bash
 # 1. DELETE the old topic & indexes:
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181,hdpr01hn01:2181,hdpr01hn02:2181 --delete --topic ap_logs_test_222
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181,hdpr01hn01:2181,hdpr01hn02:2181 --topic ap-log-v1 --delete
 
 curl -XDELETE --user es_admin:password 'localhost:9200/aplog*?pretty'
 
@@ -72,11 +72,11 @@ curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=
 }'
 
 # 2. RECREATE the topic:
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --zookeeper hdpr01mgt:2181,hdpr01hn01:2181,hdpr01hn02:2181 --replication-factor 2 --partition 10 --topic ap_logs_test_222
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181,hdpr01hn01:2181,hdpr01hn02:2181 --topic ap-log-v1 --create --replication-factor 2 --partition 10 
 
 
 # 3. START monitoring the topic:
-/usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdpr01mgt:2181 --topic ap_logs_test_222 --from-beginning
+/usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --zookeeper hdpr01mgt:2181 --topic ap-log-v1 --from-beginning
 
 # 4. COMPILE & PACKAGE Storm topologies:
 cd /root/workspace/LearnStorm/
@@ -95,7 +95,7 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
 
 ```bash
 /usr/hdp/current/kafka-broker/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --zookeeper hdpr01mgt:2181 --group aplog-analyzer
-/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181 --topic ap_logs_test_222 --describe
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --zookeeper hdpr01mgt:2181 --topic ap-log-v1 --describe
 ```
 
 ## 3. References:
