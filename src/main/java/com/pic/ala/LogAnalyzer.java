@@ -39,8 +39,9 @@ public class LogAnalyzer extends LogBaseTopology {
 		final SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot, CONSUMER_GROUP_ID);
 		spoutConfig.startOffsetTime = System.currentTimeMillis();
 		spoutConfig.scheme = new SchemeAsMultiScheme(logScheme);
-		spoutConfig.retryInitialDelayMs = 10000;
-		spoutConfig.retryDelayMultiplier = 1.0;
+		spoutConfig.retryInitialDelayMs = 10000;	// 10 seconds
+		spoutConfig.retryDelayMultiplier = 1.1;		// 10, 11, 12.1, 13.31, 14.641... 
+		spoutConfig.retryDelayMaxMs = 590000;		// about 10 minutes
 		return spoutConfig;
 	}
 
@@ -73,9 +74,9 @@ public class LogAnalyzer extends LogBaseTopology {
 		Config config = new Config();
 		config.setDebug(DEBUG);
 		config.setNumWorkers(numWorkers);
-		config.setMaxSpoutPending(1000);
+		config.setMaxSpoutPending(1000000);
 		// https://github.com/apache/storm/tree/v0.10.0/external/storm-kafka
-		config.setMessageTimeoutSecs(61);	// This value(30 secs by default) must
+		config.setMessageTimeoutSecs(600);	// This value(30 secs by default) must
 							// be larger than retryDelayMaxMs
 							// (60 secs by default) in
 							/// KafkaSpout.
