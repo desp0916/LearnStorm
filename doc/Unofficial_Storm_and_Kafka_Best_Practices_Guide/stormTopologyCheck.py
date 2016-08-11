@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Wes Floyd April 2015
 
 import sys
@@ -32,12 +33,12 @@ def getTopoTuples(topoID):
     resp = requests.get(url)
     resp.encoding = 'utf-8'
     data = resp.json()
-    
+
     #If the topology ID does not exist, return 0
     if 'error' in data:
         print 'Topology "'+topoID+'" returned error'
         return 0
-    
+
     #Return number of emitted tuples for "all time"
     #Doc - https://github.com/apache/storm/blob/0.9.3-branch/STORM-UI-REST-API.md#apiv1topologyid-get
     return data['topologyStats'][3]['emitted']
