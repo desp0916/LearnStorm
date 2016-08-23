@@ -34,8 +34,8 @@ public class ApLogScheme implements Scheme {
 	public static final String FORMAT_DATE = "yyyy.MM.dd";
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(FORMAT_DATETIME);
 	private static final String[] FORMATS = new String[] {
+			"yyyy-MM-dd HH:mm:ss.SSS",			
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-			"yyyy-MM-dd HH:mm:ss.SSS",
 			"yyyy-MM-dd'T'HH:mm:ss.SSSZ" };
 
 	// The following fields will be used or stored by Elasticsearch.

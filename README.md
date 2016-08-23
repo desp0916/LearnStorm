@@ -46,6 +46,10 @@ curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=
         "enabled": true
       },
       "properties": {
+        "logTime": {
+          "type":   "date",
+          "format": "yyyy-MM-dd HH:mm:ss.SSS||strict_date_optional_time||epoch_millis"
+        },
         "apID" : {
           "type" : "string",
           "index": "not_analyzed" 
