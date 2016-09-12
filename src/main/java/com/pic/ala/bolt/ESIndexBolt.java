@@ -189,11 +189,13 @@ public class ESIndexBolt extends BaseRichBolt {
 		if (isNullOrEmpty(type)) {
 			type = defaultType;
 		}
-		if ( isNullOrEmpty(logDate)
-			|| !isDateValid(logDate, LogScheme.FORMAT_DATE)
-			|| isNullOrEmpty(message) || isNullOrEmpty(toBeIndexed))
-		{
-			LOG.error("Received null or incorrect value from tuple.");
+		if (!isDateValid(logDate, LogScheme.FORMAT_DATE)) {
+			LOG.error("The format of logDate is null or invalid: {}", logDate);
+			collector.ack(tuple);
+			return;			
+		}
+		if (isNullOrEmpty(logDate)	|| isNullOrEmpty(message) || isNullOrEmpty(toBeIndexed)) {
+			LOG.error("Received null or incorrect value from tuple: {}", toBeIndexed);
 			collector.ack(tuple);
 			return;
 		}

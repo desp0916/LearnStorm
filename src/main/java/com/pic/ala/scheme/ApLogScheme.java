@@ -93,7 +93,10 @@ public class ApLogScheme implements Scheme {
 			msg = apLog.getMsg();
 			String tmpLogDateTime = parseDateTime(apLog.getLogTime(), dateTimeFormatter, FORMATS, FORMAT_DATETIME);
 			String tmpLogDate = parseDateTime(apLog.getLogTime(), dateTimeFormatter, FORMATS, FORMAT_DATE);
-
+			
+			LOG.error("*******apLog.getLogTime(): {}", apLog.getLogTime());
+			LOG.error("#######tmpLogDate: {}", logDate);
+			
 			if (tmpLogDateTime != null && tmpLogDate != null) {
 				logDateTime = tmpLogDateTime;
 				logDate = tmpLogDate;

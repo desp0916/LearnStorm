@@ -179,11 +179,17 @@ public class ESIndexerBolt extends BaseRichBolt {
 		String msg = (String) tuple.getValueByField(ApLogScheme.FIELD_MSG);
 		String toBeIndexed = (String) tuple.getValueByField(ApLogScheme.FIELD_ES_SOURCE);
 
+		if (!isDateValid(logDate, ApLogScheme.FORMAT_DATE)) {
+			LOG.error("The format of logDate is null or invalid: {}", logDate);
+			collector.ack(tuple);
+			return;			
+		}
+
 		if (isNullOrEmpty(sysID) || isNullOrEmpty(logType) || isNullOrEmpty(logDate)
-			|| !isDateValid(logDate, ApLogScheme.FORMAT_DATE) || isNullOrEmpty(apID)
-			|| isNullOrEmpty(at) || isNullOrEmpty(msg) || isNullOrEmpty(toBeIndexed))
+			|| isNullOrEmpty(apID) || isNullOrEmpty(at) || isNullOrEmpty(msg)
+			|| isNullOrEmpty(toBeIndexed))
 		{
-			LOG.error("Received null or incorrect value from tuple.");
+			LOG.error("Received null or incorrect value from tuple: {}", toBeIndexed);
 			collector.ack(tuple);
 			return;
 		}
