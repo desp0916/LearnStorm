@@ -21,7 +21,8 @@ public class LogUtil {
 	 */
 	public static String getISO8601Time() {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		df.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
+		// Uncomment the following line if you would like set the timezone explicitly.
+		// df.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
 		return df.format(new Date());
 	}
 

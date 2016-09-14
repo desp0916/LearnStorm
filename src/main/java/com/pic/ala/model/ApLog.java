@@ -31,6 +31,7 @@ public class ApLog {
 	private static List<String> users = Arrays.asList("聞氫哥", "魯蛇", "一拳超人", "Kung Fury", "金正恩", "機器人", "駭客先生", "聖誕老公公", "聖戰士");
 	private static List<String> allServers = new ArrayList<String>();
 	private static List<String> webServers = Arrays.asList("apache", "iis", "nginx", "proxy");
+	private static List<String> internetIPs = Arrays.asList("61.57.231.227", "114.136.21.238", "8.8.8.8", "168.95.1.1");
 	private static List<String> apServers = Arrays.asList("tomcat", "jboss", "iis", "websphere");
 	private static List<String> batchServers = Arrays.asList("batch01", "batch02", "batch03", "batch04");
 
@@ -89,7 +90,7 @@ public class ApLog {
 
 		if (logType == "ui") {
 			this.apID = "UI" +  getRandomOption(apIDs);
-			this.from = getRandomOption(webServers);
+			this.from = getRandomOption(internetIPs);
 			this.at = getRandomOption(apServers);
 			this.to = getRandomOption(dbServers);
 			this.who = getRandomOption(users);
@@ -97,14 +98,14 @@ public class ApLog {
 		} else if (logType == "tpipas") {
 			getAllServers();
 			this.apID = "TPIPAS" +  getRandomOption(apIDs);
-			this.from = getRandomOption(allServers);
+			this.from = getRandomOption(internetIPs);
 			this.at = getRandomOption(allServers);
 			this.to = getRandomOption(allServers);
 			this.who = getRandomOption(users);
 			this.action = getRandomOption(actions);
 		} else if (logType == "batch") {
 			this.apID = "Batch" +  getRandomOption(apIDs);
-			this.from = getRandomOption(apServers);
+			this.from = getRandomOption(internetIPs);
 			this.at = getRandomOption(batchServers);
 			this.to = getRandomOption(dbServers);
 			this.who = getRandomOption(users);
