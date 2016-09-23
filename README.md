@@ -48,7 +48,11 @@ curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=
       "properties": {
         "logTime": {
           "type":   "date",
-          "format": "yyyy-MM-dd HH:mm:ss.SSS||strict_date_optional_time||epoch_millis"
+          "format": "strict_date_time||yyyy-MM-dd HH:mm:ss.SSS||strict_date_optional_time||epoch_millis"
+        },
+        "sysID" : {
+          "type" : "string",
+          "index": "not_analyzed"
         },
         "apID" : {
           "type" : "string",
@@ -75,10 +79,6 @@ curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=
           "index": "not_analyzed"
         },
         "msgLevel" : {
-          "type" : "string",
-          "index": "not_analyzed"
-        },
-        "sysID" : {
           "type" : "string",
           "index": "not_analyzed"
         }

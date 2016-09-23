@@ -15,13 +15,18 @@ public class LogUtil {
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 	/**
+	 * Get current moment in ISO 8601 format
 	 * http://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format
+	 * 2016-01-20T10:53:52.457+08:00
 	 * 2016-01-20T10:53:52.457+0800
 	 * 2016-01-20T11:11:42.915Z
 	 */
 	public static String getISO8601Time() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		// Uncomment the following line if you would like set the timezone explicitly.
+		// Choose one from the following two lines.
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		// DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+		// Uncomment and modify the following line if you would like set the timezone explicitly.
 		// df.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
 		return df.format(new Date());
 	}
@@ -98,13 +103,11 @@ public class LogUtil {
 	 * 將字串解析並格式化成某特定日期時間格式
 	 *
 	 * @param dateTimeString		字串（應為日期時間）
-	 * @param dateTimeFormatter		日期時間格式轉換器
 	 * @param validFormats			可接受哪些日期時間格式
 	 * @param outputFormat			希望輸出的日期時間格式
 	 * @return						格式化結果
 	 */
-	public static String parseDateTime(String dateTimeString, DateTimeFormatter dateTimeFormatter,
-			String[] validFormats, String outputFormat) {
+	public static String parseDateTime(String dateTimeString, String[] validFormats, String outputFormat) {
 		for (int i = 0; i < validFormats.length; i++) {
 			SimpleDateFormat format = new SimpleDateFormat(validFormats[i]);
 			DateFormat df = new SimpleDateFormat(outputFormat);
@@ -150,6 +153,14 @@ public class LogUtil {
 			return true;
 		} catch (ParseException e) {
 			return false;
+		}
+	}
+
+	private String cleanup(String str) {
+		if (str != null) {
+			return str.trim().replace("\n", "").replace("\t", "");
+		} else {
+			return str;
 		}
 	}
 }

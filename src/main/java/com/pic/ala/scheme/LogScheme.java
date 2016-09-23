@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,11 +20,12 @@ public class LogScheme implements Scheme {
 	public static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	public static final String FORMAT_DATE = "yyyy.MM.dd";
 
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(FORMAT_DATETIME);
 	private static final String[] FORMATS = new String[] {
 		"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
 		"yyyy-MM-dd HH:mm:ss.SSS",
-		"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+		"yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+		"yyyy-MM-dd'T'HH:mm:ss.SSSZZ",
+		"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
 	};
 
 	public static final String FIELD_ES_SOURCE = "es_source";	// Elasticsearch "source" field
@@ -56,8 +55,8 @@ public class LogScheme implements Scheme {
 			type = logEntry.get(FIELD_TYPE);
 			message = logEntry.get(FIELD_MESSAGE);
 
-			String tmpLogDateTime = parseDateTime(logEntry.get("@timestamp"), dateTimeFormatter, FORMATS, FORMAT_DATETIME);
-			String tmpLogDate = parseDateTime(logEntry.get("@timestamp"), dateTimeFormatter, FORMATS, FORMAT_DATE);
+			String tmpLogDateTime = parseDateTime(logEntry.get("@timestamp"), FORMATS, FORMAT_DATETIME);
+			String tmpLogDate = parseDateTime(logEntry.get("@timestamp"), FORMATS, FORMAT_DATE);
 
 			if (tmpLogDateTime != null && tmpLogDate != null) {
 				logDateTime = tmpLogDateTime;
