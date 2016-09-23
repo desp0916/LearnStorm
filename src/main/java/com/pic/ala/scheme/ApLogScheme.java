@@ -26,11 +26,11 @@ public class ApLogScheme implements Scheme {
     private static final Logger LOG = LoggerFactory.getLogger(ApLogScheme.class);
 	public static final String FORMAT_DATE = "yyyy.MM.dd";
 	private static final String[] FORMATS = new String[] {
-			"yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-			"yyyy-MM-dd'T'HH:mm:ss.SSSZZ",
-			"yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-			"yyyy-MM-dd HH:mm:ss.SSS",
-			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+		"yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+		"yyyy-MM-dd'T'HH:mm:ss.SSSZZ",
+		"yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+		"yyyy-MM-dd HH:mm:ss.SSS",
+		"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 	};
 
 	// The following fields will be used or stored by Elasticsearch.
@@ -86,8 +86,8 @@ public class ApLogScheme implements Scheme {
 			msg = apLog.getMsg();
 			String tmpLogDate = parseDateTime(apLog.getLogTime(), FORMATS, FORMAT_DATE);
 
-			LOG.error("*******apLog.getLogTime(): {}", apLog.getLogTime());
-			LOG.error("#######tmpLogDate: {}", logDate);
+//			LOG.error("*******apLog.getLogTime(): {}", apLog.getLogTime());
+//			LOG.error("#######tmpLogDate: {}", logDate);
 
 			if (tmpLogDate != null) {
 				logDate = tmpLogDate;

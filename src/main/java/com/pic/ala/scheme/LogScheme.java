@@ -17,15 +17,14 @@ public class LogScheme implements Scheme {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LogScheme.class);
 
-	public static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	public static final String FORMAT_DATE = "yyyy.MM.dd";
 
 	private static final String[] FORMATS = new String[] {
-		"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-		"yyyy-MM-dd HH:mm:ss.SSS",
-		"yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+		"yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
 		"yyyy-MM-dd'T'HH:mm:ss.SSSZZ",
-		"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+		"yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+		"yyyy-MM-dd HH:mm:ss.SSS",
+		"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 	};
 
 	public static final String FIELD_ES_SOURCE = "es_source";	// Elasticsearch "source" field
@@ -42,7 +41,6 @@ public class LogScheme implements Scheme {
 		String index = "";
 		String type = "";
 		String message = "";
-		String logDateTime = "";
 		String logDate = "";
 
 		try {
@@ -55,11 +53,9 @@ public class LogScheme implements Scheme {
 			type = logEntry.get(FIELD_TYPE);
 			message = logEntry.get(FIELD_MESSAGE);
 
-			String tmpLogDateTime = parseDateTime(logEntry.get("@timestamp"), FORMATS, FORMAT_DATETIME);
 			String tmpLogDate = parseDateTime(logEntry.get("@timestamp"), FORMATS, FORMAT_DATE);
 
-			if (tmpLogDateTime != null && tmpLogDate != null) {
-				logDateTime = tmpLogDateTime;
+			if (tmpLogDate != null) {
 				logDate = tmpLogDate;
 			}
 
@@ -68,13 +64,13 @@ public class LogScheme implements Scheme {
 			e.printStackTrace();
 		}
 
-		return new Values(esSource, index, type, logDate, logDateTime, message);
+		return new Values(esSource, index, type, logDate, message);
 	}
 
 	@Override
 	public Fields getOutputFields() {
 		return new Fields(FIELD_ES_SOURCE, FIELD_INDEX, FIELD_TYPE,
-				FIELD_LOG_DATE, FIELD_LOG_DATETIME, FIELD_MESSAGE);
+				FIELD_LOG_DATE, FIELD_MESSAGE);
 	}
 
 }
