@@ -70,6 +70,18 @@ curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=
           "type" : "string",
           "index": "not_analyzed"
         },
+        "from" : {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "at" : {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "to" : {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
         "action" : {
           "type" : "string",
           "index": "not_analyzed"
@@ -79,6 +91,14 @@ curl -XPUT -u es_admin:password "http://hdpr01wn01:9200/_template/aplog*?pretty=
           "index": "not_analyzed"
         },
         "msgLevel" : {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "msgCode" : {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "table" : {
           "type" : "string",
           "index": "not_analyzed"
         }

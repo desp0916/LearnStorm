@@ -53,7 +53,8 @@ public class Event {
 				}
 				// logger.info(log.toString());
 				logger.info(mapper.writeValueAsString(log));
-				this.increment();
+//				this.increment();
+//				System.out.println(this.getCount());
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			} catch (JsonMappingException jme) {
