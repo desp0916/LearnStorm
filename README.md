@@ -142,7 +142,8 @@ storm jar target/LearnStorm-0.0.1-SNAPSHOT.jar com.pic.ala.ApLogGenerator
  * [What is the maven-shade-plugin used for, and why would you want to relocate java packages?](http://stackoverflow.com/questions/13620281/what-is-the-maven-shade-plugin-used-for-and-why-would-you-want-to-relocate-java)
  * [Apache Maven Shade Plugin / shade:shade](https://maven.apache.org/plugins/maven-shade-plugin/shade-mojo.html)
  * [在 HDInsight (Hadoop) 中使用 Apache Storm、事件中樞和 HBase 分析感應器資料](https://azure.microsoft.com/zh-tw/documentation/articles/hdinsight-storm-sensor-data-analysis/)
-
+ * [Hortonworks Data Platform Development Guide](https://community.hortonworks.com/articles/43727/hortonworks-data-platform-development-guide.html)
+ * [Download the HDP Maven Artifacts](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.4.2/bk_installing_manually_book/content/ch01s13.html)
 
 ## 4. Misc
 

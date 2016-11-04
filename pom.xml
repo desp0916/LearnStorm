@@ -22,12 +22,17 @@
 	</properties>
 
 	<repositories>
+	<!--
 		<repository>
 			<id>hortonworks</id>
 			<url>http://nexus-private.hortonworks.com/nexus/content/groups/public/</url>
 		</repository>
-		<!--repository> <id>hortonworks</id> <url>http://repo.hortonworks.com/content/repositories/releases/</url> 
-			</repository -->
+	-->
+        <repository>
+            <id>HDP</id>
+            <name>HDP Releases</name>
+            <url>http://repo.hortonworks.com/content/repositories/releases/</url>
+        </repository>
 		<repository>
 			<id>github-releases</id>
 			<url>http://oss.sonatype.org/content/repositories/github-releases/</url>
