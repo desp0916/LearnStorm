@@ -14,6 +14,12 @@
 # 2. References:
 #  2.1 https://elasticsearch-py.readthedocs.io/en/master/api.html
 #  2.2 https://tryolabs.com/blog/2015/02/17/python-elasticsearch-first-steps/
+#  2.3 https://docs.python.org/2/howto/logging-cookbook.html
+#
+# 3. Some commands:
+# 
+#  3.1 List all snapshots:
+#      curl 'hdpr01wn01:9200/_snapshot/backup/*?pretty'
 #
 # TODO:
 #
@@ -25,27 +31,38 @@ import logging
 from elasticsearch import Elasticsearch
 from datetime import date, timedelta
 
+indices = ['aes3g', 'pos', 'wds', 'upcc']
+
 # http://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/7517430#7517430
-logging.basicConfig(filename='./ESIndexBackup.log',
-                    level = logging.INFO,
-                    format='%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-                    datefmt="%Y-%m-%d %H:%M:%S")
+logger = logging.getLogger('ESIndexBackup')
+logger.setLevel(logging.INFO)
 
-logger = logging.getLogger('ESTest')
+# File Handler
+fh = logging.FileHandler('./ESIndexBackup.log')
+fh.setLevel(logging.INFO)
+fh_formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
+fh.setFormatter(fh_formatter)
+
+# Console Handler
+ch = logging.StreamHandler()
+ch.setLevel(logging.ERROR)
+ch_formatter = logging.Formatter('%(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
+ch.setFormatter(ch_formatter)
+
+# add the handlers to the logger
+logger.addHandler(fh)
+logger.addHandler(ch)
+
+# logging.basicConfig(filename='./ESIndexBackup.log',
+#                     level = logging.INFO,
+#                     format='%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+#                     datefmt="%Y-%m-%d %H:%M:%S")
 
 
-index = 'aes3g'
+# yesterdayDate = '2016.11.15'
 yesterday = date.today() - timedelta(1)
-#yesterdayDate = '2016.11.15'
 yesterdayDate = yesterday.strftime('%Y.%m.%d')
 month = yesterdayDate[:-3]
-
-srcIndex = 'aplog_' + index + '-' + yesterdayDate
-# srcIndex = 'aplog_aes3g-2016.11.15'
-destIndex = 'aplog_' + index + '-' + month
-
-
-# print srcIndexName
 
 # Global options: ignore, request_timeout, response filtering(filter_path)
 es = Elasticsearch(
@@ -58,13 +75,27 @@ es = Elasticsearch(
     sniff_timeout=60
 )
 
+def BackupIndices(indices):
+    for index in indices:
+        srcIndex = 'aplog_' + index + '-' + yesterdayDate
+        destIndex = 'aplog_' + index + '-' + month
+        if copyIndex(srcIndex, destIndex):
+            logger.info('copyIndex() OK: %s', srcIndex)
+            if snapshot(destIndex, srcIndex):
+                logger.info('snapshot() OK: %s', srcIndex)
+            else:
+                logger.error('snapshot() FAILED: %s', srcIndex)
+        else:
+            logger.error('copyIndex() FAILED: %s', srcIndex)
+
 # ignore 400 cause by IndexAlreadyExistsException when creating an index
 #es.indices.create(index='test-index', ignore=400)
 
-def copyIndex(srcIndex, desIndex):
+def copyIndex(srcIndex, destIndex):
     try:
         es.reindex(body = {"source": { "index": srcIndex },
                      "dest": { "index": destIndex } })
+        logger.info("index '%s' has been copied into '%s' successfully", srcIndex, destIndex)
     except Exception as e:
         logger.error(e)
         # print e
@@ -80,19 +111,12 @@ def snapshot(index, snapshot):
                            body = {"indices": index, "ignore_unavailable": True, "include_global_state": False},
                            master_timeout = '10s',
                            wait_for_completion = True)
+        logger.info("index '%s' has been snapshotted to 'snapshot-%s' successfully", index, snapshot)
     except Exception as e:
-        print e
+        logger.error(e)
         return False
 
     return True
 
-if copyIndex(srcIndex, destIndex):
-    print 'copyIndex() OK'
-    if snapshot(destIndex, srcIndex):
-        print 'snapshot() OK'
-    else:
-        print 'snapshot() FAILED'
-else:
-    print 'copyIndex() FAIL'
 
-# es.indices.delete(srcIndexName)
+BackupIndices(indices)
