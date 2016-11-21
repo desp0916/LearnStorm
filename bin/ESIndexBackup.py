@@ -24,6 +24,7 @@
 # TODO:
 #
 #    1. E-mail
+#    2. Delete old indices
 #
 
 import logging
