@@ -138,9 +138,9 @@ if __name__ == '__main__':
 
     eib = ESIndexBackup(es, logger)
 
-    yesterdayDate = '2016.11.22'
-    # yesterday = date.today() - timedelta(1)
-    #yesterdayDate = yesterday.strftime('%Y.%m.%d')
+    #yesterdayDate = '2016.11.22'
+    yesterday = date.today() - timedelta(1)
+    yesterdayDate = yesterday.strftime('%Y.%m.%d')
     month = yesterdayDate[:-3]
 
     indices = ['aes3g', 'pos', 'wds', 'upcc']
@@ -150,3 +150,4 @@ if __name__ == '__main__':
         srcIndex = index_prefix + index + '-' + yesterdayDate
         destIndex = index_prefix + index + '-' + month
         eib.backupIndex(index, srcIndex, destIndex)
+
