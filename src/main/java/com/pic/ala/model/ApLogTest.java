@@ -58,11 +58,12 @@ public class ApLogTest {
 	}
 
 	public static void startAllThreads() {
-		Event.enableSleep = false;
+		Event.enableSleep = true;
 		for (String sysID : ApLog.SYSTEMS) {
 			(new BatchJobThread(new BatchJob(sysID))).start();
 			(new UIActionThread(new UIAction(sysID))).start();
 			(new TPIPASEventThread(new TPIPASEvent(sysID))).start();
+			(new APIEventThread(new APIEvent(sysID))).start();
 		}
 	}
 

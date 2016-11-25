@@ -26,11 +26,11 @@ public class ApLog {
 
 	// Index names of Elasticsearch should be lower cases.
 	public static final List<String> SYSTEMS = Arrays.asList(DEFAULT_SYS_ID, "pos", "upcc", "wds");
-	public static final List<String> LOG_TYPES = Arrays.asList(DEFAULT_LOG_TYPE, "ui", "tpipas");
+	public static final List<String> LOG_TYPES = Arrays.asList(DEFAULT_LOG_TYPE, "ui", "tpipas", "api");
 
 	private static List<String> apIDs = Arrays.asList("App01V4", "App02V2", "App03V4", "App04V3", "App05V1");
-	private static List<String> functionIDs = Arrays.asList("FUNC_10001", "FUNC_10002", "FUNC_10003", "FUNC_10004", "FUNC_10005");
-	private static List<String> users = Arrays.asList("聞氫哥", "魯蛇", "一拳超人", "Kung Fury", "金正恩", "機器人", "駭客先生", "聖誕老公公", "聖戰士");
+	private static List<String> functionIDs = Arrays.asList("訂單明細", "折讓單", "發票", "出貨單", "托運單", "訂單", "進貨單");
+	private static List<String> users = Arrays.asList("總經理", "副總", "部長", "經理", "專員A", "專員B", "廠商A", "廠商B", "消費者A", "消費者B");
 	private static List<String> allServers = new ArrayList<String>();
 	private static List<String> webServers = Arrays.asList("apache", "iis", "nginx", "proxy");
 	private static List<String> internetIPs = Arrays.asList("61.57.231.227", "114.136.21.238", "8.8.8.8", "168.95.1.1");
@@ -39,11 +39,11 @@ public class ApLog {
 
 	private static List<String> dbServers = Arrays.asList("edb", "mssql", "mysql", "oracle", "postgres");
 
-	private static List<String> actions = Arrays.asList("登入", "取消訂單", "填寫個人資料", "訂單成立", "放入購物車");
+	private static List<String> actions = Arrays.asList("add", "delete", "query", "edit");
 	private static List<String> results = Arrays.asList("成功", "失敗", "放棄", "取消", "逾時");
 	private static List<String> keywords = Arrays.asList("原力覺醒", "史努比", "玩命關頭", "侏儸紀世界", "怪物遊戲");
 	private static List<String> messageLevels = Arrays.asList("FATAL", "ERROR", "WARNING", "NOTICE", "INFO", "DEBUG");
-	private static List<String> messages = Arrays.asList("Wrong password.", "Lost connection.", "Invalid arguments", "Unsufficient privilege", "Disk full", genStackTrace());
+	private static List<String> messages = Arrays.asList("OK", "OK", "OK", "Wrong password.", "Lost connection.", "Invalid arguments", "Unsufficient privilege", "Disk full", genStackTrace());
 //	private static List<String> messageCodes = Arrays.asList("10001", "23001", "12345", "56789", "23245");
 	private static List<String> tableNames = Arrays.asList("SYS_USERS", "TRA_ORDERS", "TRA_INVOICES", "CODES", "ITEMS");
 //	private static List<String> dataCounts = Arrays.asList("1", "24", "100", "1234", "20344");
@@ -91,7 +91,7 @@ public class ApLog {
 		}
 
 		if (logType == "ui") {
-			this.apID = "UI" +  getRandomOption(apIDs);
+			this.apID = logType.toUpperCase() +  getRandomOption(apIDs);
 			this.from = getRandomOption(internetIPs);
 			this.at = getRandomOption(apServers);
 			this.to = getRandomOption(dbServers);
@@ -99,14 +99,14 @@ public class ApLog {
 			this.action = getRandomOption(actions);
 		} else if (logType == "tpipas") {
 			getAllServers();
-			this.apID = "TPIPAS" +  getRandomOption(apIDs);
+			this.apID = logType.toUpperCase() +  getRandomOption(apIDs);
 			this.from = getRandomOption(internetIPs);
 			this.at = getRandomOption(allServers);
 			this.to = getRandomOption(allServers);
 			this.who = getRandomOption(users);
 			this.action = getRandomOption(actions);
-		} else if (logType == "batch") {
-			this.apID = "Batch" +  getRandomOption(apIDs);
+		} else if (logType == "batch" || logType == "api") {
+			this.apID = logType.toUpperCase() +  getRandomOption(apIDs);
 			this.from = getRandomOption(internetIPs);
 			this.at = getRandomOption(batchServers);
 			this.to = getRandomOption(dbServers);

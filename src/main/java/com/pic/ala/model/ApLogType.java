@@ -2,7 +2,7 @@ package com.pic.ala.model;
 
 public enum ApLogType {
 
-	BATCH("batch"), UI("ui"), TPIPAS("tpipas");
+	BATCH("batch"), UI("ui"), TPIPAS("tpipas"), API("api");
 
 	private String value;
 
