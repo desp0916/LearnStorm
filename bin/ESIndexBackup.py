@@ -28,7 +28,6 @@
 4. TODO:
 
  4.1 E-mail
- 4.2 Delete old indices
 """
 
 import logging
@@ -54,7 +53,12 @@ class ESIndexBackup:
             self.logger.info('copyIndex() OK: %s', srcIndex)
             if self.snapshot(destIndex, srcIndex):
                 self.logger.info('snapshot() OK: %s', srcIndex)
-                return True
+                if self.deleteIndex(srcIndex):
+                    self.logger.info('deleteIndex() OK: %s', srcIndex)
+                    return True
+                else:
+                    self.logger.error('deleteIndex() FAILED: %s', srcIndex)
+                    return False
             else:
                 self.logger.error('snapshot() FAILED: %s', srcIndex)
                 return False
@@ -103,6 +107,17 @@ class ESIndexBackup:
 
         return True
 
+    def deleteIndex(self, index):
+        try:
+            self.es.indices.delete(index)
+            self.logger.info("index '%s' has been deleted successfully", index)
+        except Exception as e:
+            self.logger.error(e)
+            return False
+
+        return True
+
+
 if __name__ == '__main__':
 
     # Global options: ignore, request_timeout, response filtering(filter_path)
@@ -150,4 +165,3 @@ if __name__ == '__main__':
         srcIndex = index_prefix + index + '-' + yesterdayDate
         destIndex = index_prefix + index + '-' + month
         eib.backupIndex(index, srcIndex, destIndex)
-
