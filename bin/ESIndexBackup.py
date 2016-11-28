@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
     eib = ESIndexBackup(es, logger)
 
-    # today = datetime.strptime('2016 11 28', '%Y %m %d')
+    # today = datetime.strptime('2016 11 2', '%Y %m %d')
     today = date.today()
     todayDayOfMonth = today.strftime('%d');
 
@@ -210,8 +210,8 @@ if __name__ == '__main__':
     lastDayOfTwoMonthsAgo = "%d.%02d.%02d" % (twoMonthsAgoYear, twoMonthsAgoMonth, twoMonthsAgoDay)
     lastDayOfTwoMonthsAgoMonth = "%d.%02d" % (twoMonthsAgoYear, twoMonthsAgoMonth)
 
-    # systems = ['aes3g', 'pos', 'wds', 'upcc']
-    systems = ['pos']
+    #systems = ['pos']
+    systems = ['aes3g', 'pos', 'wds', 'upcc']
     indexPrefix = 'aplog_'
 
     for system in systems:
@@ -223,6 +223,7 @@ if __name__ == '__main__':
         snapshotTwoMonthsAgo = indexPrefix + system + '-' + lastDayOfTwoMonthsAgo
 
         # 將昨天的 index 從 ES snapshot 至 HDFS
+        # (先將昨日的 index 與昨日的全月 index 合併，然後再對全月 index 做 snapshot)
         if eib.backupIndex(indexYesterday, indexYesterdayMonth):
             logger.info("backupIndex() from %s to %s OK", indexYesterday, indexYesterdayMonth)
 
@@ -246,6 +247,6 @@ if __name__ == '__main__':
                 eib.deleteSnapshot(indexTheDayBeforeYesterday)
 
         else:
-            logger.error("backupIndex() from %s to %s FAILED", indexYesterday, indexYesterdayMonth)
+            logger.error("Backup from index '%s' to 'snapshot %s' FAILED", indexYesterday, indexYesterdayMonth)
 
 
