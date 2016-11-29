@@ -42,8 +42,9 @@
 
 4. TODO:
 
- 4.1 E-mail
- 4.2 HDFS
+ 4.1 HDFS: After deleting a snapshot, its folders remains on HDFS.
+            Therefore we should also delete the folders automatically.
+ 4.2 Email: We should be alerted while errors occur.
 
 """
 
