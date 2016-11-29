@@ -5,14 +5,23 @@
 """
 1. 邏輯：
 
- 1.1 每日凌晨 03:30，把 ES 裡前一日的索引複製（合併）至當月的索引，並把前一日的索引刪除。
-     例如：2016.11.21 凌晨 03:30 時，把 ES 裡的 aplog_aes3g-2016.11.20 複製到 aplog_aes3g-2016.11
+    最多只保留最近兩個月內之索引（本月與上個月）
 
- 1.2 每日凌晨 03:30，把 ES 裡當月索引快照至 HDFS 之中。
-     例如：2016.11.21 凌晨 03:30 時，把 ES 裡的 aplog_aes3g-2016.11 快照至 HDFS 的 snapshot-ap-aes3g-2016.11.20
+    1.1 每日凌晨，備份索引至 HDFS：
+        1.1.1 將昨日索引與月索引合併 (使用 reindex API 的 copy 功能)
+        1.1.2 將月索引快照至 HDFS 之中
+        1.1.3 例如：2016.11.21 凌晨 03:30 時
+            1.1.3.1 把昨日索引「aplog_aes3g-2016.11.20」合併到月索引「aplog_aes3g-2016.11」（此索引內會有 2016.11.01～2016.11.20 的索引）
+            1.1.3.2 把月索引「aplog_aes3g-2016.11」快照至 HDFS 的「snapshot-ap-aes3g-2016.11.20」（此快照內最後會有 2016.11.01～2016.11.20 的索引）
 
- 1.3 每月一日凌晨 03:30，完成上述兩項動作之後，把 ES 裡上上個月的索引和 HDFS 上上個月的快照刪除。
-     例如：2016.12.01 凌晨 03:30 時，把 ES 裡的 aplog_aes3g-2016.10 刪除。
+    1.2 確認上述動作都執行成功後，才進行索引與快照的 HouseKeeping：
+        1.2.1 刪除昨日索引
+        1.2.2 如果今天是 2 號，就刪除兩個月前的索引與快照
+        1.2.3 如果今天不是 2 號，就刪除前天快照
+        1.2.4 例如：2016.12.02 凌晨
+            1.2.4.1 刪除昨日索引「 aplog_aes3g-2016.12.01」、兩個月前索引「aplog_aes3g-2016.10」與兩個月前快照「snapshot-aplog_aes3g-2016.10.31」
+        1.2.5 例如：2016.12.01 凌晨
+            1.2.5.1 刪除昨日索引「 aplog_aes3g-2016.11.31」、前天快照「snapshot-aplog_aes3g-2016.11.30」
 
 2. References:
 
@@ -34,6 +43,8 @@
 4. TODO:
 
  4.1 E-mail
+ 4.2 HDFS
+
 """
 
 import logging
@@ -45,11 +56,31 @@ from dateutil.relativedelta import *
 
 class ESIndexBackup:
 
-    def __init__(self, es, logger):
+    def __init__(self, es):
         self.es = es
-        self.logger = logger
         self.repository = 'backup' # Snapshot repository on HDFS
         self.snapshot_prefix = 'snapshot-'
+
+        # http://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/7517430#7517430
+        self.logger = logging.getLogger('ESIndexBackup')
+        self.logger.setLevel(logging.INFO)
+
+        # File Handler
+        fh = self.logging.FileHandler('./ESIndexBackup.log')
+        fh.setLevel(logging.INFO)
+        fh_formatter = logging.Formatter(
+            '%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
+        fh.setFormatter(fh_formatter)
+
+        # Console Handler
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.ERROR)
+        ch_formatter = logging.Formatter('%(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
+        ch.setFormatter(ch_formatter)
+
+        # add the handlers to the logger
+        self.logger.addHandler(fh)
+        self.logger.addHandler(ch)
 
     def backupIndex(self, srcIndex, destIndex):
         """
@@ -65,9 +96,9 @@ class ESIndexBackup:
 
     def housekeepIndexAndSnapshot(self, index, snapshot):
         """
-        刪除 ES 昨天的索引與 HDFS 前天的 snapshot
-        :param index: 昨天的索引名稱
-        :param snapshot: 前天的snapshot名稱
+        刪除索引與 snapshot
+        :param index: 索引名稱
+        :param snapshot: snapshot名稱
         :return: 成功回傳 True; 失敗回傳 False
         """
         if self.deleteIndex(index):
@@ -89,10 +120,9 @@ class ESIndexBackup:
                             refresh = False,
                             timeout = '3m',
                             wait_for_completion=True )
-            self.logger.info("index '%s' has been copied into '%s' successfully", srcIndex, destIndex)
+            self.logger.info("copyIndex() OK. '%s' --> '%s'", srcIndex, destIndex)
         except Exception as e:
-            self.logger.error(e)
-            # print e
+            self.logger.error("copyIndex() FAILED. '%s' --> '%s': %s", srcIndex, destIndex, e)
             return False
 
         return True
@@ -111,9 +141,9 @@ class ESIndexBackup:
                                body = {"indices": indices, "ignore_unavailable": True, "include_global_state": False},
                                master_timeout = '120s',
                                wait_for_completion = True)
-            self.logger.info("index '%s' has been snapshotted to '%s%s' successfully", indices, self.snapshot_prefix, snapshot)
+            self.logger.info("createSnapshot() OK. '%s' --> '%s%s'", indices, self.snapshot_prefix, snapshot)
         except Exception as e:
-            self.logger.error(e)
+            self.logger.error("createSnapshot() FAILED. '%s' --> '%s%s': %s" , indices, self.snapshot_prefix, snapshot, e)
             return False
 
         return True
@@ -128,9 +158,9 @@ class ESIndexBackup:
         try:
             self.es.snapshot.delete(self.repository, self.snapshot_prefix + snapshot,
                                master_timeout = '120s')
-            self.logger.info("index '%s' has been deleted successfully", snapshot)
+            self.logger.info("deleteSnapshot() OK. '%s%s'", self.snapshot_prefix, snapshot)
         except Exception as e:
-            self.logger.error(e)
+            self.logger.error("deleteSnapshot() FAILED. '%s%s': %s", self.snapshot_prefix, snapshot, e)
             return False
 
         return True
@@ -143,9 +173,9 @@ class ESIndexBackup:
         """
         try:
             self.es.indices.delete(index)
-            self.logger.info("index '%s' has been deleted successfully", index)
+            self.logger.info("deleteIndex() OK. '%s'", index)
         except Exception as e:
-            self.logger.error(e)
+            self.logger.error("deleteIndex() FAILED. '%s'", index)
             return False
 
         return True
@@ -167,27 +197,7 @@ if __name__ == '__main__':
         sniff_timeout=60
     )
 
-    # http://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/7517430#7517430
-    logger = logging.getLogger('ESIndexBackup')
-    logger.setLevel(logging.INFO)
-
-    # File Handler
-    fh = logging.FileHandler('./ESIndexBackup.log')
-    fh.setLevel(logging.INFO)
-    fh_formatter = logging.Formatter('%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
-    fh.setFormatter(fh_formatter)
-
-    # Console Handler
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.ERROR)
-    ch_formatter = logging.Formatter('%(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
-    ch.setFormatter(ch_formatter)
-
-    # add the handlers to the logger
-    logger.addHandler(fh)
-    logger.addHandler(ch)
-
-    eib = ESIndexBackup(es, logger)
+    eib = ESIndexBackup(es)
 
     # today = datetime.strptime('2016 11 2', '%Y %m %d')
     today = date.today()
@@ -201,7 +211,7 @@ if __name__ == '__main__':
     theDayBeforeYesterday = today - timedelta(2)
     theDayBeforeYesterdayDate = theDayBeforeYesterday.strftime('%Y.%m.%d')
 
-    # 上上個月的最後一天（例如今天是 2016.11.28，則 上上個月的最後一天是 2016.09.30）
+    # 上上個月的最後一天，例如今天是 2016.11.28，則 上上個月的最後一天是 2016.09.30
     # http://stackoverflow.com/questions/42950/get-last-day-of-the-month-in-python
     twoMonthsAgo = today - relativedelta(months=2)
     twoMonthsAgoYear = int(twoMonthsAgo.strftime("%Y"))
@@ -216,37 +226,23 @@ if __name__ == '__main__':
 
     for system in systems:
 
-        indexYesterday = indexPrefix + system + '-' + yesterdayDate
-        indexTheDayBeforeYesterday = indexPrefix + system + '-' + theDayBeforeYesterdayDate
+        indexYesterday = snapshotYesterday = indexPrefix + system + '-' + yesterdayDate
+        indexTheDayBeforeYesterday = snapshotTheDayBeforeYesterday = indexPrefix + system + '-' + theDayBeforeYesterdayDate
         indexYesterdayMonth = indexPrefix + system + '-' + yesterdayMonth
         indexTwoMonthsAgo = indexPrefix + system + '-' + lastDayOfTwoMonthsAgoMonth
         snapshotTwoMonthsAgo = indexPrefix + system + '-' + lastDayOfTwoMonthsAgo
 
         # 將昨天的 index 從 ES snapshot 至 HDFS
         # (先將昨日的 index 與昨日的全月 index 合併，然後再對全月 index 做 snapshot)
-        if eib.backupIndex(indexYesterday, indexYesterdayMonth):
-            logger.info("backupIndex() from %s to %s OK", indexYesterday, indexYesterdayMonth)
-
-            # 將昨天的 index 從 ES 裡刪除
-            if eib.deleteIndex(indexYesterday):
-                logger.info("deleteIndex() %s OK", indexYesterday)
-            else:
-                logger.error("deleteIndex() %s FAILED", indexYesterday)
-
-            # 將前天的 snapshot 從 HDFS 裡刪除，
-            # 但是如果今天是 2 號，就刪除兩個月前的 index 與 snapshot。
-            # http://stackoverflow.com/questions/394809/does-python-have-a-ternary-conditional-operator
-            # snapToDelete = snapshotTwoMonthsAgo if (todayDayOfMonth == '2') else indexTheDayBeforeYesterday
-
-            if (todayDayOfMonth == '2'):
-                logger.info("Start deleting index '%s' and snapshot '%s'", indexTwoMonthsAgo, snapshotTwoMonthsAgo)
-                eib.deleteIndex(indexTwoMonthsAgo)
-                eib.deleteSnapshot(snapshotTwoMonthsAgo)
-            else:
-                logger.info("Start deleting index '%s'", indexTheDayBeforeYesterday)
-                eib.deleteSnapshot(indexTheDayBeforeYesterday)
-
-        else:
-            logger.error("Backup from index '%s' to 'snapshot %s' FAILED", indexYesterday, indexYesterdayMonth)
-
+        if eib.copyIndex(indexYesterday, indexYesterdayMonth):
+            if eib.createSnapshot(indexYesterdayMonth, snapshotYesterday):
+                # 將昨天的 index 從 ES 裡刪除
+                eib.deleteIndex(indexYesterday)
+                # 將前天的 snapshot 從 HDFS 裡刪除，
+                # 但是如果今天是 2 號，就刪除兩個月前的 index 與 snapshot。
+                if todayDayOfMonth == '2':
+                    eib.deleteIndex(indexTwoMonthsAgo)
+                    eib.deleteSnapshot(snapshotTwoMonthsAgo)
+                else:
+                    eib.deleteSnapshot(indexTheDayBeforeYesterday)
 
