@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+# @since 2016/11/15
 
 """
-1. 邏輯：
+1. Logics & workflow：
 
-    ES 和 HDFS 上最多都只保留最近兩個月內之索引（本月與上個月）
+    ES 和 HDFS 上最多都只保留最近 3 個月內之索引（本月、上個月與上上個月）
 
     1.1 每日凌晨，備份索引至 HDFS：
         1.1.1 將昨日索引與月索引合併 (使用 reindex API 的 copy 功能)
@@ -16,12 +17,12 @@
 
     1.2 確認上述動作都執行成功後，才進行索引與快照的 HouseKeeping：
         1.2.1 刪除昨日索引
-        1.2.2 如果今天是 2 號，就刪除兩個月前的索引與快照
-        1.2.3 如果今天不是 2 號，就刪除前天快照
-        1.2.4 例如：2016.12.02 凌晨
-            1.2.4.1 刪除昨日索引「 aplog_aes3g-2016.12.01」、兩個月前索引「aplog_aes3g-2016.10」與兩個月前快照「snapshot-aplog_aes3g-2016.10.31」
-        1.2.5 例如：2016.12.01 凌晨
+        1.2.2 如果今天不是 2 號，就刪除前天快照
+        1.2.3 如果今天是 2 號，就刪除 3 個月前的索引與快照
+        1.2.4 例如：2016.12.01 凌晨
             1.2.5.1 刪除昨日索引「 aplog_aes3g-2016.11.31」、前天快照「snapshot-aplog_aes3g-2016.11.30」
+        1.2.5 例如：2016.12.02 凌晨
+            1.2.4.1 刪除昨日索引「 aplog_aes3g-2016.12.01」、三個月前索引「aplog_aes3g-2016.09」與三個月前快照「snapshot-aplog_aes3g-2016.09.30」
 
 2. References:
 
@@ -62,26 +63,6 @@ class ESIndexBackup:
         self.repository = 'backup' # Snapshot repository on HDFS
         self.snapshot_prefix = 'snapshot-'
 
-        # http://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/7517430#7517430
-        self.logger = logging.getLogger('ESIndexBackup')
-        self.logger.setLevel(logging.INFO)
-
-        # File Handler
-        fh = self.logging.FileHandler('./ESIndexBackup.log')
-        fh.setLevel(logging.INFO)
-        fh_formatter = logging.Formatter(
-            '%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
-        fh.setFormatter(fh_formatter)
-
-        # Console Handler
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.ERROR)
-        ch_formatter = logging.Formatter('%(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
-        ch.setFormatter(ch_formatter)
-
-        # add the handlers to the logger
-        self.logger.addHandler(fh)
-        self.logger.addHandler(ch)
 
     def backupIndex(self, srcIndex, destIndex):
         """
@@ -121,9 +102,9 @@ class ESIndexBackup:
                             refresh = False,
                             timeout = '3m',
                             wait_for_completion=True )
-            self.logger.info("copyIndex() OK. '%s' --> '%s'", srcIndex, destIndex)
+            logger.info("copyIndex() OK. '%s' --> '%s'", srcIndex, destIndex)
         except Exception as e:
-            self.logger.error("copyIndex() FAILED. '%s' --> '%s': %s", srcIndex, destIndex, e)
+            logger.error("copyIndex() FAILED. '%s' --> '%s': %s", srcIndex, destIndex, e)
             return False
 
         return True
@@ -142,9 +123,9 @@ class ESIndexBackup:
                                body = {"indices": indices, "ignore_unavailable": True, "include_global_state": False},
                                master_timeout = '120s',
                                wait_for_completion = True)
-            self.logger.info("createSnapshot() OK. '%s' --> '%s%s'", indices, self.snapshot_prefix, snapshot)
+            logger.info("createSnapshot() OK. '%s' --> '%s%s'", indices, self.snapshot_prefix, snapshot)
         except Exception as e:
-            self.logger.error("createSnapshot() FAILED. '%s' --> '%s%s': %s" , indices, self.snapshot_prefix, snapshot, e)
+            logger.error("createSnapshot() FAILED. '%s' --> '%s%s': %s" , indices, self.snapshot_prefix, snapshot, e)
             return False
 
         return True
@@ -159,9 +140,9 @@ class ESIndexBackup:
         try:
             self.es.snapshot.delete(self.repository, self.snapshot_prefix + snapshot,
                                master_timeout = '120s')
-            self.logger.info("deleteSnapshot() OK. '%s%s'", self.snapshot_prefix, snapshot)
+            logger.info("deleteSnapshot() OK. '%s%s'", self.snapshot_prefix, snapshot)
         except Exception as e:
-            self.logger.error("deleteSnapshot() FAILED. '%s%s': %s", self.snapshot_prefix, snapshot, e)
+            logger.error("deleteSnapshot() FAILED. '%s%s': %s", self.snapshot_prefix, snapshot, e)
             return False
 
         return True
@@ -174,9 +155,9 @@ class ESIndexBackup:
         """
         try:
             self.es.indices.delete(index)
-            self.logger.info("deleteIndex() OK. '%s'", index)
+            logger.info("deleteIndex() OK. '%s'", index)
         except Exception as e:
-            self.logger.error("deleteIndex() FAILED. '%s'", index)
+            logger.error("deleteIndex() FAILED. '%s'", index)
             return False
 
         return True
@@ -184,12 +165,63 @@ class ESIndexBackup:
 
 if __name__ == '__main__':
 
+    # 要保留幾個月內的 indices 和 snapshots
+    N = 3
+
+    # systems = ['pos']
+    systems = ['aes3g', 'pos', 'wds', 'upcc']
+    indexPrefix = 'aplog_'
+
+    # 今天
+    # today = datetime.strptime('2016 12 1', '%Y %m %d')  # this is for test
+    today = date.today()
+    todayDayOfMonth = today.strftime('%d')  # 今天是幾號？
+
+    # 昨天
+    yesterday = today - timedelta(1)
+    yesterdayDate = yesterday.strftime('%Y.%m.%d')
+    yesterdayMonth = yesterday.strftime('%Y.%m')
+
+    # 前天
+    theDayBeforeYesterday = today - timedelta(2)
+    theDayBeforeYesterdayDate = theDayBeforeYesterday.strftime('%Y.%m.%d')
+
+    # N 個月前的最後一天，例如：N = 3，今天是 2016.12.01，則 N 個月的最後一天是 2016.09.30
+    # http://stackoverflow.com/questions/42950/get-last-day-of-the-month-in-python
+    NMonthsAgo = today - relativedelta(months=N)
+    NMonthsAgoYear = int(NMonthsAgo.strftime("%Y"))
+    NMonthsAgoMonth = int(NMonthsAgo.strftime("%-m"))
+    NMonthsAgoDay = int(calendar.monthrange(NMonthsAgoYear, NMonthsAgoMonth)[1])
+    lastDayOfNMonthsAgo = "%d.%02d.%02d" % (NMonthsAgoYear, NMonthsAgoMonth, NMonthsAgoDay)
+    lastDayOfNMonthsAgoMonth = "%d.%02d" % (NMonthsAgoYear, NMonthsAgoMonth)
+
+    logger = logging.getLogger('ESIndexBackup')
+    logger.setLevel(logging.INFO)
+
+    # File Handler
+    # http://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/7517430#7517430
+    fh = logging.FileHandler('./ESIndexBackup.log')
+    fh.setLevel(logging.INFO)
+    fh_formatter = logging.Formatter(
+        '%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
+    fh.setFormatter(fh_formatter)
+
+    # Console Handler
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.ERROR)
+    ch_formatter = logging.Formatter('%(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
+    ch.setFormatter(ch_formatter)
+
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
     # Global options: ignore, request_timeout, response filtering(filter_path)
     es = Elasticsearch(
         ['hdpr01wn01', 'hdpr01wn02', 'hdpr01wn03', 'hdpr01wn04', 'hdpr01wn05'],
         # http://stackoverflow.com/questions/25908484/how-to-fix-read-timed-out-in-elasticsearch
-        # 預設 10 分鐘!
-        timeout=600,
+        # 預設 30 分鐘!
+        timeout=1800,
         # sniff before doing anything
         sniff_on_start=True,
         # refresh nodes after a node fails to respond
@@ -200,38 +232,11 @@ if __name__ == '__main__':
 
     eib = ESIndexBackup(es)
 
-    # today = datetime.strptime('2016 11 2', '%Y %m %d')
-    today = date.today()
-    todayDayOfMonth = today.strftime('%d');
-
-    yesterday = today - timedelta(1)
-    yesterdayDate = yesterday.strftime('%Y.%m.%d')
-    yesterdayMonth = yesterdayDate[:-3]
-
-    # 前天
-    theDayBeforeYesterday = today - timedelta(2)
-    theDayBeforeYesterdayDate = theDayBeforeYesterday.strftime('%Y.%m.%d')
-
-    # 上上個月的最後一天，例如今天是 2016.11.28，則 上上個月的最後一天是 2016.09.30
-    # http://stackoverflow.com/questions/42950/get-last-day-of-the-month-in-python
-    twoMonthsAgo = today - relativedelta(months=2)
-    twoMonthsAgoYear = int(twoMonthsAgo.strftime("%Y"))
-    twoMonthsAgoMonth = int(twoMonthsAgo.strftime("%-m"))
-    twoMonthsAgoDay = int(calendar.monthrange(twoMonthsAgoYear, twoMonthsAgoMonth)[1])
-    lastDayOfTwoMonthsAgo = "%d.%02d.%02d" % (twoMonthsAgoYear, twoMonthsAgoMonth, twoMonthsAgoDay)
-    lastDayOfTwoMonthsAgoMonth = "%d.%02d" % (twoMonthsAgoYear, twoMonthsAgoMonth)
-
-    #systems = ['pos']
-    systems = ['aes3g', 'pos', 'wds', 'upcc']
-    indexPrefix = 'aplog_'
-
     for system in systems:
 
         indexYesterday = snapshotYesterday = indexPrefix + system + '-' + yesterdayDate
         indexTheDayBeforeYesterday = snapshotTheDayBeforeYesterday = indexPrefix + system + '-' + theDayBeforeYesterdayDate
         indexYesterdayMonth = indexPrefix + system + '-' + yesterdayMonth
-        indexTwoMonthsAgo = indexPrefix + system + '-' + lastDayOfTwoMonthsAgoMonth
-        snapshotTwoMonthsAgo = indexPrefix + system + '-' + lastDayOfTwoMonthsAgo
 
         # 將昨天的 index 從 ES snapshot 至 HDFS
         # (先將昨日的 index 與昨日的全月 index 合併，然後再對全月 index 做 snapshot)
@@ -240,10 +245,11 @@ if __name__ == '__main__':
                 # 將昨天的 index 從 ES 裡刪除
                 eib.deleteIndex(indexYesterday)
                 # 將前天的 snapshot 從 HDFS 裡刪除，
-                # 但是如果今天是 2 號，就刪除兩個月前的 index 與 snapshot。
+                # 但是如果今天是 2 號，就刪除 N 個月前的 index 與 snapshot。
                 if todayDayOfMonth == '2':
-                    eib.deleteIndex(indexTwoMonthsAgo)
-                    eib.deleteSnapshot(snapshotTwoMonthsAgo)
+                    indexNMonthsAgo = indexPrefix + system + '-' + lastDayOfNMonthsAgoMonth
+                    snapshotNMonthsAgo = indexPrefix + system + '-' + lastDayOfNMonthsAgo
+                    eib.deleteIndex(indexNMonthsAgo)
+                    eib.deleteSnapshot(snapshotNMonthsAgo)
                 else:
                     eib.deleteSnapshot(indexTheDayBeforeYesterday)
-
