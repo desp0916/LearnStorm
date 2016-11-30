@@ -1,0 +1,582 @@
+2016-11-21 17:25:22.728 base.py[line:66] INFO GET http://hdpr01wn04:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:25:22.820 base.py[line:66] INFO POST http://172.20.2.54:9200/_reindex [status:200 request:0.091s]
+2016-11-21 17:25:22.820 ESIndexBackup.py[line:69] INFO index 'aplog_aes3g-2016.11.15' has been copied into aplog_aes3g-2016.11 successfully
+2016-11-21 17:25:23.056 base.py[line:66] INFO PUT http://172.20.2.56:9200/_snapshot/backup/snapshot-aplog_aes3g-2016.11.15?wait_for_completion=true&master_timeout=10s [status:200 request:0.235s]
+2016-11-21 17:25:23.056 ESIndexBackup.py[line:85] INFO index 'aplog_aes3g-2016.11' has been snapshotted to snapshot-aplog_aes3g-2016.11.15 successfully
+2016-11-21 17:30:44.346 base.py[line:66] INFO GET http://hdpr01wn02:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:30:44.404 base.py[line:66] INFO POST http://172.20.2.53:9200/_reindex [status:200 request:0.057s]
+2016-11-21 17:30:44.405 ESIndexBackup.py[line:69] INFO index 'aplog_aes3g-2016.11.15' has been copied into 'aplog_aes3g-2016.11' successfully
+2016-11-21 17:30:44.435 base.py[line:88] WARNING PUT /_snapshot/backup/snapshot-aplog_aes3g-2016.11.15?wait_for_completion=true&master_timeout=10s [status:400 request:0.030s]
+2016-11-21 17:30:44.436 ESIndexBackup.py[line:87] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_aes3g-2016.11.15] Invalid snapshot name [snapshot-aplog_aes3g-2016.11.15], snapshot with such name already exists')
+2016-11-21 17:49:24.837 base.py[line:66] INFO GET http://hdpr01wn02:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:49:24.838 ESIndexBackup.py[line:77] ERROR global name 'destIndex' is not defined
+2016-11-21 17:50:56.171 base.py[line:66] INFO GET http://hdpr01wn03:9200/_nodes/_all/clear [status:200 request:0.011s]
+2016-11-21 17:50:56.172 ESIndexBackup.py[line:77] ERROR global name 'destIndex' is not defined
+2016-11-21 17:51:01.906 base.py[line:66] INFO GET http://hdpr01wn04:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:51:01.907 ESIndexBackup.py[line:77] ERROR global name 'destIndex' is not defined
+2016-11-21 17:51:03.733 base.py[line:66] INFO GET http://hdpr01wn03:9200/_nodes/_all/clear [status:200 request:0.011s]
+2016-11-21 17:51:03.734 ESIndexBackup.py[line:77] ERROR global name 'destIndex' is not defined
+2016-11-21 17:51:05.087 base.py[line:66] INFO GET http://hdpr01wn04:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:51:05.088 ESIndexBackup.py[line:77] ERROR global name 'destIndex' is not defined
+2016-11-21 17:51:06.792 base.py[line:66] INFO GET http://hdpr01wn05:9200/_nodes/_all/clear [status:200 request:0.012s]
+2016-11-21 17:51:06.793 ESIndexBackup.py[line:77] ERROR global name 'destIndex' is not defined
+2016-11-21 17:53:30.181 base.py[line:66] INFO GET http://hdpr01wn04:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:53:30.182 ESIndexBackup.py[line:81] ERROR global name 'destIndex' is not defined
+2016-11-21 17:55:41.117 base.py[line:66] INFO GET http://hdpr01wn03:9200/_nodes/_all/clear [status:200 request:0.010s]
+2016-11-21 17:55:41.118 ESIndexBackup.py[line:81] ERROR global name 'destIndex' is not defined
+2016-11-21 17:55:41.118 ESIndexBackup.py[line:81] ERROR global name 'destIndex' is not defined
+2016-11-21 17:55:41.118 ESIndexBackup.py[line:81] ERROR global name 'destIndex' is not defined
+2016-11-21 17:55:41.119 ESIndexBackup.py[line:81] ERROR global name 'destIndex' is not defined
+2016-11-21 18:07:29.010 ESIndexBackup.py[line:99] ERROR global name 'destIndex' is not defined
+2016-11-21 18:07:29.010 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_aes3g-2016.11.20
+2016-11-21 18:07:29.010 ESIndexBackup.py[line:99] ERROR global name 'destIndex' is not defined
+2016-11-21 18:07:29.011 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_pos-2016.11.20
+2016-11-21 18:07:29.011 ESIndexBackup.py[line:99] ERROR global name 'destIndex' is not defined
+2016-11-21 18:07:29.011 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_wds-2016.11.20
+2016-11-21 18:07:29.011 ESIndexBackup.py[line:99] ERROR global name 'destIndex' is not defined
+2016-11-21 18:07:29.011 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_upcc-2016.11.20
+2016-11-21 18:08:00.240 ESIndexBackup.py[line:99] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-21 18:08:00.240 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_aes3g-2016.11.20
+2016-11-21 18:08:00.243 ESIndexBackup.py[line:99] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-21 18:08:00.243 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_pos-2016.11.20
+2016-11-21 18:08:00.246 ESIndexBackup.py[line:99] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-21 18:08:00.246 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_wds-2016.11.20
+2016-11-21 18:08:00.249 ESIndexBackup.py[line:99] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-21 18:08:00.249 ESIndexBackup.py[line:88] ERROR copyIndex() FAILED: aplog_upcc-2016.11.20
+2016-11-22 09:02:53.146 ESIndexBackup.py[line:101] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 09:02:53.146 ESIndexBackup.py[line:90] ERROR copyIndex() FAILED: aplog_aes3g-2016.11.21
+2016-11-22 09:02:53.149 ESIndexBackup.py[line:101] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 09:02:53.149 ESIndexBackup.py[line:90] ERROR copyIndex() FAILED: aplog_pos-2016.11.21
+2016-11-22 09:02:53.151 ESIndexBackup.py[line:101] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 09:02:53.152 ESIndexBackup.py[line:90] ERROR copyIndex() FAILED: aplog_wds-2016.11.21
+2016-11-22 09:02:53.154 ESIndexBackup.py[line:101] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 09:02:53.155 ESIndexBackup.py[line:90] ERROR copyIndex() FAILED: aplog_upcc-2016.11.21
+2016-11-22 10:53:43.314 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:53:43.314 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_aes3g-2016.11.21
+2016-11-22 10:53:43.317 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:53:43.317 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_pos-2016.11.21
+2016-11-22 10:53:43.320 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:53:43.320 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_wds-2016.11.21
+2016-11-22 10:53:43.323 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:53:43.324 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_upcc-2016.11.21
+2016-11-22 10:54:34.966 ESIndexBackup.py[line:77] INFO index 'aplog_aes3g-2016.11.15' has been copied into 'aplog_aes3g-2016.11' successfully
+2016-11-22 10:54:34.966 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_aes3g-2016.11.15
+2016-11-22 10:54:34.997 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_aes3g-2016.11.15] Invalid snapshot name [snapshot-aplog_aes3g-2016.11.15], snapshot with such name already exists')
+2016-11-22 10:54:34.998 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_aes3g-2016.11.15
+2016-11-22 10:54:35.000 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:54:35.000 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_pos-2016.11.15
+2016-11-22 10:54:35.003 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:54:35.003 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_wds-2016.11.15
+2016-11-22 10:54:35.006 ESIndexBackup.py[line:79] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-22 10:54:35.006 ESIndexBackup.py[line:62] ERROR copyIndex() FAILED: aplog_upcc-2016.11.15
+2016-11-22 10:55:06.542 ESIndexBackup.py[line:77] INFO index 'aplog_aes3g-2016.11.22' has been copied into 'aplog_aes3g-2016.11' successfully
+2016-11-22 10:55:06.542 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_aes3g-2016.11.22
+2016-11-22 10:55:07.022 ESIndexBackup.py[line:99] INFO index 'aplog_aes3g-2016.11' has been snapshotted to 'snapshot-aplog_aes3g-2016.11.22' successfully
+2016-11-22 10:55:07.022 ESIndexBackup.py[line:56] INFO snapshot() OK: aplog_aes3g-2016.11.22
+2016-11-22 10:55:08.175 ESIndexBackup.py[line:77] INFO index 'aplog_pos-2016.11.22' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-22 10:55:08.175 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_pos-2016.11.22
+2016-11-22 10:55:08.602 ESIndexBackup.py[line:99] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.22' successfully
+2016-11-22 10:55:08.602 ESIndexBackup.py[line:56] INFO snapshot() OK: aplog_pos-2016.11.22
+2016-11-22 10:55:09.844 ESIndexBackup.py[line:77] INFO index 'aplog_wds-2016.11.22' has been copied into 'aplog_wds-2016.11' successfully
+2016-11-22 10:55:09.844 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_wds-2016.11.22
+2016-11-22 10:55:10.113 ESIndexBackup.py[line:99] INFO index 'aplog_wds-2016.11' has been snapshotted to 'snapshot-aplog_wds-2016.11.22' successfully
+2016-11-22 10:55:10.113 ESIndexBackup.py[line:56] INFO snapshot() OK: aplog_wds-2016.11.22
+2016-11-22 10:55:11.115 ESIndexBackup.py[line:77] INFO index 'aplog_upcc-2016.11.22' has been copied into 'aplog_upcc-2016.11' successfully
+2016-11-22 10:55:11.115 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_upcc-2016.11.22
+2016-11-22 10:55:11.586 ESIndexBackup.py[line:99] INFO index 'aplog_upcc-2016.11' has been snapshotted to 'snapshot-aplog_upcc-2016.11.22' successfully
+2016-11-22 10:55:11.586 ESIndexBackup.py[line:56] INFO snapshot() OK: aplog_upcc-2016.11.22
+2016-11-22 10:55:24.503 ESIndexBackup.py[line:77] INFO index 'aplog_aes3g-2016.11.22' has been copied into 'aplog_aes3g-2016.11' successfully
+2016-11-22 10:55:24.503 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_aes3g-2016.11.22
+2016-11-22 10:55:24.527 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_aes3g-2016.11.22] Invalid snapshot name [snapshot-aplog_aes3g-2016.11.22], snapshot with such name already exists')
+2016-11-22 10:55:24.528 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_aes3g-2016.11.22
+2016-11-22 10:55:24.737 ESIndexBackup.py[line:77] INFO index 'aplog_pos-2016.11.22' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-22 10:55:24.737 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_pos-2016.11.22
+2016-11-22 10:55:24.762 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_pos-2016.11.22] Invalid snapshot name [snapshot-aplog_pos-2016.11.22], snapshot with such name already exists')
+2016-11-22 10:55:24.762 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_pos-2016.11.22
+2016-11-22 10:55:24.928 ESIndexBackup.py[line:77] INFO index 'aplog_wds-2016.11.22' has been copied into 'aplog_wds-2016.11' successfully
+2016-11-22 10:55:24.929 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_wds-2016.11.22
+2016-11-22 10:55:24.950 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_wds-2016.11.22] Invalid snapshot name [snapshot-aplog_wds-2016.11.22], snapshot with such name already exists')
+2016-11-22 10:55:24.951 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_wds-2016.11.22
+2016-11-22 10:55:25.188 ESIndexBackup.py[line:77] INFO index 'aplog_upcc-2016.11.22' has been copied into 'aplog_upcc-2016.11' successfully
+2016-11-22 10:55:25.188 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_upcc-2016.11.22
+2016-11-22 10:55:25.222 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_upcc-2016.11.22] Invalid snapshot name [snapshot-aplog_upcc-2016.11.22], snapshot with such name already exists')
+2016-11-22 10:55:25.222 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_upcc-2016.11.22
+2016-11-22 17:54:33.782 ESIndexBackup.py[line:77] INFO index 'aplog_aes3g-2016.11.22' has been copied into 'aplog_aes3g-2016.11' successfully
+2016-11-22 17:54:33.782 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_aes3g-2016.11.22
+2016-11-22 17:54:33.814 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_aes3g-2016.11.22] Invalid snapshot name [snapshot-aplog_aes3g-2016.11.22], snapshot with such name already exists')
+2016-11-22 17:54:33.815 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_aes3g-2016.11.22
+2016-11-22 17:54:36.278 ESIndexBackup.py[line:77] INFO index 'aplog_pos-2016.11.22' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-22 17:54:36.279 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_pos-2016.11.22
+2016-11-22 17:54:36.305 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_pos-2016.11.22] Invalid snapshot name [snapshot-aplog_pos-2016.11.22], snapshot with such name already exists')
+2016-11-22 17:54:36.305 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_pos-2016.11.22
+2016-11-22 17:54:37.774 ESIndexBackup.py[line:77] INFO index 'aplog_wds-2016.11.22' has been copied into 'aplog_wds-2016.11' successfully
+2016-11-22 17:54:37.774 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_wds-2016.11.22
+2016-11-22 17:54:37.800 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_wds-2016.11.22] Invalid snapshot name [snapshot-aplog_wds-2016.11.22], snapshot with such name already exists')
+2016-11-22 17:54:37.800 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_wds-2016.11.22
+2016-11-22 17:54:40.024 ESIndexBackup.py[line:77] INFO index 'aplog_upcc-2016.11.22' has been copied into 'aplog_upcc-2016.11' successfully
+2016-11-22 17:54:40.024 ESIndexBackup.py[line:54] INFO copyIndex() OK: aplog_upcc-2016.11.22
+2016-11-22 17:54:40.048 ESIndexBackup.py[line:101] ERROR TransportError(400, u'invalid_snapshot_name_exception', u'[backup:snapshot-aplog_upcc-2016.11.22] Invalid snapshot name [snapshot-aplog_upcc-2016.11.22], snapshot with such name already exists')
+2016-11-22 17:54:40.048 ESIndexBackup.py[line:59] ERROR snapshot() FAILED: aplog_upcc-2016.11.22
+2016-11-28 09:51:26.159 ESIndexBackup.py[line:84] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 09:51:26.159 ESIndexBackup.py[line:67] ERROR copyIndex() FAILED: aplog_aes3g-2016.11.27
+2016-11-28 09:51:26.162 ESIndexBackup.py[line:84] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 09:51:26.162 ESIndexBackup.py[line:67] ERROR copyIndex() FAILED: aplog_pos-2016.11.27
+2016-11-28 09:51:26.166 ESIndexBackup.py[line:84] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 09:51:26.166 ESIndexBackup.py[line:67] ERROR copyIndex() FAILED: aplog_wds-2016.11.27
+2016-11-28 09:51:26.169 ESIndexBackup.py[line:84] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 09:51:26.170 ESIndexBackup.py[line:67] ERROR copyIndex() FAILED: aplog_upcc-2016.11.27
+2016-11-28 09:56:18.035 ESIndexTest.py[line:114] INFO index 'aplog_wds-2016.10.04' has been deleted successfully
+2016-11-28 10:05:16.804 ESIndexBackup.py[line:83] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 10:05:16.804 ESIndexBackup.py[line:66] ERROR copyIndex() FAILED: aplog_aes3g-2016.11.27
+2016-11-28 10:05:16.807 ESIndexBackup.py[line:83] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 10:05:16.807 ESIndexBackup.py[line:66] ERROR copyIndex() FAILED: aplog_pos-2016.11.27
+2016-11-28 10:05:16.811 ESIndexBackup.py[line:83] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 10:05:16.811 ESIndexBackup.py[line:66] ERROR copyIndex() FAILED: aplog_wds-2016.11.27
+2016-11-28 10:05:16.814 ESIndexBackup.py[line:83] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 10:05:16.814 ESIndexBackup.py[line:66] ERROR copyIndex() FAILED: aplog_upcc-2016.11.27
+2016-11-28 13:48:00.859 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:48:00.859 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:48:00.862 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:48:00.862 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:48:00.865 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:48:00.865 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:48:00.868 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:48:00.868 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:50:33.569 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:50:33.569 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:50:33.572 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:50:33.572 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:50:33.575 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:50:33.575 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:50:33.578 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:50:33.578 ESIndexBackup.py[line:214] ERROR backupIndex() FAILED
+2016-11-28 13:53:44.928 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:53:44.928 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 13:53:44.930 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:53:44.931 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 13:53:44.933 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:53:44.934 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 13:53:44.936 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:53:44.937 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 13:54:06.177 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:54:06.177 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 13:54:06.180 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:54:06.180 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 13:54:06.182 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:54:06.183 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 13:54:06.185 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:54:06.185 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 13:56:34.286 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:56:34.286 ESIndexBackup.py[line:216] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 13:56:34.289 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:56:34.289 ESIndexBackup.py[line:216] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 13:56:34.292 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:56:34.292 ESIndexBackup.py[line:216] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 13:56:34.295 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 13:56:34.295 ESIndexBackup.py[line:216] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 14:27:29.720 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:29.721 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 14:27:29.724 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:29.724 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 14:27:29.727 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:29.727 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 14:27:29.730 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:29.730 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 14:27:43.637 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:43.637 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 14:27:43.640 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:43.640 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 14:27:43.643 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:43.643 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 14:27:43.646 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:27:43.646 ESIndexBackup.py[line:214] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 14:29:14.092 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:29:14.093 ESIndexBackup.py[line:215] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 14:29:14.095 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:29:14.095 ESIndexBackup.py[line:215] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 14:29:14.098 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:29:14.098 ESIndexBackup.py[line:215] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 14:29:14.101 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 14:29:14.101 ESIndexBackup.py[line:215] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 15:06:29.011 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:29.011 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 15:06:29.014 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:29.014 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 15:06:29.016 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:29.017 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 15:06:29.019 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:29.019 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 15:06:34.792 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:34.792 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 15:06:34.795 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:34.795 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 15:06:34.798 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:34.799 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 15:06:34.801 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:06:34.802 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 15:10:17.560 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:10:17.560 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 15:10:17.563 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:10:17.563 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 15:10:17.566 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:10:17.566 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 15:10:17.568 ESIndexBackup.py[line:85] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:10:17.569 ESIndexBackup.py[line:227] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 15:56:06.216 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:56:06.216 ESIndexBackup.py[line:231] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 15:56:06.219 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:56:06.219 ESIndexBackup.py[line:231] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 15:56:06.222 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:56:06.222 ESIndexBackup.py[line:231] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 15:56:06.225 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 15:56:06.225 ESIndexBackup.py[line:231] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 16:29:22.372 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:29:22.372 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_aes3g-2016.11.27 to aplog_aes3g-2016.11 FAILED
+2016-11-28 16:29:22.374 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:29:22.375 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 16:29:22.377 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:29:22.377 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_wds-2016.11.27 to aplog_wds-2016.11 FAILED
+2016-11-28 16:29:22.379 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:29:22.379 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_upcc-2016.11.27 to aplog_upcc-2016.11 FAILED
+2016-11-28 16:31:38.135 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:31:38.136 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_aes3g-2016.02.27 to aplog_aes3g-2016.02 FAILED
+2016-11-28 16:31:38.138 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:31:38.138 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_pos-2016.02.27 to aplog_pos-2016.02 FAILED
+2016-11-28 16:31:38.140 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:31:38.141 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_wds-2016.02.27 to aplog_wds-2016.02 FAILED
+2016-11-28 16:31:38.143 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:31:38.143 ESIndexBackup.py[line:233] ERROR backupIndex() from aplog_upcc-2016.02.27 to aplog_upcc-2016.02 FAILED
+2016-11-28 16:32:41.926 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:32:41.926 ESIndexBackup.py[line:232] ERROR backupIndex() from aplog_aes3g-2016.02.27 to aplog_aes3g-2016.02 FAILED
+2016-11-28 16:32:41.929 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:32:41.929 ESIndexBackup.py[line:232] ERROR backupIndex() from aplog_pos-2016.02.27 to aplog_pos-2016.02 FAILED
+2016-11-28 16:32:41.932 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:32:41.932 ESIndexBackup.py[line:232] ERROR backupIndex() from aplog_wds-2016.02.27 to aplog_wds-2016.02 FAILED
+2016-11-28 16:32:41.934 ESIndexBackup.py[line:86] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:32:41.934 ESIndexBackup.py[line:232] ERROR backupIndex() from aplog_upcc-2016.02.27 to aplog_upcc-2016.02 FAILED
+2016-11-28 16:50:48.984 ESIndexBackup.py[line:88] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:50:48.984 ESIndexBackup.py[line:235] ERROR backupIndex() from aplog_pos-2016.09.22 to aplog_pos-2016.09 FAILED
+2016-11-28 16:51:25.288 ESIndexBackup.py[line:86] INFO index 'aplog_pos-2016.09.23' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 16:52:49.441 ESIndexBackup.py[line:86] INFO index 'aplog_pos-2016.09.23' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 16:52:49.950 ESIndexBackup.py[line:108] INFO index 'aplog_pos-2016.09' has been snapshotted to 'snapshot-aplog_pos-2016.09.23' successfully
+2016-11-28 16:52:49.950 ESIndexBackup.py[line:217] INFO backupIndex() from aplog_pos-2016.09.23 to aplog_pos-2016.09 OK
+2016-11-28 16:52:50.226 ESIndexBackup.py[line:141] INFO index 'aplog_pos-2016.09.23' has been deleted successfully
+2016-11-28 16:52:50.226 ESIndexBackup.py[line:221] INFO deleteIndex() aplog_pos-2016.09.23 OK
+2016-11-28 16:52:50.226 ESIndexBackup.py[line:128] ERROR delete() got an unexpected keyword argument 'wait_for_completion'
+2016-11-28 16:52:50.226 ESIndexBackup.py[line:232] ERROR deleteSnapsoht() <__main__.ESIndexBackup instance at 0x1bd9ab8> FAILED
+2016-11-28 16:58:54.631 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 16:58:54.632 ESIndexBackup.py[line:238] ERROR backupIndex() from aplog_pos-2016.09.23 to aplog_pos-2016.09 FAILED
+2016-11-28 16:59:54.585 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.09.24' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 16:59:54.940 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.09' has been snapshotted to 'snapshot-aplog_pos-2016.09.24' successfully
+2016-11-28 16:59:54.940 ESIndexBackup.py[line:220] INFO backupIndex() from aplog_pos-2016.09.24 to aplog_pos-2016.09 OK
+2016-11-28 16:59:55.251 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.09.24' has been deleted successfully
+2016-11-28 16:59:55.251 ESIndexBackup.py[line:224] INFO deleteIndex() aplog_pos-2016.09.24 OK
+2016-11-28 16:59:55.329 ESIndexBackup.py[line:131] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.09.23] is missing')
+2016-11-28 16:59:55.329 ESIndexBackup.py[line:235] ERROR deleteSnapsoht() <__main__.ESIndexBackup instance at 0xe88a70> FAILED
+2016-11-28 17:00:46.259 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.09.25' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 17:00:46.725 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.09' has been snapshotted to 'snapshot-aplog_pos-2016.09.25' successfully
+2016-11-28 17:00:46.725 ESIndexBackup.py[line:220] INFO backupIndex() from aplog_pos-2016.09.25 to aplog_pos-2016.09 OK
+2016-11-28 17:00:46.899 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.09.25' has been deleted successfully
+2016-11-28 17:00:46.899 ESIndexBackup.py[line:224] INFO deleteIndex() aplog_pos-2016.09.25 OK
+2016-11-28 17:00:47.167 ESIndexBackup.py[line:129] INFO index 'aplog_pos-2016.09.24' has been deleted successfully
+2016-11-28 17:00:47.167 ESIndexBackup.py[line:233] INFO deleteSnapshot() <__main__.ESIndexBackup instance at 0x131ea70> OK
+2016-11-28 17:17:35.443 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.09.27' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 17:17:35.813 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.09' has been snapshotted to 'snapshot-aplog_pos-2016.09.27' successfully
+2016-11-28 17:17:35.813 ESIndexBackup.py[line:222] INFO backupIndex() from aplog_pos-2016.09.27 to aplog_pos-2016.09 OK
+2016-11-28 17:17:36.123 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.09.27' has been deleted successfully
+2016-11-28 17:17:36.123 ESIndexBackup.py[line:226] INFO deleteIndex() aplog_pos-2016.09.27 OK
+2016-11-28 17:17:36.123 ESIndexBackup.py[line:241] ERROR deleteSnapsoht() <__main__.ESIndexBackup instance at 0x10a69e0> FAILED
+2016-11-28 17:20:35.947 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:20:35.947 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.09.27 to aplog_pos-2016.09 FAILED
+2016-11-28 17:21:10.455 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:21:10.456 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.09.27 to aplog_pos-2016.09 FAILED
+2016-11-28 17:22:22.441 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.09.28' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 17:22:22.869 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.09' has been snapshotted to 'snapshot-aplog_pos-2016.09.28' successfully
+2016-11-28 17:22:22.869 ESIndexBackup.py[line:222] INFO backupIndex() from aplog_pos-2016.09.28 to aplog_pos-2016.09 OK
+2016-11-28 17:22:23.152 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.09.28' has been deleted successfully
+2016-11-28 17:22:23.152 ESIndexBackup.py[line:226] INFO deleteIndex() aplog_pos-2016.09.28 OK
+2016-11-28 17:22:23.153 ESIndexBackup.py[line:241] ERROR Start deleting index 'aplog_pos-2016.09.27'
+2016-11-28 17:22:23.437 ESIndexBackup.py[line:129] INFO index 'aplog_pos-2016.09.27' has been deleted successfully
+2016-11-28 17:23:20.381 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.09.29' has been copied into 'aplog_pos-2016.09' successfully
+2016-11-28 17:23:20.707 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.09' has been snapshotted to 'snapshot-aplog_pos-2016.09.29' successfully
+2016-11-28 17:23:20.708 ESIndexBackup.py[line:222] INFO backupIndex() from aplog_pos-2016.09.29 to aplog_pos-2016.09 OK
+2016-11-28 17:23:20.882 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.09.29' has been deleted successfully
+2016-11-28 17:23:20.882 ESIndexBackup.py[line:226] INFO deleteIndex() aplog_pos-2016.09.29 OK
+2016-11-28 17:23:20.882 ESIndexBackup.py[line:241] INFO Start deleting index 'aplog_pos-2016.09.28'
+2016-11-28 17:23:21.145 ESIndexBackup.py[line:129] INFO index 'aplog_pos-2016.09.28' has been deleted successfully
+2016-11-28 17:24:31.712 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:24:31.712 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.09.30 to aplog_pos-2016.09 FAILED
+2016-11-28 17:27:32.188 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:27:32.188 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.10.01 to aplog_pos-2016.10 FAILED
+2016-11-28 17:29:06.989 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:29:06.989 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.10.02 to aplog_pos-2016.10 FAILED
+2016-11-28 17:31:42.384 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.10.03' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:31:42.710 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.03' successfully
+2016-11-28 17:31:42.710 ESIndexBackup.py[line:222] INFO backupIndex() from aplog_pos-2016.10.03 to aplog_pos-2016.10 OK
+2016-11-28 17:31:42.904 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.10.03' has been deleted successfully
+2016-11-28 17:31:42.904 ESIndexBackup.py[line:226] INFO deleteIndex() aplog_pos-2016.10.03 OK
+2016-11-28 17:31:42.904 ESIndexBackup.py[line:241] INFO Start deleting index 'aplog_pos-2016.10.02'
+2016-11-28 17:31:42.979 ESIndexBackup.py[line:131] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.10.02] is missing')
+2016-11-28 17:32:22.925 ESIndexBackup.py[line:92] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:32:22.925 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.10.04 to aplog_pos-2016.10 FAILED
+2016-11-28 17:32:54.608 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.10.05' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:32:54.960 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.05' successfully
+2016-11-28 17:32:54.961 ESIndexBackup.py[line:222] INFO backupIndex() from aplog_pos-2016.10.05 to aplog_pos-2016.10 OK
+2016-11-28 17:32:55.095 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.10.05' has been deleted successfully
+2016-11-28 17:32:55.095 ESIndexBackup.py[line:226] INFO deleteIndex() aplog_pos-2016.10.05 OK
+2016-11-28 17:32:55.095 ESIndexBackup.py[line:241] INFO Start deleting index 'aplog_pos-2016.10.04'
+2016-11-28 17:32:55.170 ESIndexBackup.py[line:131] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.10.04] is missing')
+2016-11-28 17:33:56.534 ESIndexBackup.py[line:90] INFO index 'aplog_pos-2016.10.06' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:33:56.912 ESIndexBackup.py[line:112] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.06' successfully
+2016-11-28 17:33:56.912 ESIndexBackup.py[line:222] INFO backupIndex() from aplog_pos-2016.10.06 to aplog_pos-2016.10 OK
+2016-11-28 17:33:57.073 ESIndexBackup.py[line:144] INFO index 'aplog_pos-2016.10.06' has been deleted successfully
+2016-11-28 17:33:57.074 ESIndexBackup.py[line:226] INFO deleteIndex() aplog_pos-2016.10.06 OK
+2016-11-28 17:33:57.074 ESIndexBackup.py[line:241] INFO Start deleting index 'aplog_pos-2016.10.05'
+2016-11-28 17:33:57.341 ESIndexBackup.py[line:129] INFO index 'aplog_pos-2016.10.05' has been deleted successfully
+2016-11-28 17:34:42.855 ESIndexBackup.py[line:92] ERROR ConnectionTimeout caused by - ReadTimeoutError(HTTPConnectionPool(host=u'172.20.2.53', port=9200): Read timed out. (read timeout=10))
+2016-11-28 17:34:42.855 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.10.07 to aplog_pos-2016.10 FAILED
+2016-11-28 17:35:45.919 ESIndexBackup.py[line:92] ERROR ConnectionTimeout caused by - ReadTimeoutError(HTTPConnectionPool(host=u'172.20.2.53', port=9200): Read timed out. (read timeout=10))
+2016-11-28 17:35:45.919 ESIndexBackup.py[line:245] ERROR backupIndex() from aplog_pos-2016.10.07 to aplog_pos-2016.10 FAILED
+2016-11-28 17:42:11.982 ESIndexBackup.py[line:93] ERROR ConnectionTimeout caused by - ReadTimeoutError(HTTPConnectionPool(host=u'172.20.2.109', port=9200): Read timed out. (read timeout=10))
+2016-11-28 17:42:11.982 ESIndexBackup.py[line:246] ERROR backupIndex() from aplog_pos-2016.10.07 to aplog_pos-2016.10 FAILED
+2016-11-28 17:44:36.784 ESIndexBackup.py[line:94] ERROR ConnectionTimeout caused by - ReadTimeoutError(HTTPConnectionPool(host=u'172.20.2.109', port=9200): Read timed out. (read timeout=10))
+2016-11-28 17:44:36.785 ESIndexBackup.py[line:247] ERROR backupIndex() from aplog_pos-2016.10.07 to aplog_pos-2016.10 FAILED
+2016-11-28 17:47:45.407 ESIndexBackup.py[line:94] ERROR ConnectionTimeout caused by - ReadTimeoutError(HTTPConnectionPool(host=u'172.20.2.54', port=9200): Read timed out. (read timeout=10))
+2016-11-28 17:47:45.407 ESIndexBackup.py[line:249] ERROR backupIndex() from aplog_pos-2016.10.07 to aplog_pos-2016.10 FAILED
+2016-11-28 17:49:28.222 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.07' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:49:30.437 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.07' successfully
+2016-11-28 17:49:30.438 ESIndexBackup.py[line:226] INFO backupIndex() from aplog_pos-2016.10.07 to aplog_pos-2016.10 OK
+2016-11-28 17:49:30.656 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.07' has been deleted successfully
+2016-11-28 17:49:30.657 ESIndexBackup.py[line:230] INFO deleteIndex() aplog_pos-2016.10.07 OK
+2016-11-28 17:49:30.657 ESIndexBackup.py[line:245] INFO Start deleting index 'aplog_pos-2016.10.06'
+2016-11-28 17:49:31.113 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.06' has been deleted successfully
+2016-11-28 17:50:54.819 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.08' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:50:55.945 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.08' successfully
+2016-11-28 17:50:55.945 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.08 to aplog_pos-2016.10 OK
+2016-11-28 17:50:56.147 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.08' has been deleted successfully
+2016-11-28 17:50:56.147 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.08 OK
+2016-11-28 17:50:56.147 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.07'
+2016-11-28 17:50:56.591 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.07' has been deleted successfully
+2016-11-28 17:51:20.115 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.09' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:51:21.120 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.09' successfully
+2016-11-28 17:51:21.120 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.09 to aplog_pos-2016.10 OK
+2016-11-28 17:51:21.314 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.09' has been deleted successfully
+2016-11-28 17:51:21.315 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.09 OK
+2016-11-28 17:51:21.315 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.08'
+2016-11-28 17:51:21.666 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.08' has been deleted successfully
+2016-11-28 17:51:41.410 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.10' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:51:41.731 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.10' successfully
+2016-11-28 17:51:41.731 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.10 to aplog_pos-2016.10 OK
+2016-11-28 17:51:41.882 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.10' has been deleted successfully
+2016-11-28 17:51:41.882 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.10 OK
+2016-11-28 17:51:41.882 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.09'
+2016-11-28 17:51:42.131 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.09' has been deleted successfully
+2016-11-28 17:51:45.388 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.11' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:51:45.688 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.11' successfully
+2016-11-28 17:51:45.689 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.11 to aplog_pos-2016.10 OK
+2016-11-28 17:51:45.842 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.11' has been deleted successfully
+2016-11-28 17:51:45.842 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.11 OK
+2016-11-28 17:51:45.842 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.10'
+2016-11-28 17:51:46.106 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.10' has been deleted successfully
+2016-11-28 17:51:48.249 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:51:48.250 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.12 to aplog_pos-2016.10 FAILED
+2016-11-28 17:51:53.775 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:51:53.775 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.13 to aplog_pos-2016.10 FAILED
+2016-11-28 17:51:58.680 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:51:58.680 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.14 to aplog_pos-2016.10 FAILED
+2016-11-28 17:52:04.397 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:52:04.398 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.15 to aplog_pos-2016.10 FAILED
+2016-11-28 17:52:10.544 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:52:10.544 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.16 to aplog_pos-2016.10 FAILED
+2016-11-28 17:52:17.525 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.17' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:52:17.830 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.17' successfully
+2016-11-28 17:52:17.831 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.17 to aplog_pos-2016.10 OK
+2016-11-28 17:52:18.002 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.17' has been deleted successfully
+2016-11-28 17:52:18.002 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.17 OK
+2016-11-28 17:52:18.002 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.16'
+2016-11-28 17:52:18.076 ESIndexBackup.py[line:133] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.10.16] is missing')
+2016-11-28 17:52:25.663 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.18' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:52:26.368 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.18' successfully
+2016-11-28 17:52:26.368 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.18 to aplog_pos-2016.10 OK
+2016-11-28 17:52:26.524 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.18' has been deleted successfully
+2016-11-28 17:52:26.524 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.18 OK
+2016-11-28 17:52:26.524 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.17'
+2016-11-28 17:52:26.799 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.17' has been deleted successfully
+2016-11-28 17:52:33.872 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.10.19' has been copied into 'aplog_pos-2016.10' successfully
+2016-11-28 17:52:34.236 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.10' has been snapshotted to 'snapshot-aplog_pos-2016.10.19' successfully
+2016-11-28 17:52:34.237 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.10.19 to aplog_pos-2016.10 OK
+2016-11-28 17:52:34.423 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.10.19' has been deleted successfully
+2016-11-28 17:52:34.423 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.10.19 OK
+2016-11-28 17:52:34.423 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.10.18'
+2016-11-28 17:52:34.680 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.10.18' has been deleted successfully
+2016-11-28 17:52:39.155 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:52:39.155 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.20 to aplog_pos-2016.10 FAILED
+2016-11-28 17:52:43.339 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:52:43.339 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.21 to aplog_pos-2016.10 FAILED
+2016-11-28 17:52:47.813 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:52:47.813 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.22 to aplog_pos-2016.10 FAILED
+2016-11-28 17:52:52.125 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:52:52.125 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.23 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:02.882 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:02.883 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.24 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:07.503 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:07.503 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.25 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:12.849 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:12.849 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.26 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:18.717 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:18.717 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.27 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:26.258 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:26.258 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.28 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:36.039 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:36.039 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.29 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:43.207 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:43.208 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.30 to aplog_pos-2016.10 FAILED
+2016-11-28 17:53:55.836 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:53:55.837 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.10.31 to aplog_pos-2016.10 FAILED
+2016-11-28 17:54:04.478 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:54:04.479 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.01 to aplog_pos-2016.11 FAILED
+2016-11-28 17:54:29.188 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.02' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:54:29.527 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.02' successfully
+2016-11-28 17:54:29.527 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.02 to aplog_pos-2016.11 OK
+2016-11-28 17:54:29.690 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.02' has been deleted successfully
+2016-11-28 17:54:29.690 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.02 OK
+2016-11-28 17:54:29.690 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.01'
+2016-11-28 17:54:29.760 ESIndexBackup.py[line:133] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.11.01] is missing')
+2016-11-28 17:54:40.729 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:54:40.729 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.03 to aplog_pos-2016.11 FAILED
+2016-11-28 17:55:47.418 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:55:47.418 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.04 to aplog_pos-2016.11 FAILED
+2016-11-28 17:55:51.077 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:55:51.077 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.04 to aplog_pos-2016.11 FAILED
+2016-11-28 17:55:52.283 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:55:52.283 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.04 to aplog_pos-2016.11 FAILED
+2016-11-28 17:55:53.360 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:55:53.360 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.04 to aplog_pos-2016.11 FAILED
+2016-11-28 17:55:59.681 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:55:59.681 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.05 to aplog_pos-2016.11 FAILED
+2016-11-28 17:56:03.538 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:56:03.538 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.06 to aplog_pos-2016.11 FAILED
+2016-11-28 17:56:08.458 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:56:08.459 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.07 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:02.512 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.08' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:57:02.805 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.08' successfully
+2016-11-28 17:57:02.805 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.08 to aplog_pos-2016.11 OK
+2016-11-28 17:57:03.013 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.08' has been deleted successfully
+2016-11-28 17:57:03.014 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.08 OK
+2016-11-28 17:57:03.014 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.07'
+2016-11-28 17:57:03.082 ESIndexBackup.py[line:133] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.11.07] is missing')
+2016-11-28 17:57:09.748 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.09' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:57:10.028 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.09' successfully
+2016-11-28 17:57:10.028 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.09 to aplog_pos-2016.11 OK
+2016-11-28 17:57:10.205 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.09' has been deleted successfully
+2016-11-28 17:57:10.205 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.09 OK
+2016-11-28 17:57:10.205 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.08'
+2016-11-28 17:57:10.498 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.11.08' has been deleted successfully
+2016-11-28 17:57:22.390 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:22.390 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.10 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:25.142 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:25.143 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.11 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:28.917 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:28.918 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.12 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:31.785 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:31.785 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.13 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:38.662 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:38.663 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.14 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:42.142 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:42.142 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.15 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:47.282 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:47.282 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.16 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:50.556 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:50.557 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.17 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:54.740 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:54.740 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.18 to aplog_pos-2016.11 FAILED
+2016-11-28 17:57:59.151 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:57:59.151 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.19 to aplog_pos-2016.11 FAILED
+2016-11-28 17:58:02.554 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:58:02.554 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.20 to aplog_pos-2016.11 FAILED
+2016-11-28 17:58:05.462 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:58:05.462 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.21 to aplog_pos-2016.11 FAILED
+2016-11-28 17:58:10.475 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.22' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:58:10.828 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.22' successfully
+2016-11-28 17:58:10.829 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.22 to aplog_pos-2016.11 OK
+2016-11-28 17:58:11.002 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.22' has been deleted successfully
+2016-11-28 17:58:11.002 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.22 OK
+2016-11-28 17:58:11.002 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.21'
+2016-11-28 17:58:11.088 ESIndexBackup.py[line:133] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.11.21] is missing')
+2016-11-28 17:58:16.730 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.23' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:58:17.028 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.23' successfully
+2016-11-28 17:58:17.028 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.23 to aplog_pos-2016.11 OK
+2016-11-28 17:58:17.289 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.23' has been deleted successfully
+2016-11-28 17:58:17.289 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.23 OK
+2016-11-28 17:58:17.289 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.22'
+2016-11-28 17:58:17.570 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.11.22' has been deleted successfully
+2016-11-28 17:58:22.919 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.24' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:58:23.227 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.24' successfully
+2016-11-28 17:58:23.227 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.24 to aplog_pos-2016.11 OK
+2016-11-28 17:58:23.450 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.24' has been deleted successfully
+2016-11-28 17:58:23.450 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.24 OK
+2016-11-28 17:58:23.450 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.23'
+2016-11-28 17:58:23.717 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.11.23' has been deleted successfully
+2016-11-28 17:58:28.565 ESIndexBackup.py[line:92] INFO index 'aplog_pos-2016.11.25' has been copied into 'aplog_pos-2016.11' successfully
+2016-11-28 17:58:28.866 ESIndexBackup.py[line:114] INFO index 'aplog_pos-2016.11' has been snapshotted to 'snapshot-aplog_pos-2016.11.25' successfully
+2016-11-28 17:58:28.866 ESIndexBackup.py[line:227] INFO backupIndex() from aplog_pos-2016.11.25 to aplog_pos-2016.11 OK
+2016-11-28 17:58:28.998 ESIndexBackup.py[line:146] INFO index 'aplog_pos-2016.11.25' has been deleted successfully
+2016-11-28 17:58:28.998 ESIndexBackup.py[line:231] INFO deleteIndex() aplog_pos-2016.11.25 OK
+2016-11-28 17:58:28.998 ESIndexBackup.py[line:246] INFO Start deleting index 'aplog_pos-2016.11.24'
+2016-11-28 17:58:29.249 ESIndexBackup.py[line:131] INFO index 'aplog_pos-2016.11.24' has been deleted successfully
+2016-11-28 17:58:31.930 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:58:31.930 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.26 to aplog_pos-2016.11 FAILED
+2016-11-28 17:58:36.549 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 17:58:36.550 ESIndexBackup.py[line:250] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 18:03:08.711 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 18:03:08.711 ESIndexBackup.py[line:236] ERROR backupIndex() from aplog_pos-2016.11.27 to aplog_pos-2016.11 FAILED
+2016-11-28 18:03:08.711 ESIndexBackup.py[line:249] INFO Start deleting index 'aplog_pos-2016.11.26'
+2016-11-28 18:03:08.724 ESIndexBackup.py[line:133] ERROR TransportError(404, u'snapshot_missing_exception', u'[backup:snapshot-aplog_pos-2016.11.26] is missing')
+2016-11-28 18:13:24.782 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 18:13:24.783 ESIndexBackup.py[line:253] ERROR Backup from index 'aplog_pos-2016.11.01' to 'snapshot aplog_pos-2016.11' FAILED
+2016-11-28 18:14:26.879 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-28 18:14:26.879 ESIndexBackup.py[line:254] ERROR Backup from index 'aplog_pos-2016.11.01' to 'snapshot aplog_pos-2016.11' FAILED
+2016-11-29 09:10:28.098 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:28.098 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:28.098 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:28.098 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:29.322 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:29.322 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:29.322 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:10:29.322 ESIndexBackup.py[line:225] INFO OK
+2016-11-29 09:39:15.750 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:39:15.752 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:39:15.755 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:39:15.757 ESIndexBackup.py[line:94] ERROR TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:59:48.407 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_aes3g-2016.11.28' --> 'aplog_aes3g-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:59:48.409 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_pos-2016.11.28' --> 'aplog_pos-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:59:48.412 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_wds-2016.11.28' --> 'aplog_wds-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 09:59:48.415 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_upcc-2016.11.28' --> 'aplog_upcc-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:14.884 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_aes3g-2016.11.28' --> 'aplog_aes3g-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:14.886 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_pos-2016.11.28' --> 'aplog_pos-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:14.889 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_wds-2016.11.28' --> 'aplog_wds-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:14.891 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_upcc-2016.11.28' --> 'aplog_upcc-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:33.382 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_aes3g-2016.11.28' --> 'aplog_aes3g-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:33.386 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_pos-2016.11.28' --> 'aplog_pos-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:33.389 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_wds-2016.11.28' --> 'aplog_wds-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:33.391 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_upcc-2016.11.28' --> 'aplog_upcc-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:34.662 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_aes3g-2016.11.28' --> 'aplog_aes3g-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:34.665 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_pos-2016.11.28' --> 'aplog_pos-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:34.668 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_wds-2016.11.28' --> 'aplog_wds-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-29 10:01:34.670 ESIndexBackup.py[line:94] ERROR copyIndex() FAILED. 'aplog_upcc-2016.11.28' --> 'aplog_upcc-2016.11': TransportError(404, u'index_not_found_exception', u'no such index')
+2016-11-30 09:35:21.209 ESIndexBackup.py[line:104] INFO copyIndex() OK. 'aplog_aes3g-2016.11.29' --> 'aplog_aes3g-2016.11'
+2016-11-30 09:35:21.530 ESIndexBackup.py[line:125] INFO createSnapshot() OK. 'aplog_aes3g-2016.11' --> 'snapshot-aplog_aes3g-2016.11.29'
+2016-11-30 09:35:21.714 ESIndexBackup.py[line:157] INFO deleteIndex() OK. 'aplog_aes3g-2016.11.29'
+2016-11-30 09:35:21.977 ESIndexBackup.py[line:142] INFO deleteSnapshot() OK. 'snapshot-aplog_aes3g-2016.11.28'
+2016-11-30 09:35:23.389 ESIndexBackup.py[line:104] INFO copyIndex() OK. 'aplog_pos-2016.11.29' --> 'aplog_pos-2016.11'
+2016-11-30 09:35:23.944 ESIndexBackup.py[line:125] INFO createSnapshot() OK. 'aplog_pos-2016.11' --> 'snapshot-aplog_pos-2016.11.29'
+2016-11-30 09:35:24.108 ESIndexBackup.py[line:157] INFO deleteIndex() OK. 'aplog_pos-2016.11.29'
+2016-11-30 09:35:24.406 ESIndexBackup.py[line:142] INFO deleteSnapshot() OK. 'snapshot-aplog_pos-2016.11.28'
+2016-11-30 09:35:26.793 ESIndexBackup.py[line:104] INFO copyIndex() OK. 'aplog_wds-2016.11.29' --> 'aplog_wds-2016.11'
+2016-11-30 09:35:27.124 ESIndexBackup.py[line:125] INFO createSnapshot() OK. 'aplog_wds-2016.11' --> 'snapshot-aplog_wds-2016.11.29'
+2016-11-30 09:35:27.282 ESIndexBackup.py[line:157] INFO deleteIndex() OK. 'aplog_wds-2016.11.29'
+2016-11-30 09:35:27.529 ESIndexBackup.py[line:142] INFO deleteSnapshot() OK. 'snapshot-aplog_wds-2016.11.28'
+2016-11-30 09:35:28.917 ESIndexBackup.py[line:104] INFO copyIndex() OK. 'aplog_upcc-2016.11.29' --> 'aplog_upcc-2016.11'
+2016-11-30 09:35:29.218 ESIndexBackup.py[line:125] INFO createSnapshot() OK. 'aplog_upcc-2016.11' --> 'snapshot-aplog_upcc-2016.11.29'
+2016-11-30 09:35:29.381 ESIndexBackup.py[line:157] INFO deleteIndex() OK. 'aplog_upcc-2016.11.29'
+2016-11-30 09:35:29.644 ESIndexBackup.py[line:142] INFO deleteSnapshot() OK. 'snapshot-aplog_upcc-2016.11.28'
