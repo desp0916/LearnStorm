@@ -5,21 +5,22 @@
 #
 # Usage:
 #  
-#  ./ESIndexBackup.py [system1,system2,system3,...] [Index Date]
+#  ESIndexBackup.py [system1,system2,system3,...] [Today's date]
 #
-# Notice:
+# Notice: Put ',' between the systems, no whitespaces.
 #
-#  Put ',' between the systems, not whitespaces.
+# For examples:
 #
-#  1. Default (no arguments):
+#  1. Default backup (no arguments):
 #
-#     ./ESIndexBackup.py
+#     ESIndexBackup.py
 # 
 #  2. Merge daily indices into monthly index:
 # 
-#    # Backup two indices
-#    ./ESIndexBackup.py aes3g,pos,upcc,wds 2016-10-01
+#    # Asume today is 2016-10-01, replay the backups on these systems: 'aes3g,pos,upcc,wds'
+#    ESIndexBackup.py aes3g,pos,upcc,wds 2016-10-01
 #
+#    # Replay the backups from 2016-10-1 to 2016-10-31 on 'aes3g':
 #    for i in $(seq 1 31); do ./ESIndexBackup.py aes3g 2016-10-$i; done
 #
 # @since 2016/11/15
@@ -198,13 +199,13 @@ if __name__ == '__main__':
     	systems = (str(sys.argv[1])).split(',')
         today = datetime.strptime(sys.argv[2], '%Y-%m-%d')
     elif len(sys.argv) == 1:
-    	systems = ['aes3g', 'pos', 'wds', 'upcc', 'picui']
+    	systems = ['aes3g', 'pos', 'wds', 'upcc','picui']
     	today = date.today()
     else:
 	print "ES Indices of AP Logs Archiving and Housekeeping"
-	print "Notice: Put ',' between the systems, not whitespaces."
 	print
-        print "Usage: ./ESIndexBackup.py [system1,system2,system3,...] [Index Date]"
+        print "Usage: ESIndexBackup.py [system1,system2,system3,...] [Today's Date]"
+	print "Notice: Put ',' between the systems, no whitespaces."
 	print
         sys.exit(1)
 
