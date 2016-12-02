@@ -168,12 +168,12 @@ if __name__ == '__main__':
     # 要保留幾個月內的 indices 和 snapshots
     N = 3
 
-    # systems = ['pos']
-    systems = ['aes3g', 'pos', 'wds', 'upcc']
+    #systems = ['wds']
+    systems = ['aes3g', 'pos', 'wds', 'upcc', 'picui']
     indexPrefix = 'aplog_'
 
     # 今天
-    # today = datetime.strptime('2016 12 1', '%Y %m %d')  # this is for test
+    #today = datetime.strptime('2016 10 21', '%Y %m %d')  # this is for test
     today = date.today()
     todayDayOfMonth = today.strftime('%d')  # 今天是幾號？
 
@@ -200,7 +200,7 @@ if __name__ == '__main__':
 
     # File Handler
     # http://stackoverflow.com/questions/6290739/python-logging-use-milliseconds-in-time-format/7517430#7517430
-    fh = logging.FileHandler('./ESIndexBackup.log')
+    fh = logging.FileHandler('/home/apmgr/bin/ESIndexBackup.log')
     fh.setLevel(logging.INFO)
     fh_formatter = logging.Formatter(
         '%(asctime)s.%(msecs)03d %(filename)s[line:%(lineno)d] %(levelname)s %(message)s', "%Y-%m-%d %H:%M:%S")
