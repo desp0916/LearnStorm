@@ -1,7 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+# ES Indices of AP Logs Archiving and Housekeeping
+#
+# Usage:
+#  
+#  ./ESIndexBackup.py [system1,system2,system3,...] [Index Date]
+#
+# Notice:
+#
+#  Put ',' between the systems, not whitespaces.
+#
+#  1. Default (no arguments):
+#
+#     ./ESIndexBackup.py
+# 
+#  2. Merge daily indices into monthly index:
+# 
+#    # Backup two indices
+#    ./ESIndexBackup.py aes3g,pos,upcc,wds 2016-10-01
+#
+#    for i in $(seq 1 31); do ./ESIndexBackup.py aes3g 2016-10-$i; done
+#
 # @since 2016/11/15
+#
 
 """
 1. Logics & workflow：
@@ -51,6 +73,7 @@
 
 import logging
 import calendar
+import sys
 
 from elasticsearch import Elasticsearch
 from datetime import datetime, date, timedelta
@@ -168,13 +191,24 @@ if __name__ == '__main__':
     # 要保留幾個月內的 indices 和 snapshots
     N = 3
 
-    #systems = ['wds']
-    systems = ['aes3g', 'pos', 'wds', 'upcc', 'picui']
     indexPrefix = 'aplog_'
 
     # 今天
-    #today = datetime.strptime('2016 10 21', '%Y %m %d')  # this is for test
-    today = date.today()
+    if len(sys.argv) == 3:
+    	systems = (str(sys.argv[1])).split(',')
+        today = datetime.strptime(sys.argv[2], '%Y-%m-%d')
+    elif len(sys.argv) == 1:
+    	systems = ['aes3g', 'pos', 'wds', 'upcc', 'picui']
+    	today = date.today()
+    else:
+	print "ES Indices of AP Logs Archiving and Housekeeping"
+	print "Notice: Put ',' between the systems, not whitespaces."
+	print
+        print "Usage: ./ESIndexBackup.py [system1,system2,system3,...] [Index Date]"
+	print
+        sys.exit(1)
+
+    #today = datetime.strptime('2016 9 24', '%Y %m %d')  # this is for test
     todayDayOfMonth = today.strftime('%d')  # 今天是幾號？
 
     # 昨天
@@ -249,7 +283,10 @@ if __name__ == '__main__':
                 if todayDayOfMonth == '2':
                     indexNMonthsAgo = indexPrefix + system + '-' + lastDayOfNMonthsAgoMonth
                     snapshotNMonthsAgo = indexPrefix + system + '-' + lastDayOfNMonthsAgo
-                    eib.deleteIndex(indexNMonthsAgo)
-                    eib.deleteSnapshot(snapshotNMonthsAgo)
+                    if eib.deleteIndex(indexNMonthsAgo) and eib.deleteSnapshot(snapshotNMonthsAgo):
+                        sys.exit(0)	# All done sucessfully
                 else:
-                    eib.deleteSnapshot(indexTheDayBeforeYesterday)
+                    if eib.deleteSnapshot(indexTheDayBeforeYesterday):
+                        sys.exit(0)	# All done sucessfully
+
+    sys.exit(1)		# Something may went wrong!
