@@ -17,11 +17,11 @@
 # 
 #  2. Merge daily indices into monthly index:
 # 
-#    # Asume today is 2016-10-01, replay the backups on these systems: 'aes3g,pos,upcc,wds'
-#    ESIndexBackup.py aes3g,pos,upcc,wds 2016-10-01
+#    # Asume today is 2016.10.01, replay the backups on these systems: 'aes3g,pos,upcc,wds'
+#    ESIndexBackup.py aes3g,pos,upcc,wds 2016.10.01
 #
-#    # Replay the backups from 2016-10-1 to 2016-10-31 on 'aes3g':
-#    for i in $(seq 1 31); do ./ESIndexBackup.py aes3g 2016-10-$i; done
+#    # Replay the backups from 2016.10.1 to 2016.10.31 on 'aes3g':
+#    for i in $(seq 1 31); do ./ESIndexBackup.py aes3g 2016.10.$i; done
 #
 # @since 2016/11/15
 #
@@ -196,8 +196,8 @@ if __name__ == '__main__':
 
     # 今天
     if len(sys.argv) == 3:
-    	systems = (str(sys.argv[1])).split(',')
-        today = datetime.strptime(sys.argv[2], '%Y-%m-%d')
+    	systems = str(sys.argv[1]).split(',')
+        today = datetime.strptime(sys.argv[2], '%Y.%m.%d')
     elif len(sys.argv) == 1:
     	systems = ['aes3g', 'pos', 'wds', 'upcc','picui']
     	today = date.today()
@@ -266,6 +266,7 @@ if __name__ == '__main__':
     )
 
     eib = ESIndexBackup(es)
+    fails = []  # 用來紀錄以下操作結果（只紀錄失敗的）
 
     for system in systems:
 
@@ -285,9 +286,20 @@ if __name__ == '__main__':
                     indexNMonthsAgo = indexPrefix + system + '-' + lastDayOfNMonthsAgoMonth
                     snapshotNMonthsAgo = indexPrefix + system + '-' + lastDayOfNMonthsAgo
                     if eib.deleteIndex(indexNMonthsAgo) and eib.deleteSnapshot(snapshotNMonthsAgo):
-                        sys.exit(0)	# All done sucessfully
+                        pass
+                    else:
+                        fails.append(1)
                 else:
                     if eib.deleteSnapshot(indexTheDayBeforeYesterday):
-                        sys.exit(0)	# All done sucessfully
+                        pass
+                    else:
+                        fails.append(1)
+            else:
+                fails.append(1)
+        else:
+            fails.append(1)
 
-    sys.exit(1)		# Something may went wrong!
+    if len(fails) > 0:
+        sys.exit(1)  # Something may went wrong!
+    else:
+        sys.exit(0)   # All done sucessfully
