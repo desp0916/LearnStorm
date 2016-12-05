@@ -266,7 +266,7 @@ if __name__ == '__main__':
     )
 
     eib = ESIndexBackup(es)
-    fails = []  # 用來紀錄以下操作結果（只紀錄失敗的）
+    fails = 0  # 用來紀錄以下操作結果（只紀錄失敗的）
 
     for system in systems:
 
@@ -288,18 +288,18 @@ if __name__ == '__main__':
                     if eib.deleteIndex(indexNMonthsAgo) and eib.deleteSnapshot(snapshotNMonthsAgo):
                         pass
                     else:
-                        fails.append(1)
+                        fails += 1
                 else:
                     if eib.deleteSnapshot(indexTheDayBeforeYesterday):
                         pass
                     else:
-                        fails.append(1)
+                        fails += 1
             else:
-                fails.append(1)
+                fails += 1
         else:
-            fails.append(1)
+            fails += 1
 
-    if len(fails) > 0:
+    if fails > 0:
         sys.exit(1)  # Something may went wrong!
     else:
         sys.exit(0)   # All done sucessfully
