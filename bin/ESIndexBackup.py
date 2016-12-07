@@ -69,6 +69,8 @@
  4.1 HDFS: After deleting a snapshot, its folders remains on HDFS.
             Therefore we should also delete the folders automatically.
  4.2 Email: We should be alerted while errors occur.
+ 4.3 SearchContextMissingException: No search context found for id [xx]  #9726
+     https://github.com/elastic/elasticsearch/issues/9726
 
 """
 
