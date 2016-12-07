@@ -69,8 +69,17 @@
  4.1 HDFS: After deleting a snapshot, its folders remains on HDFS.
             Therefore we should also delete the folders automatically.
  4.2 Email: We should be alerted while errors occur.
- 4.3 SearchContextMissingException: No search context found for id [xx]  #9726
-     https://github.com/elastic/elasticsearch/issues/9726
+
+5. Errors:
+
+ 5.1 ERROR copyIndex() FAILED. 'aplog_picui-2016.12.06' --> 'aplog_picui-2016.12': TransportError(404, u'{"took":242,"timed_out":false,"total":973,"updated":800,"created":0,"batches":8,"version_conflicts":0,"noops":0,"retries":0,"failures":[{"shard":-1,"index":null,"reason":{"type":"search_context_missing_exception","reason":"No search context found for id [24819]"}}]}')
+
+    See: SearchContextMissingException: No search context found for id [xx]  #9726
+    https://github.com/elastic/elasticsearch/issues/9726
+
+ 5.2 ERROR createSnapshot() FAILED. 'aplog_picui-2016.12' --> 'snapshot-aplog_picui-2016.12.05': TransportError(503, u'concurrent_snapshot_execution_exception', u'[backup:snapshot-aplog_picui-2016.12.05] a snapshot is already running')
+
+ 5.3 ERROR deleteSnapshot() FAILED. 'snapshot-aplog_upcc-2016.12.04': TransportError(503, u'concurrent_snapshot_execution_exception', u'[backup:snapshot-aplog_upcc-2016.12.04] another snapshot is currently running cannot delete')
 
 """
 
