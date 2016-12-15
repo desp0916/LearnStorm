@@ -16,7 +16,7 @@ import org.elasticsearch.shield.ShieldPlugin;
 // ES 1.7.4
 //import org.elasticsearch.common.settings.ImmutableSettings;
 
-public class ESTest {
+public class ESConnTest {
 
 	private static Client client;
 	private static TransportClient transportClient;
