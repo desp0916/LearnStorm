@@ -10,12 +10,14 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.elasticsearch.search.aggregations.bucket.filter.Filter;
+import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.MetricsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.max.Max;
+import org.elasticsearch.search.aggregations.metrics.sum.Sum;
 
 public class ESearchTest {
 
@@ -51,9 +53,11 @@ public class ESearchTest {
 		Client client = getClient();
 		SearchResponse sr = client.prepareSearch("aplog_aes3g-2016.12")
 				.addAggregation(
-						AggregationBuilders.terms("by_functID").field("functID").subAggregation(AggregationBuilders
-								.dateHistogram("by_result").field("dataCnt").interval(DateHistogramInterval.MONTH)))
+						AggregationBuilders.terms("by_functID").field("functID")
+//							.subAggregation(AggregationBuilders.terms("by_result").field("dataCnt"))
+						)
 				.execute().actionGet();
+		// NOTE: We need to call getHits() TWICE here!!!
 		SearchHit[] results = sr.getHits().getHits();
 		for (SearchHit hit : results) {
 			String sourceAsString = hit.getSourceAsString();
@@ -65,8 +69,43 @@ public class ESearchTest {
 		}
 	}
 
+	// https://www.elastic.co/guide/en/elasticsearch/client/java-api/2.3/_metrics_aggregations.html#java-aggs-metrics-max
+	public static void testMaxAggregation() {
+		Client client = getClient();
+		MetricsAggregationBuilder<?> aggregation = AggregationBuilders.max("agg").field("dataCnt");
+		SearchResponse sr = client.prepareSearch("aplog_aes3g-2016.12.15")
+				.addAggregation(aggregation).execute().actionGet();
+		Max agg = sr.getAggregations().get("agg");
+		double value = agg.getValue();
+		System.out.println(value);
+	}
+
+	public static void testSumAggregation() {
+		Client client = getClient();
+		MetricsAggregationBuilder<?> aggregation = AggregationBuilders.sum("agg").field("dataCnt");
+		SearchResponse sr = client.prepareSearch("aplog_aes3g-2016.12.15")
+				.addAggregation(aggregation).execute().actionGet();
+		Sum agg = sr.getAggregations().get("agg");
+		double value = agg.getValue();
+		System.out.println(value);
+	}
+
+	// Filter then count
+	public static void testFilterAggregation() {
+		Client client = getClient();
+		FilterAggregationBuilder aggregation = AggregationBuilders.filter("agg").filter(QueryBuilders.termQuery("logType", "batch"));
+		SearchResponse sr = client.prepareSearch("aplog_aes3g-2016.12.15")
+				.addAggregation(aggregation).execute().actionGet();
+		Filter agg = sr.getAggregations().get("agg");
+
+		long count = agg.getDocCount(); // Doc count
+		System.out.println(count);
+	}
+
 	public static void main(String[] args) {
-		testAggregation1();
+//		testMaxAggregation();
+//		testSumAggregation();
+		testFilterAggregation();
 	}
 
 }
