@@ -69,6 +69,7 @@
  4.1 HDFS: After deleting a snapshot, its folders remains on HDFS.
             Therefore we should also delete the folders automatically.
  4.2 Email: We should be alerted while errors occur.
+ 4.3 Snapshot: 
 
 5. Errors:
 
@@ -133,6 +134,9 @@ class ESIndexBackup:
         :return: 成功回傳 True; 失敗回傳 False
         """
         try:
+            # if self.es.indices.exists(destIndex) == False:
+            # logger.info("copyIndex() Creating index: '%s'", destIndex)
+            # self.es.indices.create(destIndex)
             self.es.reindex(body = {"source": { "index": srcIndex },"dest": { "index": destIndex }},
                             refresh = False,
                             timeout = '3m',
@@ -210,7 +214,7 @@ if __name__ == '__main__':
     	systems = str(sys.argv[1]).split(',')
         today = datetime.strptime(sys.argv[2], '%Y.%m.%d')
     elif len(sys.argv) == 1:
-    	systems = ['aes3g', 'pos', 'wds', 'upcc','picui']
+    	systems = ['aes3g', 'pos', 'wds', 'upcc','picui', 'rfm']
     	today = date.today()
     else:
 	print "ES Indices of AP Logs Archiving and Housekeeping"
