@@ -42,7 +42,7 @@ public class Event {
 	public void go() {
 		while (true) {
 			try {
-				ApLog log = new ApLog(sysID, outputFields, logType);
+				ApLog log = new ApLog(sysID, logType, outputFields);
 				// logger.info(log.toString());
 				if (enableSleep) {
 					Thread.sleep(ThreadLocalRandom.current().nextInt(1, 20) * 1000);
