@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -14,6 +13,11 @@ public class LogUtil {
 
 	private static final DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
+	// Suppress default constructor for noninstantiability
+	private LogUtil() {
+		throw new AssertionError();
+	}
+
 	/**
 	 * Get current moment in ISO 8601 format
 	 * http://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format
@@ -22,8 +26,19 @@ public class LogUtil {
 	 * 2016-01-20T11:11:42.915Z
 	 */
 	public static String getISO8601Time() {
+		return getISO8601Time("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	}
+
+	/**
+	 * Get current moment in ISO 8601 format
+	 * http://stackoverflow.com/questions/3914404/how-to-get-current-moment-in-iso-8601-format
+	 * 2016-01-20T10:53:52.457+08:00
+	 * 2016-01-20T10:53:52.457+0800
+	 * 2016-01-20T11:11:42.915Z
+	 */
+	public static String getISO8601Time(String dateFormat) {
 		// Choose one from the following two lines.
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		DateFormat df = new SimpleDateFormat(dateFormat);
 		// DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
 		// Uncomment and modify the following line if you would like set the timezone explicitly.
